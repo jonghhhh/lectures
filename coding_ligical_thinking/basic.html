@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>코딩과 논리적 사고 — 파이썬으로 배우는 논증의 기술</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@600;900&family=Noto+Sans+KR:wght@400;500;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FAFAF7;
+  --ink:#22303F;
+  --indigo:#2E4A7A;
+  --ochre:#B8860B;
+  --rule:#D8D5CC;
+  --code-bg:#F0EFE9;
+  --predict:#8A3B2E;
+  --sidebar-w:264px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);font-family:'Noto Sans KR',sans-serif;font-size:15.5px;line-height:1.8}
+
+/* ---------- sidebar ---------- */
+nav{position:fixed;top:0;left:0;width:var(--sidebar-w);height:100vh;background:#fff;border-right:1px solid var(--rule);padding:28px 0;overflow-y:auto;z-index:10}
+nav .brand{padding:0 22px 18px;border-bottom:2px solid var(--ink);margin-bottom:14px}
+nav .brand .t1{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;color:var(--indigo)}
+nav .brand .t2{font-family:'Noto Serif KR',serif;font-weight:900;font-size:17px;margin-top:4px;line-height:1.4}
+nav a{display:block;padding:7px 22px;color:var(--ink);text-decoration:none;font-size:13.5px;border-left:3px solid transparent}
+nav a:hover{background:var(--code-bg)}
+nav a.on{border-left-color:var(--ochre);background:var(--code-bg);font-weight:700}
+nav a .no{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ochre);margin-right:7px}
+nav .navgroup{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.12em;color:#8A94A3;padding:16px 22px 5px}
+#menuBtn{display:none;position:fixed;top:14px;left:14px;z-index:20;background:var(--ink);color:#fff;border:none;padding:8px 14px;font-family:'IBM Plex Mono',monospace;font-size:13px;cursor:pointer}
+
+/* ---------- main ---------- */
+main{margin-left:var(--sidebar-w);max-width:860px;padding:56px 40px 120px}
+header.hero{border-bottom:3px solid var(--ink);padding-bottom:30px;margin-bottom:54px}
+.eyebrow{font-family:'IBM Plex Mono',monospace;font-size:13px;letter-spacing:.12em;color:var(--indigo);margin-bottom:14px}
+h1{font-family:'Noto Serif KR',serif;font-weight:900;font-size:clamp(28px,4.5vw,40px);line-height:1.35}
+h1 .formula{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:.55em;color:var(--ochre);display:block;margin-top:12px;letter-spacing:.04em}
+.frame{margin-top:18px;font-size:15px;color:#4A5768;max-width:660px}
+
+section{margin-bottom:80px;scroll-margin-top:24px}
+.sec-head{display:flex;align-items:baseline;gap:14px;border-bottom:1px solid var(--rule);padding-bottom:10px;margin-bottom:24px}
+.sec-mark{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:20px;color:var(--ochre);min-width:44px}
+.sec-head h2{font-family:'Noto Serif KR',serif;font-weight:900;font-size:23px}
+.sec-head .sub{font-size:12.5px;color:#6B7686;margin-left:auto;font-family:'IBM Plex Mono',monospace;text-align:right}
+h3{font-family:'Noto Serif KR',serif;font-weight:900;font-size:17px;margin:30px 0 12px;padding-left:12px;border-left:4px solid var(--indigo)}
+
+p{margin-bottom:13px}
+ul,ol{padding-left:24px;margin-bottom:16px}
+li{margin-bottom:7px}
+li ul{margin:7px 0 0 0}
+strong{color:var(--indigo)}
+
+.duo{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--rule);margin:18px 0}
+.duo>div{padding:15px 18px}
+.duo>div:first-child{border-right:1px solid var(--rule);background:#fff}
+.duo .label{font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.1em;color:var(--indigo);display:block;margin-bottom:8px}
+.logic{font-family:'Noto Serif KR',serif;font-size:14.5px;line-height:2}
+.logic .sym{font-family:'IBM Plex Mono',monospace;color:var(--ochre)}
+
+pre{background:var(--code-bg);border-left:3px solid var(--indigo);padding:13px 16px;overflow-x:auto;font-family:'IBM Plex Mono',monospace;font-size:13px;line-height:1.75;margin:13px 0}
+code{font-family:'IBM Plex Mono',monospace;font-size:.92em;background:var(--code-bg);padding:1px 5px}
+pre code{background:none;padding:0}
+.cm{color:#7A8494}
+.out{color:var(--indigo);font-weight:600}
+
+.predict-box{border:2px solid var(--predict);padding:15px 18px;margin:20px 0}
+.predict-box .tag{font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.1em;color:var(--predict);display:block;margin-bottom:8px}
+.predict-box p{margin-bottom:6px}
+.predict-box ul,.predict-box ol{margin-bottom:6px}
+
+.media-box{border:1px solid var(--rule);border-top:3px solid var(--ochre);background:#fff;padding:15px 18px;margin:20px 0}
+.media-box .tag{font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.1em;color:var(--ochre);display:block;margin-bottom:8px}
+
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:13.5px}
+th,td{border:1px solid var(--rule);padding:7px 11px;text-align:center}
+th{background:#fff;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600}
+td.f{color:var(--predict)}
+td.t{color:var(--indigo);font-weight:700}
+td.l{text-align:left}
+
+.parsons{padding-left:0;margin:12px 0}
+.parsons li{font-family:'IBM Plex Mono',monospace;font-size:13px;background:#fff;border:1px solid var(--rule);padding:6px 12px;list-style:none;margin-bottom:6px}
+
+.note{font-size:13px;color:#6B7686;border-top:1px dashed var(--rule);padding-top:10px;margin-top:18px}
+details{margin:10px 0 18px;border:1px solid var(--rule);background:#fff}
+details summary{cursor:pointer;padding:9px 14px;font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--indigo)}
+details .ans{padding:4px 16px 14px;font-size:14px}
+
+footer{border-top:3px solid var(--ink);padding-top:20px;font-size:13px;color:#6B7686}
+
+@media(max-width:900px){
+  nav{transform:translateX(-100%);transition:transform .25s}
+  nav.open{transform:none;box-shadow:4px 0 24px rgba(0,0,0,.15)}
+  #menuBtn{display:block}
+  main{margin-left:0;padding:70px 20px 100px}
+  .duo{grid-template-columns:1fr}
+  .duo>div:first-child{border-right:none;border-bottom:1px solid var(--rule)}
+}
+</style>
+</head>
+<body>
+
+<button id="menuBtn">☰ 목차</button>
+
+<nav id="nav">
+  <div class="brand">
+    <div class="t1">KYUNG HEE · MEDIA</div>
+    <div class="t2">코딩과<br>논리적 사고</div>
+  </div>
+  <div class="navgroup">준비</div>
+  <a href="#s0"><span class="no">00</span>왜 코딩이 논리 훈련인가</a>
+  <div class="navgroup">기초: 명제 만들기</div>
+  <a href="#s1"><span class="no">01</span>변수 — 이름 붙이기의 논리</a>
+  <a href="#s2"><span class="no">02</span>자료형 — 세계를 범주로 나누기</a>
+  <a href="#s3"><span class="no">03</span>연산자 — 판단의 문법</a>
+  <div class="navgroup">추론: 논증 만들기</div>
+  <a href="#s4"><span class="no">04</span>조건문 — 연역 추론</a>
+  <a href="#s5"><span class="no">05</span>반복문 — 귀납과 일반화</a>
+  <a href="#s6"><span class="no">06</span>자료구조 — 집합과 양화</a>
+  <div class="navgroup">구성: 체계 만들기</div>
+  <a href="#s7"><span class="no">07</span>문자열 — 미디어 텍스트 다루기</a>
+  <a href="#s8"><span class="no">08</span>함수 — 정의와 추상화</a>
+  <a href="#s9"><span class="no">09</span>오류와 디버깅 — 반증의 기술</a>
+  <div class="navgroup">종합</div>
+  <a href="#s10"><span class="no">10</span>파일과 모듈 — 지식의 축적</a>
+  <a href="#s11"><span class="no">11</span>AI에게 명세하기 — 프롬프트 논리</a>
+  <a href="#s12"><span class="no">12</span>종합 프로젝트</a>
+</nav>
+
+<main>
+
+<header class="hero">
+  <div class="eyebrow">미디어학과 1학년 · 강의자료 전체본</div>
+  <h1>파이썬으로 배우는 논증의 기술
+    <span class="formula">code = 실행 가능한 논리(executable logic)</span>
+  </h1>
+  <p class="frame">이 수업은 프로그래밍 문법 암기 수업이 아니다. 우리가 배우는 것은 <strong>생각을 기계가 검증할 수 있을 만큼 정확하게 쓰는 기술</strong>이다. 모든 장은 네 단계로 진행한다: <strong>예측(P?)</strong> → <strong>실행(⊢)</strong> → <strong>설명(∴)</strong> → <strong>변형(∀)</strong>.</p>
+</header>
+
+<!-- ============ 00 ============ -->
+<section id="s0">
+  <div class="sec-head">
+    <span class="sec-mark">00</span>
+    <h2>왜 코딩이 논리 훈련인가</h2>
+    <span class="sub">orientation</span>
+  </div>
+
+  <h3>핵심 주장</h3>
+  <ul>
+    <li>코드는 <strong>컴퓨터에게 보내는 논증문</strong>임
+      <ul>
+        <li>전제(입력)와 규칙(코드)이 있으면 결론(출력)이 필연적으로 따라 나옴</li>
+        <li>논리학의 "타당한 추론"과 구조가 동일함</li>
+      </ul>
+    </li>
+    <li>사람은 애매한 말을 눈치로 이해하지만, 컴퓨터는 <strong>애매함을 허용하지 않음</strong>
+      <ul>
+        <li>따라서 코딩은 "애매하게 생각하던 것을 정확하게 만드는 훈련"이 됨</li>
+        <li>글쓰기 훈련이 생각을 명료하게 하듯, 코딩은 추론을 명료하게 함</li>
+      </ul>
+    </li>
+    <li>미디어학과 학생에게 필요한 이유
+      <ul>
+        <li>뉴스·광고·알고리즘은 모두 "숨은 조건문"으로 작동함 (추천 알고리즘 = 거대한 if문 덩어리)</li>
+        <li>논증 오류를 탐지하는 능력 = 가짜뉴스·과장광고를 해부하는 능력</li>
+        <li>AI 시대의 핵심 역량은 코드 암기가 아니라 <strong>AI에게 논리적으로 명세하는 능력</strong>임</li>
+      </ul>
+    </li>
+  </ul>
+
+  <h3>수업의 4단계 리듬</h3>
+  <ul>
+    <li><strong>예측(P?)</strong> — 코드를 실행하기 전에 결과를 종이에 적음. 연역 훈련</li>
+    <li><strong>실행(⊢)</strong> — 컴퓨터로 검증. 예측이 틀리면 "내 추론 어디가 틀렸나" 진단</li>
+    <li><strong>설명(∴)</strong> — 코드를 자연어 논증으로 번역. 언어화 훈련</li>
+    <li><strong>변형(∀)</strong> — 규칙을 바꾸거나 일반화. 새로운 상황에 적용</li>
+  </ul>
+
+  <div class="media-box">
+    <span class="tag">미디어 렌즈</span>
+    <p>유튜브 추천 화면을 떠올려 보자. "이 영상을 본 사람에게는 저 영상을 보여준다"는 규칙이 무수히 쌓인 결과다. 이번 학기가 끝나면 여러분은 그 규칙을 <strong>읽고, 의심하고, 직접 쓸 수 있는 사람</strong>이 된다.</p>
+  </div>
+</section>
+
+<!-- ============ 01 ============ -->
+<section id="s1">
+  <div class="sec-head">
+    <span class="sec-mark">01</span>
+    <h2>변수 — 이름 붙이기의 논리</h2>
+    <span class="sub">variable · 지시(reference)</span>
+  </div>
+
+  <h3>개념</h3>
+  <ul>
+    <li>변수 = 값에 붙이는 <strong>이름표</strong>
+      <ul>
+        <li>논리학·언어학의 "지시(reference)"와 같은 기능임: 이름이 대상을 가리킴</li>
+        <li><code>=</code>는 "같다"가 아니라 <strong>"오른쪽 값을 왼쪽 이름에 붙여라"는 명령</strong>임</li>
+      </ul>
+    </li>
+    <li>좋은 변수명 = 좋은 개념 정의
+      <ul>
+        <li><code>a = 15000</code>보다 <code>subscriber_count = 15000</code>이 나음</li>
+        <li>이름만 보고 무엇을 가리키는지 알 수 있어야 함 — 논증에서 용어 정의가 중요한 것과 동일함</li>
+      </ul>
+    </li>
+  </ul>
+
+  <div class="duo">
+    <div>
+      <span class="label">논리 언어</span>
+      <p class="logic">"구독자 수를 <span class="sym">S</span>라 하자.<br><span class="sym">S</span> = 15000"<br><br>수학 증명의 "~라 하자(let)"와<br>완전히 같은 행위임</p>
+    </div>
+    <div>
+      <span class="label">파이썬</span>
+<pre><code>subscriber_count = 15000
+channel_name = "미디어연구소"
+print(channel_name, subscriber_count)</code></pre>
+    </div>
+  </div>
+
+  <h3>변수는 다시 붙일 수 있다</h3>
+  <ul>
+    <li>같은 이름에 새 값을 붙이면 <strong>이전 값은 잊혀짐</strong></li>
+    <li>순서가 의미를 결정함 — 논증에서 전제의 순서가 중요한 것과 같음</li>
+  </ul>
+
+  <div class="predict-box">
+    <span class="tag">예측 과제 P? — 실행 금지</span>
+    <p>출력값을 먼저 종이에 적으시오. 근거도 한 문장으로.</p>
+<pre><code>views = 100
+views = views + 50
+views = views * 2
+print(views)</code></pre>
+    <details><summary>해설 보기</summary>
+      <div class="ans">300. 둘째 줄에서 views는 150이 되고(이전 값 100은 사라짐), 셋째 줄에서 150×2=300. 핵심: <code>=</code>의 오른쪽을 먼저 계산한 뒤 왼쪽 이름에 붙인다는 <strong>순서 규칙</strong>.</div>
+    </details>
+  </div>
+</section>
+
+<!-- ============ 02 ============ -->
+<section id="s2">
+  <div class="sec-head">
+    <span class="sec-mark">02</span>
+    <h2>자료형 — 세계를 범주로 나누기</h2>
+    <span class="sub">data type · 범주(category)</span>
+  </div>
+
+  <h3>개념</h3>
+  <ul>
+    <li>자료형 = 값이 속하는 <strong>범주(category)</strong>
+      <ul>
+        <li>아리스토텔레스 이후 논리학의 출발은 "이것은 어떤 종류의 것인가"라는 분류였음</li>
+        <li>파이썬도 모든 값을 범주로 나눠서 다룸</li>
+      </ul>
+    </li>
+    <li>기초 4범주
+      <ul>
+        <li><code>int</code> 정수 — 구독자 수, 조회수: <code>15000</code></li>
+        <li><code>float</code> 실수 — 시청률, 평점: <code>4.8</code></li>
+        <li><code>str</code> 문자열 — 기사 제목, 댓글: <code>"속보입니다"</code></li>
+        <li><code>bool</code> 진리값 — 참/거짓: <code>True</code>, <code>False</code> ← <strong>논리학이 코드에 들어오는 문</strong></li>
+      </ul>
+    </li>
+    <li>범주가 다르면 연산의 의미가 달라짐
+      <ul>
+        <li><code>3 + 5</code> → <code>8</code> (덧셈)</li>
+        <li><code>"3" + "5"</code> → <code>"35"</code> (이어붙이기)</li>
+        <li>같은 <code>+</code>라도 범주에 따라 규칙이 다름 — <strong>"범주 오류(category mistake)"</strong>가 왜 문제인지 몸으로 배우게 됨</li>
+      </ul>
+    </li>
+  </ul>
+
+  <div class="duo">
+    <div>
+      <span class="label">논리 언어</span>
+      <p class="logic">범주 오류의 고전 예:<br>"초록색 아이디어가 맹렬히 잔다"<br>— 문법은 맞지만 범주가 어긋난 문장<br><br>파이썬: <code>"3" + 5</code><br>— 문법은 맞지만 범주가 어긋난 코드 → 오류 발생</p>
+    </div>
+    <div>
+      <span class="label">파이썬</span>
+<pre><code>print(type(15000))    <span class="cm"># &lt;class 'int'&gt;</span>
+print(type("속보"))   <span class="cm"># &lt;class 'str'&gt;</span>
+print(type(True))     <span class="cm"># &lt;class 'bool'&gt;</span>
+
+<span class="cm"># 범주 변환(형변환) = 재분류</span>
+views = int("15000")
+print(views + 1)      <span class="out"># 15001</span></code></pre>
+    </div>
+  </div>
+
+  <div class="predict-box">
+    <span class="tag">예측 과제 P?</span>
+    <p>각 줄의 출력 또는 오류 여부를 적으시오.</p>
+<pre><code>print("100" + "200")
+print(100 + 200)
+print("100" + 200)</code></pre>
+    <details><summary>해설 보기</summary>
+      <div class="ans">"100200" → 300 → 오류(TypeError). 셋째 줄이 오류인 이유: str과 int는 서로 다른 범주라 <code>+</code>의 규칙을 정할 수 없음. 컴퓨터는 범주 오류를 절대 눈감아 주지 않는다.</div>
+    </details>
+  </div>
+
+  <div class="media-box">
+    <span class="tag">미디어 렌즈</span>
+    <p>설문조사 데이터에서 "나이" 칸에 "스무살"이라고 적힌 응답을 본 적이 있는가. 데이터 분석의 절반은 이런 <strong>범주 정리(형변환)</strong>다. 여론조사 기사 뒤에는 언제나 이 지루하고 중요한 작업이 숨어 있다.</p>
+  </div>
+</section>
+
+<!-- ============ 03 ============ -->
+<section id="s3">
+  <div class="sec-head">
+    <span class="sec-mark">03</span>
+    <h2>연산자 — 판단의 문법</h2>
+    <span class="sub">operator · 진리표(truth table)</span>
+  </div>
+
+  <h3>비교 연산자: 명제를 만드는 기계</h3>
+  <ul>
+    <li>비교 연산자는 <strong>참/거짓으로 판정 가능한 문장(명제)</strong>을 만듦
+      <ul>
+        <li><code>views > 1000</code> → "조회수가 1000을 넘는다"라는 명제 → <code>True</code> 또는 <code>False</code></li>
+        <li>종류: <code>&gt;</code> <code>&lt;</code> <code>&gt;=</code> <code>&lt;=</code> <code>==</code>(같다) <code>!=</code>(다르다)</li>
+        <li>주의: <code>=</code>는 이름 붙이기, <code>==</code>는 같은지 판정 — <strong>행위와 판단의 구분</strong></li>
+      </ul>
+    </li>
+  </ul>
+
+  <h3>논리 연산자: 명제를 결합하는 접속사</h3>
+  <ul>
+    <li>논리학의 세 연산이 파이썬에 그대로 존재함
+      <ul>
+        <li>연접(그리고) <span style="font-family:'IBM Plex Mono',monospace;color:var(--ochre)">P ∧ Q</span> → <code>and</code></li>
+        <li>이접(또는) <span style="font-family:'IBM Plex Mono',monospace;color:var(--ochre)">P ∨ Q</span> → <code>or</code></li>
+        <li>부정(아니다) <span style="font-family:'IBM Plex Mono',monospace;color:var(--ochre)">¬P</span> → <code>not</code></li>
+      </ul>
+    </li>
+    <li>진리표는 외우지 않고 <strong>코드로 생성함</strong></li>
+  </ul>
+
+<pre><code>for P in [True, False]:
+    for Q in [True, False]:
+        print(P, Q, P and Q, P or Q)</code></pre>
+
+  <table>
+    <tr><th>P</th><th>Q</th><th>P and Q</th><th>P or Q</th></tr>
+    <tr><td class="t">T</td><td class="t">T</td><td class="t">T</td><td class="t">T</td></tr>
+    <tr><td class="t">T</td><td class="f">F</td><td class="f">F</td><td class="t">T</td></tr>
+    <tr><td class="f">F</td><td class="t">T</td><td class="f">F</td><td class="t">T</td></tr>
+    <tr><td class="f">F</td><td class="f">F</td><td class="f">F</td><td class="f">F</td></tr>
+  </table>
+
+  <h3>일상어 "또는"과 논리 or의 차이</h3>
+  <ul>
+    <li>일상어: "짜장 또는 짬뽕" — 보통 둘 중 하나만(배타적)</li>
+    <li>파이썬 <code>or</code>: 둘 다 참이어도 참(포괄적)</li>
+    <li>이 차이를 아는 것이 <strong>약관·법조문·기사 문장을 정확히 읽는 힘</strong>이 됨</li>
+  </ul>
+
+  <div class="predict-box">
+    <span class="tag">예측 과제 P?</span>
+<pre><code>age = 21
+is_student = True
+print(age >= 19 and not is_student)
+print(age >= 19 or age < 10)</code></pre>
+    <details><summary>해설 보기</summary>
+      <div class="ans">False → True. 첫 줄: True and (not True) = True and False = False. 둘째 줄: True or False = True. or는 하나만 참이어도 참.</div>
+    </details>
+  </div>
+
+  <div class="media-box">
+    <span class="tag">미디어 렌즈</span>
+    <p>"만 19세 이상이거나 보호자 동의가 있는 경우 가입 가능" — 회원가입 약관은 논리식이다. <code>age >= 19 or parental_consent</code>. 약관을 코드로 옮겨 보면 애매한 조항이 즉시 드러난다.</p>
+  </div>
+</section>
+
+<!-- ============ 04 ============ -->
+<section id="s4">
+  <div class="sec-head">
+    <span class="sec-mark">04</span>
+    <h2>조건문 — 연역 추론</h2>
+    <span class="sub">if · P → Q</span>
+  </div>
+
+  <h3>개념</h3>
+  <ul>
+    <li><code>if P: Q</code>는 조건문 <span style="font-family:'IBM Plex Mono',monospace;color:var(--ochre)">P → Q</span>의 실행 버전임
+      <ul>
+        <li>P가 참이면 Q를 실행함 — <strong>전건긍정(modus ponens)</strong>이 그대로 코드가 됨</li>
+        <li>들여쓰기(스페이스 4칸)가 "결론의 범위"를 표시함 — 논증의 구조가 눈에 보이는 형태로 강제됨</li>
+      </ul>
+    </li>
+    <li>세 가지 형태
+      <ul>
+        <li><code>if</code> — 조건이 참일 때만</li>
+        <li><code>if / else</code> — 참이면 A, 거짓이면 B (배중률: 참 아니면 거짓, 제3의 길은 없음)</li>
+        <li><code>if / elif / else</code> — 여러 경우를 위에서부터 차례로 검사 (배타적 선택)</li>
+      </ul>
+    </li>
+  </ul>
+
+  <div class="duo">
+    <div>
+      <span class="label">논리 언어</span>
+      <p class="logic">전제 1: 조회수가 10만을 넘으면(<span class="sym">P</span>)<br>&nbsp;&nbsp;&nbsp;&nbsp;인기 영상이다(<span class="sym">Q</span>)<br>전제 2: 조회수는 15만 → <span class="sym">P</span> 참<br>결론: <span class="sym">∴ Q</span> (전건긍정)</p>
+    </div>
+    <div>
+      <span class="label">파이썬</span>
+<pre><code>views = 150000
+if views > 100000:
+    print("인기 영상")
+else:
+    print("일반 영상")</code></pre>
+    </div>
+  </div>
+
+  <h3>elif와 독립 if — 가장 많이 틀리는 지점</h3>
+  <ul>
+    <li><code>elif</code>는 <strong>배타적 선택</strong>: 위 조건이 참이면 아래는 검사조차 하지 않음</li>
+    <li>독립된 <code>if</code>는 <strong>독립 명제</strong>: 각각 따로 검사함</li>
+    <li>이 구분은 논리학의 "배타적 이접 vs 독립 명제" 구분과 정확히 대응함</li>
+  </ul>
+
+  <div class="predict-box">
+    <span class="tag">예측 과제 P? — 이 문제로 짝과 토론</span>
+<pre><code>score = 85
+if score >= 90:
+    print("A")
+elif score >= 80:
+    print("B")
+if score >= 60:
+    print("합격")</code></pre>
+    <details><summary>해설 보기</summary>
+      <div class="ans">"B"와 "합격" 둘 다 출력. elif 블록은 A/B 중 하나만 고르는 배타 구조지만, 마지막 if는 독립된 새 판단. "B만 나온다"고 답했다면 두 if의 논리적 관계를 오인한 것 — 이 오인을 스스로 언어화하면 이 장의 목표 달성.</div>
+    </details>
+  </div>
+
+  <h3>논리적 오류를 코드로 폭로하기</h3>
+  <div class="duo">
+    <div>
+      <span class="label">일상 논증 (후건긍정의 오류)</span>
+      <p class="logic">"조회수가 높으면 좋은 기사다.<br>이 기사는 좋은 기사다.<br>∴ 조회수가 높을 것이다."<br><span class="sym">P → Q, Q ⊬ P</span> — 타당하지 않음</p>
+    </div>
+    <div>
+      <span class="label">코드로 반례 찾기</span>
+<pre><code>articles = [
+  {"views": 300, "quality": "높음"},
+  {"views": 90000, "quality": "높음"},
+]
+for a in articles:
+    if a["quality"] == "높음" and a["views"] < 1000:
+        print("반례:", a)</code></pre>
+    </div>
+  </div>
+  <p class="note">과제: 최근 본 광고·뉴스·썸네일에서 조건 추론 오류(후건긍정, 전건부정 등)를 하나 찾아 반례 코드를 작성할 것.</p>
+</section>
+
+<!-- ============ 05 ============ -->
+<section id="s5">
+  <div class="sec-head">
+    <span class="sec-mark">05</span>
+    <h2>반복문 — 귀납과 일반화</h2>
+    <span class="sub">for · while · induction</span>
+  </div>
+
+  <h3>개념</h3>
+  <ul>
+    <li>반복문 = <strong>"모든 사례에 같은 규칙을 적용한다"</strong>는 선언
+      <ul>
+        <li>논리학의 보편 양화(<span style="font-family:'IBM Plex Mono',monospace;color:var(--ochre)">∀x</span>: 모든 x에 대하여)가 코드가 된 것임</li>
+        <li>귀납적 사고와 연결됨: 개별 사례를 하나씩 검토해 전체 결론을 도출</li>
+      </ul>
+    </li>
+    <li>두 가지 형태
+      <ul>
+        <li><code>for</code> — <strong>정해진 집합의 원소를 하나씩</strong>: "이 기사 목록의 모든 기사에 대하여"</li>
+        <li><code>while</code> — <strong>조건이 참인 동안 계속</strong>: "구독자가 1만 명이 될 때까지"</li>
+      </ul>
+    </li>
+  </ul>
+
+  <div class="duo">
+    <div>
+      <span class="label">논리 언어</span>
+      <p class="logic"><span class="sym">∀x ∈ 기사목록:</span><br>x의 제목을 출력하라<br><br>"모든"이라는 말이<br>기계적으로 보장됨 — 사람과 달리<br>하나도 빠뜨리지 않음</p>
+    </div>
+    <div>
+      <span class="label">파이썬</span>
+<pre><code>titles = ["AI 규제 논쟁", "총선 여론조사", "OTT 요금 인상"]
+for t in titles:
+    print(t, len(t))</code></pre>
+    </div>
+  </div>
+
+  <h3>누적 패턴: 개별 사례에서 전체 통계로</h3>
+  <ul>
+    <li>귀납 추론의 코드 버전: 사례를 하나씩 보며 <strong>증거를 누적</strong>함</li>
+    <li>패턴: ① 빈 그릇 준비 → ② 반복하며 채움 → ③ 결론 도출</li>
+  </ul>
+
+<pre><code>view_list = [1200, 85000, 430, 150000, 9800]
+total = 0                      <span class="cm"># ① 빈 그릇</span>
+for v in view_list:
+    total = total + v          <span class="cm"># ② 증거 누적</span>
+print("평균:", total / len(view_list))   <span class="cm"># ③ 결론</span></code></pre>
+
+  <h3>while과 멈춤 조건</h3>
+  <ul>
+    <li><code>while</code>은 <strong>멈춤 조건을 명확히 정의하지 않으면 무한히 돎</strong>
+      <ul>
+        <li>"언제까지?"를 정확히 말하지 못하면 컴퓨터가 즉시 그 허점을 드러냄</li>
+        <li>무한 루프는 버그가 아니라 <strong>불완전한 명세의 증거</strong>임</li>
+      </ul>
+    </li>
+  </ul>
+
+  <div class="predict-box">
+    <span class="tag">예측 과제 P?</span>
+<pre><code>subscribers = 100
+weeks = 0
+while subscribers < 800:
+    subscribers = subscribers * 2
+    weeks = weeks + 1
+print(weeks, subscribers)</code></pre>
+    <details><summary>해설 보기</summary>
+      <div class="ans">3 1600. 100→200(1주)→400(2주)→800(3주)... 잠깐, 800 &lt; 800은 거짓이므로 멈춤? 아니다. 3주차에 800이 되는 순간 조건 검사로 돌아가 800 &lt; 800 = False로 종료. 따라서 3 800. — 이렇게 손으로 한 단계씩 추적(trace)하는 훈련이 반복문 논리의 전부다. 정답: 3 800.</div>
+    </details>
+  </div>
+
+  <div class="media-box">
+    <span class="tag">미디어 렌즈</span>
+    <p>"댓글 10만 개를 전수 분석했다"는 기사 문장의 실체가 바로 for문이다. 사람은 10만 개를 못 읽지만 반복문은 읽는다. <strong>계산 저널리즘(computational journalism)의 출발점</strong>이 이 장이다.</p>
+  </div>
+</section>
+
+<!-- ============ 06 ============ -->
+<section id="s6">
+  <div class="sec-head">
+    <span class="sec-mark">06</span>
+    <h2>자료구조 — 집합과 양화</h2>
+    <span class="sub">list · dict · set · tuple</span>
+  </div>
+
+  <h3>개념: 낱개가 아니라 묶음으로 사고하기</h3>
+  <ul>
+    <li>자료구조 = 여러 값을 <strong>하나의 논리적 단위로 묶는 방법</strong></li>
+    <li>네 가지 묶음, 네 가지 논리
+      <ul>
+        <li><code>list</code> 리스트 — <strong>순서 있는 목록</strong>: 기사 발행 순서, 재생목록. 수정 가능</li>
+        <li><code>dict</code> 딕셔너리 — <strong>이름표가 달린 묶음</strong>: 한 기사의 {제목, 조회수, 날짜}. "속성-값" 구조</li>
+        <li><code>set</code> 집합 — <strong>중복 없는 모임</strong>: 수학의 집합 그 자체. 교집합·합집합 연산 가능</li>
+        <li><code>tuple</code> 튜플 — <strong>수정 불가능한 목록</strong>: 좌표, 확정된 기록</li>
+      </ul>
+    </li>
+  </ul>
+
+<pre><code><span class="cm"># 한 기사 = 딕셔너리(속성-값), 기사들 = 리스트(순서 있는 모음)</span>
+articles = [
+    {"title": "AI 규제 논쟁", "views": 85000, "section": "IT"},
+    {"title": "총선 여론조사", "views": 150000, "section": "정치"},
+    {"title": "OTT 요금 인상", "views": 9800, "section": "IT"},
+]
+print(articles[0]["title"])        <span class="out"># AI 규제 논쟁</span>
+print(len(articles))               <span class="out"># 3</span></code></pre>
+
+  <h3>양화사: "모든"과 "어떤"을 코드로</h3>
+  <ul>
+    <li>논리학의 두 양화사가 파이썬 내장 함수로 존재함
+      <ul>
+        <li>보편 양화 <span style="font-family:'IBM Plex Mono',monospace;color:var(--ochre)">∀</span> "모든 기사가 ~이다" → <code>all()</code></li>
+        <li>존재 양화 <span style="font-family:'IBM Plex Mono',monospace;color:var(--ochre)">∃</span> "어떤 기사는 ~이다" → <code>any()</code></li>
+      </ul>
+    </li>
+  </ul>
+
+  <div class="duo">
+    <div>
+      <span class="label">논리 언어</span>
+      <p class="logic"><span class="sym">∀a:</span> a의 조회수 > 1000 인가?<br><span class="sym">∃a:</span> a의 섹션 = "정치" 인가?<br><br>"모든"의 부정은 "모두 아님"이 아니라<br>"<strong>하나라도 아닌 것이 있음</strong>"<br><span class="sym">¬∀ ≡ ∃¬</span></p>
+    </div>
+    <div>
+      <span class="label">파이썬</span>
+<pre><code>print(all(a["views"] > 1000 for a in articles))
+<span class="out"># False (9800짜리가 있어도 True... 인가?)</span>
+print(any(a["section"] == "정치" for a in articles))
+<span class="out"># True</span></code></pre>
+    </div>
+  </div>
+
+  <div class="predict-box">
+    <span class="tag">예측 과제 P?</span>
+    <p>위 duo의 첫 출력에 대한 주석은 일부러 틀리게 적어 두었다. <code>all(a["views"] > 1000 ...)</code>의 진짜 출력과 이유를 쓰시오.</p>
+    <details><summary>해설 보기</summary>
+      <div class="ans">True. 9800 > 1000이므로 세 기사 모두 조건을 만족. "9800은 작아 보이니 False"라고 직관적으로 답했다면, 인상(느낌)과 판정(명제)의 차이를 경험한 것 — 이 차이를 구분하는 것이 논리 훈련의 핵심.</div>
+    </details>
+  </div>
+
+  <h3>집합 연산: 겹침과 차이를 정확히 말하기</h3>
+<pre><code>press_A = {"AI", "총선", "부동산", "OTT"}
+press_B = {"AI", "총선", "환율"}
+print(press_A & press_B)   <span class="out"># 교집합: 둘 다 다룬 주제</span>
+print(press_A - press_B)   <span class="out"># 차집합: A만 다룬 주제</span>
+print(press_A | press_B)   <span class="out"># 합집합: 전체 의제</span></code></pre>
+
+  <div class="media-box">
+    <span class="tag">미디어 렌즈</span>
+    <p>두 신문이 같은 날 다룬 주제의 교집합·차집합을 구하는 것 — 이것이 <strong>의제설정(agenda-setting) 연구의 가장 원초적 형태</strong>다. 집합 연산 세 줄이 언론학 이론과 만난다.</p>
+  </div>
+</section>
+
+<!-- ============ 07 ============ -->
+<section id="s7">
+  <div class="sec-head">
+    <span class="sec-mark">07</span>
+    <h2>문자열 — 미디어 텍스트 다루기</h2>
+    <span class="sub">string · 텍스트 분석 입문</span>
+  </div>
+
+  <h3>개념</h3>
+  <ul>
+    <li>미디어학에서 데이터의 대부분은 <strong>텍스트</strong>임: 기사, 댓글, 자막, 해시태그</li>
+    <li>문자열은 "글자들의 순서 있는 목록"으로 취급됨 — 리스트에서 배운 논리가 그대로 적용됨</li>
+  </ul>
+
+  <h3>핵심 도구 5가지</h3>
+  <ul>
+    <li><code>in</code> — <strong>포함 판정(명제 생성)</strong>: <code>"속보" in title</code> → True/False</li>
+    <li><code>.split()</code> — 문장을 단어 목록으로 분해: 분석의 첫걸음</li>
+    <li><code>.replace()</code> — 바꾸기: 정제(cleaning)의 기본</li>
+    <li><code>.lower()</code> / <code>.strip()</code> — 소문자화 / 공백 제거: 같은 것을 같게 만들기</li>
+    <li><code>.count()</code> — 등장 횟수 세기: 빈도 분석의 시작</li>
+  </ul>
+
+<pre><code>headline = "[단독] 속보!! AI 규제법 국회 통과…업계 '충격'"
+
+print("속보" in headline)              <span class="out"># True</span>
+print(headline.count("!"))             <span class="out"># 2</span>
+
+<span class="cm"># 낚시성 지표 만들기: [단독], 속보, 충격, 느낌표</span>
+clickbait_words = ["단독", "속보", "충격"]
+score = sum(w in headline for w in clickbait_words)
+print("낚시 지수:", score)             <span class="out"># 3</span></code></pre>
+
+  <div class="predict-box">
+    <span class="tag">예측 과제 P?</span>
+<pre><code>text = "미디어 미디어학 미디어학과"
+print(text.count("미디어"))
+print(len(text.split()))</code></pre>
+    <details><summary>해설 보기</summary>
+      <div class="ans">3 → 3. count는 겹치는 부분 문자열도 각 단어 안에서 찾으므로 "미디어학", "미디어학과" 안의 "미디어"도 셈. split은 공백 기준 3개 단어. — "단어를 센다"는 말의 애매함(부분 문자열인가, 단어인가)이 코드에서는 반드시 결정돼야 함을 보여주는 예.</div>
+    </details>
+  </div>
+
+  <div class="media-box">
+    <span class="tag">미디어 렌즈 · 미니 실습</span>
+    <p>오늘자 포털 헤드라인 10개를 복사해 리스트에 넣고 낚시 지수를 계산해 보자. "낚시성"이라는 <strong>인상적 개념을 판정 가능한 지표로 조작화(operationalization)</strong>하는 것 — 사회과학 방법론의 핵심을 코드 다섯 줄로 체험한다.</p>
+  </div>
+</section>
+
+<!-- ============ 08 ============ -->
+<section id="s8">
+  <div class="sec-head">
+    <span class="sec-mark">08</span>
+    <h2>함수 — 정의와 추상화</h2>
+    <span class="sub">def · definition</span>
+  </div>
+
+  <h3>개념</h3>
+  <ul>
+    <li>함수 = <strong>추론 규칙에 이름을 붙여 재사용하는 것</strong>
+      <ul>
+        <li><code>def</code>는 definition(정의)의 줄임말 — 말 그대로 <strong>개념을 정의하는 행위</strong>임</li>
+        <li>논리학·수학에서 "f(x)를 ~로 정의한다"와 동일한 구조</li>
+      </ul>
+    </li>
+    <li>구조: 입력(전제) → 처리(추론) → <code>return</code>(결론)
+      <ul>
+        <li>좋은 함수는 좋은 논증과 같음: 전제가 분명하고, 결론이 하나이고, 이름이 내용을 말해 줌</li>
+      </ul>
+    </li>
+    <li>추상화의 힘
+      <ul>
+        <li>한 번 정의하면 내부를 잊고 이름만으로 사용 가능함</li>
+        <li>복잡한 문제를 "정의된 부품들의 조립"으로 바꿈 — <strong>문제 분해(decomposition)</strong></li>
+      </ul>
+    </li>
+  </ul>
+
+  <div class="duo">
+    <div>
+      <span class="label">논리 언어</span>
+      <p class="logic">정의: 임의의 헤드라인 <span class="sym">h</span>에 대해,<br>낚시지수(<span class="sym">h</span>) :=<br>&nbsp;&nbsp;낚시 단어의 출현 개수<br><br>정의했으므로 이제 어떤 <span class="sym">h</span>에도<br>일관되게 적용 가능함</p>
+    </div>
+    <div>
+      <span class="label">파이썬</span>
+<pre><code>def clickbait_score(headline):
+    words = ["단독", "속보", "충격", "경악"]
+    return sum(w in headline for w in words)
+
+print(clickbait_score("[단독] 충격 실태"))  <span class="out"># 2</span>
+print(clickbait_score("기준금리 동결"))      <span class="out"># 0</span></code></pre>
+    </div>
+  </div>
+
+  <h3>함수 합성: 논증의 연쇄</h3>
+  <ul>
+    <li>함수의 출력을 다른 함수의 입력으로 — <strong>결론이 다음 논증의 전제가 되는 연쇄 추론</strong></li>
+  </ul>
+
+<pre><code>def is_clickbait(headline):
+    return clickbait_score(headline) >= 2   <span class="cm"># 판정 기준: 2개 이상</span>
+
+headlines = ["[단독] 충격 실태", "기준금리 동결", "속보!! 경악 영상"]
+filtered = [h for h in headlines if not is_clickbait(h)]
+print(filtered)   <span class="out"># ['기준금리 동결']</span></code></pre>
+
+  <div class="predict-box">
+    <span class="tag">설명 과제 ∴ — Parsons 문제</span>
+    <p>다음 줄들을 논리적 순서로 배열해 "합격 판정 함수"를 완성하시오. 기준은 문법이 아니라 <strong>정의 → 판정 → 사용의 논리적 선후</strong>.</p>
+    <ul class="parsons">
+      <li>print(passed(85))</li>
+      <li>def passed(score):</li>
+      <li>&nbsp;&nbsp;&nbsp;&nbsp;return score >= 60</li>
+    </ul>
+    <details><summary>해설 보기</summary>
+      <div class="ans">def → return → print. 정의하지 않은 개념은 사용할 수 없다 — 글쓰기에서 "용어를 정의하기 전에 쓰지 말라"는 원칙과 동일.</div>
+    </details>
+  </div>
+</section>
+
+<!-- ============ 09 ============ -->
+<section id="s9">
+  <div class="sec-head">
+    <span class="sec-mark">09</span>
+    <h2>오류와 디버깅 — 반증의 기술</h2>
+    <span class="sub">error · debugging · falsification</span>
+  </div>
+
+  <h3>관점 전환: 오류는 실패가 아니라 정보다</h3>
+  <ul>
+    <li>오류 메시지 = 컴퓨터가 보내는 <strong>가장 정직한 피드백</strong>
+      <ul>
+        <li>사람은 애매한 글을 대충 칭찬하지만, 컴퓨터는 애매한 코드를 정확히 지적함</li>
+        <li>오류를 읽는 능력이 곧 실력임: 마지막 줄(오류 종류)부터 읽을 것</li>
+      </ul>
+    </li>
+    <li>오류의 두 층위
+      <ul>
+        <li><strong>문법 오류(SyntaxError 등)</strong> — 문장이 성립하지 않음. 컴퓨터가 즉시 알려 줌</li>
+        <li><strong>논리 오류(logic error)</strong> — 문장은 성립하지만 결론이 틀림. <strong>컴퓨터가 알려 주지 않음</strong> ← 이것이 진짜 훈련 대상</li>
+      </ul>
+    </li>
+  </ul>
+
+  <h3>디버깅 = 가설-연역적 방법</h3>
+  <ul>
+    <li>과학철학의 반증 절차를 그대로 사용함
+      <ul>
+        <li>① 관찰: 기대한 출력과 실제 출력의 차이를 정확히 기술</li>
+        <li>② 가설: "만약 X가 원인이라면"</li>
+        <li>③ 예측: "Y 지점에서 Z가 관찰될 것이다"</li>
+        <li>④ 검증: <code>print()</code>로 중간값 확인 → 가설 기각 또는 채택</li>
+      </ul>
+    </li>
+    <li>금지 행동: 아무 데나 고쳐 보고 되면 넘어가기 — <strong>가설 없는 수정은 훈련이 아님</strong></li>
+  </ul>
+
+  <div class="predict-box">
+    <span class="tag">진단 과제 — 논리 오류 찾기</span>
+    <p>이 코드는 오류 없이 실행되지만 결과가 틀리다. "평균 조회수 이상인 기사 수"를 세려 했다. 가설 → 예측 → 검증 순서로 원인을 진단하시오.</p>
+<pre><code>view_list = [1200, 85000, 430, 150000, 9800]
+count = 0
+for v in view_list:
+    avg = sum(view_list) / len(view_list)
+    if v > avg:
+        count = count + 1
+    print("평균 이상 기사 수:", count)</code></pre>
+    <details><summary>해설 보기</summary>
+      <div class="ans">두 가지 문제. ① print가 반복문 안에 들여쓰기되어 5번 출력됨(결론이 전제 검토 중에 반복 발표되는 꼴). ② avg 계산이 반복문 안에 있어 낭비(결과는 같지만 매번 재계산). 들여쓰기는 장식이 아니라 <strong>논증의 범위 표시</strong>임을 보여주는 사례. 진단문 예시: "만약 print의 들여쓰기가 원인이라면 출력이 5줄일 것이다 → 실행 결과 5줄 → 가설 채택."</div>
+    </details>
+  </div>
+
+  <div class="media-box">
+    <span class="tag">미디어 렌즈</span>
+    <p>팩트체크 저널리즘의 절차가 정확히 이것이다: 주장(코드) → 검증 가능한 예측 도출 → 증거 대조 → 판정. <strong>디버깅을 배우는 것은 팩트체크의 사고 절차를 배우는 것</strong>과 같다.</p>
+  </div>
+</section>
+
+<!-- ============ 10 ============ -->
+<section id="s10">
+  <div class="sec-head">
+    <span class="sec-mark">10</span>
+    <h2>파일과 모듈 — 지식의 축적</h2>
+    <span class="sub">file I/O · import</span>
+  </div>
+
+  <h3>파일 읽고 쓰기</h3>
+  <ul>
+    <li>지금까지의 코드는 실행이 끝나면 사라짐 — 파일은 <strong>결론을 기록으로 남기는 것</strong></li>
+    <li>기본 패턴: 열기 → 읽기/쓰기 → 닫기 (<code>with</code>가 닫기를 자동으로 보장)</li>
+  </ul>
+
+<pre><code><span class="cm"># 헤드라인 저장</span>
+with open("headlines.txt", "w", encoding="utf-8") as f:
+    f.write("AI 규제 논쟁\n총선 여론조사\n")
+
+<span class="cm"># 다시 읽어 분석</span>
+with open("headlines.txt", "r", encoding="utf-8") as f:
+    lines = f.read().split("\n")
+print(len(lines))</code></pre>
+
+  <h3>모듈: 남이 정의해 둔 것을 가져다 쓰기</h3>
+  <ul>
+    <li><code>import</code> = <strong>검증된 정의들의 사전을 통째로 빌려오는 것</strong>
+      <ul>
+        <li>학문이 선행 연구를 인용하며 쌓이듯, 코드는 모듈을 import하며 쌓임</li>
+        <li><code>import collections</code> → <code>Counter</code> 하나로 빈도 분석이 한 줄이 됨</li>
+      </ul>
+    </li>
+  </ul>
+
+<pre><code>from collections import Counter
+
+words = "미디어 AI 규제 AI 총선 AI 미디어".split()
+print(Counter(words).most_common(2))
+<span class="out"># [('AI', 3), ('미디어', 2)]</span></code></pre>
+
+  <p class="note">이 시점부터 학생은 "모든 것을 직접 만들지 않는다"는 감각을 얻어야 함. 좋은 인용이 좋은 논문을 만들듯, 좋은 import가 좋은 코드를 만듦.</p>
+</section>
+
+<!-- ============ 11 ============ -->
+<section id="s11">
+  <div class="sec-head">
+    <span class="sec-mark">11</span>
+    <h2>AI에게 명세하기 — 프롬프트 논리</h2>
+    <span class="sub">prompt problems · specification</span>
+  </div>
+
+  <h3>AI 시대의 역전</h3>
+  <ul>
+    <li>이제 코드는 AI가 씀 — 그렇다면 남는 인간의 역량은 무엇인가
+      <ul>
+        <li>답: <strong>요구사항을 빠짐없이, 모순 없이, 판정 가능하게 기술하는 능력</strong></li>
+        <li>이것은 코딩 능력이라기보다 <strong>논리적 글쓰기 능력</strong>임</li>
+      </ul>
+    </li>
+    <li>연구 결과: 학생들의 프롬프트 실패 원인 1위는 <strong>핵심 세부사항 누락</strong>
+      <ul>
+        <li>누락은 곧 추론의 구멍 — "당연히 알겠지"는 컴퓨터에도 AI에도 통하지 않음</li>
+      </ul>
+    </li>
+  </ul>
+
+  <h3>명세의 3원칙</h3>
+  <ul>
+    <li><strong>완전성</strong> — 모든 경우가 규칙에 포함되는가 (5자 "미만"이면? 정확히 5자면?)</li>
+    <li><strong>무모순</strong> — 규칙끼리 충돌하지 않는가 (규칙 1과 규칙 2가 동시에 적용되면?)</li>
+    <li><strong>판정 가능성</strong> — "적절히", "잘" 같은 애매어 없이 참/거짓 판정이 가능한가</li>
+  </ul>
+
+  <div class="predict-box">
+    <span class="tag">프롬프트 문제 — 프롬프트는 1회만 전송 가능</span>
+    <p>다음 규칙의 "댓글 게시 판정" 코드를 AI에게 생성시키시오.</p>
+    <ol>
+      <li>금지어 포함 시 무조건 게시 불가</li>
+      <li>금지어 없고 5자 이상이면 게시</li>
+      <li>금지어 없고 5자 미만이면 "너무 짧음" 안내</li>
+    </ol>
+    <p>제출물: ① 프롬프트 원문 ② 생성 코드 ③ 경계 사례 테스트 결과(정확히 5자 / 금지어+10자 / 빈 문자열) ④ 실패 시 누락 명세 진단문</p>
+    <details><summary>채점 기준 보기</summary>
+      <div class="ans">경계 사례 3종 모두 통과하는 프롬프트를 1회에 작성하면 만점. 실패했더라도 "정확히 5자의 처리를 명시하지 않았다"처럼 누락을 명제 수준에서 특정한 진단문을 쓰면 대부분의 점수를 부여. 채점의 무게중심은 결과가 아니라 <strong>진단의 논리적 정확성</strong>.</div>
+    </details>
+  </div>
+
+  <div class="media-box">
+    <span class="tag">미디어 렌즈</span>
+    <p>커뮤니티 가이드라인, 방송심의규정, 플랫폼 약관 — 모두 "판정 규칙의 명세"다. 이 규칙들이 왜 늘 논란이 되는지(애매어, 규칙 충돌, 누락 사례) 이제 코드의 눈으로 분석할 수 있다.</p>
+  </div>
+</section>
+
+<!-- ============ 12 ============ -->
+<section id="s12">
+  <div class="sec-head">
+    <span class="sec-mark">12</span>
+    <h2>종합 프로젝트 — 헤드라인 품질 판정기</h2>
+    <span class="sub">final project</span>
+  </div>
+
+  <h3>과제 개요</h3>
+  <ul>
+    <li>목표: 포털 헤드라인 20개를 수집해 <strong>"낚시성 판정기"</strong>를 만들고, 판정 규칙을 논증문으로 정당화함</li>
+    <li>이 프로젝트는 배운 전부를 사용함
+      <ul>
+        <li>변수·자료형(01–02) — 데이터 표현</li>
+        <li>연산자·조건문(03–04) — 판정 규칙</li>
+        <li>반복문·자료구조(05–06) — 전수 적용과 집계</li>
+        <li>문자열(07) — 텍스트 지표 계산</li>
+        <li>함수(08) — 판정 규칙의 정의와 재사용</li>
+        <li>디버깅(09) — 경계 사례 검증</li>
+        <li>파일·모듈(10) — 결과 저장과 빈도 분석</li>
+        <li>프롬프트(11) — AI와 협업해 개선</li>
+      </ul>
+    </li>
+  </ul>
+
+  <h3>제출물 3종</h3>
+  <ul>
+    <li><strong>코드</strong> — 함수 최소 2개, 주석으로 각 판정 규칙의 근거 명시</li>
+    <li><strong>논증문(1쪽)</strong> — "낚시성"의 조작적 정의, 지표 선택의 정당화, 판정기의 한계(반례가 될 수 있는 헤드라인 유형)</li>
+    <li><strong>반성문(반쪽)</strong> — 예측이 틀렸던 순간 하나를 골라, 오류를 명제 수준에서 진단</li>
+  </ul>
+
+  <h3>평가 기준</h3>
+  <table>
+    <tr><th>항목</th><th>배점</th><th style="text-align:left">기준</th></tr>
+    <tr><td class="l">작동</td><td>30</td><td class="l">20개 헤드라인에 오류 없이 실행</td></tr>
+    <tr><td class="l">논증</td><td>40</td><td class="l">지표의 조작적 정의가 판정 가능하고, 한계(반례)를 스스로 제시</td></tr>
+    <tr><td class="l">진단</td><td>30</td><td class="l">자기 오류를 "무엇을 무엇으로 오인했는가" 형태로 특정</td></tr>
+  </table>
+
+  <p class="note">배점의 의도: 코드가 돌아가는 것(30)보다 논증과 자기 진단(70)에 더 큰 무게. 이 수업의 목표가 코더 양성이 아니라 <strong>논리적으로 사고하고 쓰는 사람</strong>의 양성이기 때문.</p>
+</section>
+
+<footer>
+  코딩과 논리적 사고 · 미디어학과 1학년 강의자료<br>
+  차시 구조: 예측(P?) → 실행(⊢) → 설명(∴) → 변형(∀)<br>
+  이론적 근거: PRIMM(Sentance et al.) · Parsons problems · explain-in-plain-English 위계(Lister et al.) · Prompt Problems(Denny et al.) · 언플러그드 활동 메타분석(Huang &amp; Looi)
+</footer>
+
+</main>
+
+<script>
+const btn=document.getElementById('menuBtn'),nav=document.getElementById('nav');
+btn.addEventListener('click',()=>nav.classList.toggle('open'));
+nav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>nav.classList.remove('open')));
+const links=[...nav.querySelectorAll('a')];
+const secs=links.map(a=>document.querySelector(a.getAttribute('href')));
+const io=new IntersectionObserver(es=>{
+  es.forEach(e=>{
+    if(e.isIntersecting){
+      links.forEach(l=>l.classList.remove('on'));
+      const i=secs.indexOf(e.target);
+      if(i>-1)links[i].classList.add('on');
+    }
+  });
+},{rootMargin:'-20% 0px -70% 0px'});
+secs.forEach(s=>s&&io.observe(s));
+</script>
+
+</body>
+</html>
