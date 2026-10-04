@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>데이터저널리즘 데이터 소스 디렉토리</title>
+<meta name="description" content="초보 기자를 위한 국내외 데이터·통계 사이트 안내 — 취재 분야별 분류, 초보 추천, 2026년 최신 정보">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f6f7f9;
+    --surface: #ffffff;
+    --surface-2: #f1f4f8;
+    --border: #e2e6ec;
+    --border-strong: #cfd6e0;
+    --text: #1b2230;
+    --text-2: #4b5567;
+    --muted: #6b7486;
+    --accent: #1f5bd6;
+    --accent-soft: #e8effc;
+    --star: #b7791f;
+    --star-soft: #fdf3e1;
+    --green: #1f8a4c;
+    --green-soft: #e6f5ec;
+    --warn: #9a5b00;
+    --warn-soft: #fff6e0;
+    --red: #b42318;
+    --radius: 10px;
+    --shadow: 0 1px 2px rgba(16,24,40,.05);
+    --shadow-hover: 0 6px 16px rgba(16,24,40,.08);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  [hidden] { display: none !important; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    font-size: 15px;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--accent); }
+  button { font-family: inherit; }
+
+  /* ---------- Header ---------- */
+  .topbar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+  }
+  .topbar-inner {
+    max-width: 1360px; margin: 0 auto; padding: 18px 24px;
+    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  }
+  .brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
+  .brand-mark {
+    width: 40px; height: 40px; border-radius: 10px; flex-shrink: 0;
+    background: var(--accent); color: #fff; display: grid; place-items: center;
+    font-size: 20px;
+  }
+  .brand h1 { font-size: 20px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.3; }
+  .brand p { font-size: 13px; color: var(--muted); }
+  .top-links { margin-left: auto; display: flex; gap: 8px; flex-wrap: wrap; }
+  .top-link {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 14px; border-radius: 8px; border: 1px solid var(--border-strong);
+    background: var(--surface); color: var(--text); text-decoration: none;
+    font-size: 13.5px; font-weight: 500;
+  }
+  .top-link:hover { border-color: var(--accent); color: var(--accent); }
+  .top-link.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .top-link.primary:hover { background: #1849b0; color: #fff; }
+
+  /* ---------- Layout ---------- */
+  .layout {
+    max-width: 1360px; margin: 0 auto;
+    display: grid; grid-template-columns: 272px minmax(0, 1fr); gap: 28px;
+    padding: 24px;
+  }
+  .sidebar {
+    position: sticky; top: 16px; align-self: start;
+    max-height: calc(100vh - 32px); overflow-y: auto;
+    display: flex; flex-direction: column; gap: 18px;
+    padding-right: 4px;
+  }
+  .sidebar::-webkit-scrollbar { width: 6px; }
+  .sidebar::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
+
+  .side-block { display: flex; flex-direction: column; gap: 8px; }
+  .side-label {
+    font-size: 12px; font-weight: 700; color: var(--muted);
+    letter-spacing: .02em; padding-left: 2px;
+  }
+  .search {
+    position: relative;
+  }
+  .search input {
+    width: 100%; padding: 11px 12px 11px 38px;
+    border: 1px solid var(--border-strong); border-radius: 10px;
+    background: var(--surface); font: inherit; font-size: 14.5px; color: var(--text);
+    outline: none;
+  }
+  .search input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+  .search::before {
+    content: ''; position: absolute; left: 13px; top: 50%; width: 14px; height: 14px;
+    transform: translateY(-55%);
+    background: no-repeat center/contain url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236b7486' stroke-width='2.4' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='m20 20-3.5-3.5'/%3E%3C/svg%3E");
+  }
+  .search kbd {
+    position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+    font-family: inherit; font-size: 11px; color: var(--muted);
+    border: 1px solid var(--border); border-radius: 4px; padding: 0 5px; background: var(--surface-2);
+  }
+
+  .seg { display: flex; background: var(--surface-2); border: 1px solid var(--border); border-radius: 9px; padding: 3px; }
+  .seg button {
+    flex: 1; border: 0; background: transparent; padding: 6px 4px; border-radius: 6px;
+    font-size: 13px; color: var(--text-2); cursor: pointer; white-space: nowrap;
+  }
+  .seg button.on { background: var(--surface); color: var(--text); font-weight: 700; box-shadow: var(--shadow); }
+
+  .toggle {
+    display: flex; align-items: center; gap: 10px; padding: 8px 10px;
+    border: 1px solid var(--border); border-radius: 9px; background: var(--surface);
+    cursor: pointer; font-size: 13.5px; color: var(--text-2); text-align: left; width: 100%;
+  }
+  .toggle .box {
+    width: 18px; height: 18px; border-radius: 5px; border: 1.5px solid var(--border-strong);
+    flex-shrink: 0; display: grid; place-items: center; font-size: 12px; color: #fff;
+  }
+  .toggle.on { border-color: var(--accent); color: var(--text); background: var(--accent-soft); }
+  .toggle.on .box { background: var(--accent); border-color: var(--accent); }
+  .toggle.on .box::after { content: '✓'; }
+
+  .cats { display: flex; flex-direction: column; gap: 2px; }
+  .cat-btn {
+    display: flex; align-items: center; gap: 10px; width: 100%;
+    padding: 8px 10px; border: 0; border-radius: 8px; background: transparent;
+    font-size: 14px; color: var(--text-2); cursor: pointer; text-align: left;
+  }
+  .cat-btn:hover { background: var(--surface); color: var(--text); }
+  .cat-btn .ico { width: 22px; text-align: center; flex-shrink: 0; }
+  .cat-btn .nm { flex: 1; min-width: 0; }
+  .cat-btn .ct {
+    font-size: 12px; color: var(--muted); background: var(--surface-2);
+    border-radius: 999px; padding: 0 8px; min-width: 28px; text-align: center;
+  }
+  .cat-btn.on { background: var(--surface); color: var(--accent); font-weight: 700; box-shadow: var(--shadow); }
+  .cat-btn.on .ct { background: var(--accent-soft); color: var(--accent); }
+  .cat-btn.empty { opacity: .45; }
+
+  .reset {
+    border: 1px dashed var(--border-strong); background: transparent; border-radius: 8px;
+    padding: 8px; font-size: 13px; color: var(--muted); cursor: pointer;
+  }
+  .reset:hover { color: var(--accent); border-color: var(--accent); }
+
+  .side-note {
+    font-size: 12.5px; color: var(--muted); line-height: 1.6;
+    border-top: 1px solid var(--border); padding-top: 12px;
+  }
+
+  /* ---------- Main ---------- */
+  main { min-width: 0; }
+  .layout > * { min-width: 0; }
+  .intro {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+    padding: 20px 22px; margin-bottom: 14px; box-shadow: var(--shadow);
+  }
+  .intro h2 { font-size: 17px; font-weight: 800; margin-bottom: 10px; letter-spacing: -0.01em; }
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .step {
+    background: var(--surface-2); border-radius: 10px; padding: 12px 14px;
+    font-size: 13.5px; color: var(--text-2);
+  }
+  .step b { display: block; color: var(--text); font-size: 14px; margin-bottom: 2px; }
+  .step .n {
+    display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%;
+    background: var(--accent); color: #fff; font-size: 12px; font-weight: 700; margin-right: 6px;
+  }
+  .legend { display: flex; flex-wrap: wrap; gap: 8px 14px; margin-top: 14px; font-size: 12.5px; color: var(--muted); align-items: center; }
+
+  details.notice {
+    background: var(--warn-soft); border: 1px solid #f3dca6; border-radius: 12px;
+    padding: 12px 18px; margin-bottom: 18px;
+  }
+  details.notice summary { cursor: pointer; font-weight: 700; font-size: 14.5px; color: var(--warn); }
+  details.notice ul { margin: 10px 0 2px 18px; font-size: 13.5px; color: var(--text-2); }
+  details.notice li { margin: 3px 0; }
+
+  .resultbar {
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    margin: 4px 2px 14px; font-size: 13.5px; color: var(--muted);
+  }
+  .resultbar strong { color: var(--text); }
+  .chip-active {
+    display: inline-flex; align-items: center; gap: 4px; padding: 2px 10px;
+    background: var(--accent-soft); color: var(--accent); border-radius: 999px; font-size: 12.5px;
+  }
+
+  .section { margin-bottom: 30px; scroll-margin-top: 16px; }
+  .sec-head { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px; }
+  .sec-ico {
+    width: 38px; height: 38px; border-radius: 10px; display: grid; place-items: center;
+    font-size: 19px; flex-shrink: 0; background: var(--surface); border: 1px solid var(--border);
+  }
+  .sec-title { font-size: 18px; font-weight: 800; letter-spacing: -0.01em; line-height: 1.3; }
+  .sec-title .ct { font-size: 13px; font-weight: 500; color: var(--muted); margin-left: 6px; }
+  .sec-desc { font-size: 13.5px; color: var(--muted); margin-top: 2px; }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; }
+  .card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 14px 16px; display: flex; flex-direction: column; gap: 7px;
+    box-shadow: var(--shadow); transition: border-color .15s, box-shadow .15s;
+  }
+  .card:hover { border-color: var(--border-strong); box-shadow: var(--shadow-hover); }
+  .card.featured { border-left: 3px solid var(--star); }
+  .card-top { display: flex; align-items: flex-start; gap: 8px; }
+  .card-name {
+    font-weight: 700; font-size: 15.5px; color: var(--text); text-decoration: none; line-height: 1.4;
+    flex: 1; min-width: 0;
+  }
+  .card-name:hover { color: var(--accent); }
+  .kind {
+    font-size: 11px; font-weight: 700; padding: 2px 7px; border-radius: 5px; flex-shrink: 0;
+    background: var(--surface-2); color: var(--text-2); margin-top: 2px;
+  }
+  .kind.ai { background: #ece9fe; color: #5235c9; }
+  .kind.api { background: var(--green-soft); color: var(--green); }
+  .card-desc { font-size: 13.5px; color: var(--text-2); }
+  .card-use {
+    font-size: 13px; color: var(--text); background: var(--surface-2);
+    border-radius: 7px; padding: 6px 9px;
+  }
+  .card-use::before { content: '이럴 때 '; font-weight: 700; color: var(--accent); }
+  .card-warn {
+    font-size: 12.5px; color: var(--warn); background: var(--warn-soft); border-radius: 7px; padding: 5px 9px;
+  }
+  .card-foot { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-top: auto; padding-top: 4px; }
+  .tag {
+    font-size: 11.5px; padding: 1px 8px; border-radius: 999px; border: 1px solid var(--border);
+    color: var(--muted); background: var(--surface); white-space: nowrap;
+  }
+  .tag.star { color: var(--star); border-color: #f0d7a6; background: var(--star-soft); font-weight: 700; }
+  .tag.free { color: var(--green); border-color: #bfe3cc; background: var(--green-soft); }
+  .tag.new { color: #a8336b; border-color: #f3c6db; background: #fdf0f6; }
+  .tag.apitag { color: #5235c9; border-color: #d9d2fb; background: #f4f2ff; }
+  .open {
+    margin-left: auto; font-size: 13px; font-weight: 700; color: var(--accent); text-decoration: none;
+    padding: 4px 10px; border-radius: 6px; white-space: nowrap;
+  }
+  .open:hover { background: var(--accent-soft); }
+  .url {
+    font-size: 11.5px; color: var(--muted); word-break: break-all;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+
+  .empty-state {
+    text-align: center; padding: 60px 20px; color: var(--muted);
+    background: var(--surface); border: 1px dashed var(--border-strong); border-radius: 14px;
+  }
+  .empty-state button { margin-top: 12px; }
+
+  footer {
+    max-width: 1360px; margin: 0 auto; padding: 24px; color: var(--muted); font-size: 13px;
+    border-top: 1px solid var(--border); text-align: center; line-height: 1.8;
+  }
+
+  .totop {
+    position: fixed; right: 18px; bottom: 18px; width: 42px; height: 42px; border-radius: 50%;
+    border: 1px solid var(--border-strong); background: var(--surface); box-shadow: var(--shadow-hover);
+    font-size: 18px; cursor: pointer; display: none; color: var(--text-2);
+  }
+  .totop.show { display: block; }
+
+  /* ---------- Mobile ---------- */
+  @media (max-width: 920px) {
+    .layout { grid-template-columns: 1fr; gap: 14px; padding: 14px 16px; }
+    .sidebar { position: static; max-height: none; overflow: visible; gap: 12px; padding-right: 0; }
+    .cats { flex-direction: row; overflow-x: auto; gap: 6px; padding-bottom: 4px; -webkit-overflow-scrolling: touch; }
+    .cat-btn { width: auto; white-space: nowrap; background: var(--surface); border: 1px solid var(--border); padding: 6px 10px; }
+    .cat-btn .nm { flex: none; }
+    .side-label { display: none; }
+    .sidebar .side-block { gap: 6px; }
+    .toggle { padding: 7px 10px; }
+    .reset { display: none; }
+    .intro { padding: 16px; }
+    .brand h1 { font-size: 18px; }
+    .side-note, .search kbd { display: none; }
+    .steps { grid-template-columns: 1fr; }
+    .topbar-inner { padding: 14px 16px; }
+    .top-links { margin-left: 0; }
+    .grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="brand-mark">🗂️</div>
+      <div>
+        <h1>데이터저널리즘 데이터 소스 디렉토리</h1>
+        <p>취재에 쓸 국내외 데이터·통계 사이트 · 이종혁 (경희대 미디어학과) · 2026년 10월 업데이트</p>
+      </div>
+    </div>
+    <nav class="top-links"><a class="top-link primary" href="datajour_ai.html">🤖 AI 도구·API 가이드</a><a class="top-link" href="https://jonghhhh.github.io/2026_1/data-journalism/" target="_blank" rel="noopener">📘 수업 자료</a></nav>
+  </div>
+</header>
+
+<div class="layout">
+  <aside class="sidebar" aria-label="검색과 분류">
+    <div class="side-block">
+      <div class="search">
+        <input type="search" id="q" placeholder="예: 실거래가, 판결문, 미세먼지" autocomplete="off" aria-label="검색">
+        <kbd>/</kbd>
+      </div>
+    </div>
+
+    <div class="side-block" id="typeBlock" hidden>
+      <div class="side-label">종류</div>
+      <div class="seg" id="typeSeg"></div>
+    </div>
+
+    <div class="side-block">
+      <div class="side-label">빠른 필터</div>
+      <button class="toggle" id="tStar" type="button"><span class="box"></span>⭐ 초보 추천만 보기</button>
+      <button class="toggle" id="tFree" type="button"><span class="box"></span>무료로 쓸 수 있는 것만</button>
+      <div class="seg" id="regionSeg">
+        <button type="button" data-v="all" class="on">전체</button>
+        <button type="button" data-v="kr">🇰🇷 국내</button>
+        <button type="button" data-v="intl">🌐 해외</button>
+      </div>
+    </div>
+
+    <div class="side-block">
+      <div class="side-label">분류</div>
+      <div class="cats" id="cats"></div>
+    </div>
+
+    <button class="reset" id="reset" type="button">필터 모두 지우기</button>
+
+    <div class="side-note">데이터를 찾았다면 → 분석·검증·시각화 도구는 <a href="datajour_ai.html">AI 도구·API 가이드</a>에서.<br>검색창 단축키 <b>/</b> · 링크는 새 창으로 열립니다.</div>
+  </aside>
+
+  <main>
+    <section class="intro">
+      <h2>처음이라면 이 순서로 찾아보세요</h2>
+      <div class="steps"><div class="step"><b><span class="n">1</span>취재 분야를 고른다</b>왼쪽 분류에서 내 출입처(예: 법률·법원, 지역 데이터)를 누르세요.</div><div class="step"><b><span class="n">2</span>⭐ 추천부터 연다</b>「초보 추천만 보기」를 켜면 먼저 써 볼 핵심 사이트만 남습니다.</div><div class="step"><b><span class="n">3</span>없으면 청구한다</b>찾는 데이터가 없으면 「정보공개·공공기관」에서 정보공개청구를 하세요.</div></div>
+      <div class="legend">
+        <span class="tag star">⭐ 초보 추천</span>
+        <span class="tag free">무료</span>
+        <span class="tag">일부 유료 · 유료</span>
+        <span class="tag apitag">API 제공</span>
+        <span class="tag new">2025~26 신규·변경</span>
+        <span>· 노란 상자 = 사용 전 확인할 변경 사항</span>
+      </div>
+    </section>
+
+    <details class="notice">
+      <summary>⚠️ 2025~2026년에 바뀐 것 — 옛 자료를 보고 헤매지 않도록</summary>
+      <ul><li><b>통계청 → 국가데이터처</b>(2025.10, mods.go.kr) · SGIS 주소는 <b>sgis.mods.go.kr</b></li><li><b>방송통신위원회 → 방송미디어통신위원회</b>(2025.10) · <b>환경부 → 기후에너지환경부</b>(통계포털 stat.mcee.go.kr)</li><li><b>지방행정 인허가 데이터(LOCALDATA)</b> → 공공데이터포털로 통합(2026)</li><li><b>Sentinel Hub EO Browser 종료</b>(2026.3) → Copernicus Browser 사용</li><li><b>OCCRP Aleph</b> → Aleph Pro로 전환(언론·비영리 무료 신청) · <b>archive.today</b> 신뢰성 논란 → Wayback + 직접 캡처</li><li><b>대학알리미</b>는 대학 공시(충원율·취업률) 사이트 — 옛 목록의 「취업통계시스템」 표기를 바로잡음</li><li><b>한국 데이터 저널리즘 어워드</b> 사이트 접속이 불안정 → 수상작은 뉴스젤리 해설 글로 확인</li></ul>
+    </details>
+
+    <div class="resultbar" id="resultbar"></div>
+    <div id="content"></div>
+  </main>
+</div>
+
+<footer>데이터저널리즘: 이론과 실무 · 이종혁 (경희대학교 미디어학과) · 2026.10 업데이트<br>짝 페이지: <a href="datajour_ai.html">취재보도용 AI 도구·API 가이드</a> · 주소·서비스는 바뀔 수 있으니 중요한 인용 전에는 원 사이트에서 다시 확인하세요.</footer>
+<button class="totop" id="totop" type="button" aria-label="맨 위로">↑</button>
+
+<script>
+const CATS = [
+  { key: "데이터 찾기 출발점", icon: "🧭", desc: "무엇이 어디 있는지 모를 때 먼저 여는 곳 — 통합 검색·API 목록" },
+  { key: "종합·국가통계", icon: "📊", desc: "인구·물가·고용 등 공식 통계의 기본 출처" },
+  { key: "정보공개·공공기관", icon: "📂", desc: "청구해서 받거나, 기관이 의무적으로 공개한 자료" },
+  { key: "재정·예산·조달", icon: "💸", desc: "세금이 어디에 얼마나 쓰였나 — 예산·결산·입찰·계약" },
+  { key: "정치·국회·선거", icon: "🏛️", desc: "법안·표결·회의록·선거 결과·재산·정치자금" },
+  { key: "법률·법원", icon: "⚖️", desc: "판결문·판례·법령 원문 확인" },
+  { key: "경제·기업·금융", icon: "💰", desc: "경제지표·공시·재무제표·대기업집단" },
+  { key: "부동산·국토·교통", icon: "🏘️", desc: "실거래가·부동산 통계·교통·사고 데이터" },
+  { key: "사회·복지·보건의료", icon: "🏥", desc: "의료 이용·감염병·범죄·복지 통계" },
+  { key: "노동·산업안전·재난", icon: "🦺", desc: "고용·산업재해·중대재해·재난 피해" },
+  { key: "교육", icon: "🎓", desc: "학교·대학 공시, 교육 통계, 학술 정보" },
+  { key: "환경·기후·에너지", icon: "🌿", desc: "대기질·기상·온실가스·에너지 통계" },
+  { key: "미디어·여론·뉴스", icon: "📰", desc: "기사 빅데이터·미디어 이용·여론조사·검색 트렌드" },
+  { key: "과학·특허·문화", icon: "🔬", desc: "R&D·특허·관광·문화 데이터" },
+  { key: "지역 데이터", icon: "📍", desc: "시도·시군구 단위 데이터 — 지역 기자의 필수 목록" },
+  { key: "국제기구 통계", icon: "🌐", desc: "국가 간 비교가 필요할 때" },
+  { key: "해외 정부·오픈데이터", icon: "🗂️", desc: "각국 정부 포털과 큐레이션 데이터" },
+  { key: "기업·제재·탐사 DB", icon: "🕵️", desc: "해외 법인·역외 계좌·제재 명단 추적" },
+  { key: "위성·지도·공간", icon: "🛰️", desc: "위성영상·지도 데이터로 현장 확인" },
+  { key: "웹 기록·아카이브", icon: "🗄️", desc: "사라지거나 바뀐 웹페이지의 과거 기록" },
+  { key: "저널리즘 데이터·사례", icon: "🔍", desc: "언론사가 공개한 데이터와 수상작 아카이브" },
+  { key: "시각화 도구", icon: "📈", desc: "모은 데이터를 독자에게 보여 주기" }
+];
+
+function I(cat, name, url, desc, use, o) {
+  o = o || {};
+  return { cat: cat, name: name, url: url, desc: desc, use: use || "", region: o.region || "kr", cost: o.cost || "무료",
+    star: !!o.star, api: !!o.api, isNew: !!o.isNew, warn: o.warn || "", kw: o.kw || "", kind: "src" };
+}
+const INTL = { region: "intl" };
+function X(o) { return Object.assign({ region: "intl" }, o || {}); }
+
+const DATA = [
+  // ===== 데이터 찾기 출발점 =====
+  I("데이터 찾기 출발점", "공공데이터포털", "https://www.data.go.kr/",
+    "중앙부처·지자체·공공기관 데이터를 파일과 Open API로 제공하는 범정부 통합 창구. 2026년부터 지방행정 인허가 데이터도 통합.",
+    "어떤 주제든 '정부가 가진 데이터가 있나?' 먼저 검색할 때", { star: true, api: true, isNew: true }),
+  I("데이터 찾기 출발점", "한국 Public API 모음 (public-apis-4Kr)", "https://github.com/yybmion/public-apis-4Kr",
+    "한국 서비스·공공기관 API 300개 이상 + 글로벌 780개 이상을 분야별로 정리한 깃허브 목록. 공공데이터 활용신청 순위도 제공.",
+    "자동 수집·웹앱을 만들 데이터 API를 고를 때", { star: true, api: true, isNew: true }),
+  I("데이터 찾기 출발점", "원윈도우", "https://www.data1window.kr/",
+    "공공·민간 데이터를 한 번에 검색하는 국가 데이터 카탈로그.", "기관이 흩어져 있는 데이터를 통합 검색할 때", { isNew: true }),
+  I("데이터 찾기 출발점", "Google Dataset Search", "https://datasetsearch.research.google.com/",
+    "전 세계 공개 데이터셋 검색 엔진.", "해외 연구기관·정부가 공개한 데이터를 찾을 때", X()),
+  I("데이터 찾기 출발점", "Kaggle Datasets", "https://www.kaggle.com/datasets",
+    "데이터과학 커뮤니티의 공개 데이터셋.", "연습용 데이터나 정리된 해외 데이터가 필요할 때", X()),
+  I("데이터 찾기 출발점", "Hugging Face 한국어 데이터셋", "https://huggingface.co/datasets?language=language%3Ako",
+    "한국어 텍스트·말뭉치 데이터셋 허브.", "AI 분석용 한국어 텍스트 데이터를 찾을 때", X()),
+  I("데이터 찾기 출발점", "데이터 수집용 사이트 모음(본 페이지) · 취재보도용 AI 도구 모음", "https://jonghhhh.github.io/2026_1/datajour_ai.html",
+    "이 페이지와 짝을 이루는 AI 도구·API 안내. 데이터를 모은 뒤 분석·검증·시각화 도구는 여기서.", "데이터를 다룰 AI 도구를 고를 때", { isNew: true }),
+
+  // ===== 종합·국가통계 =====
+  I("종합·국가통계", "국가통계포털 (KOSIS)", "https://kosis.kr/",
+    "국가데이터처(옛 통계청)와 각 기관의 승인통계를 검색·다운로드. Open API 제공.",
+    "인구·물가·고용처럼 '공식 수치'를 인용해야 할 때", { star: true, api: true }),
+  I("종합·국가통계", "국가데이터처 (옛 통계청)", "https://mods.go.kr/",
+    "2025년 10월 통계청이 국가데이터처로 개편. 통계 발표 일정·보도자료·간행물.",
+    "다음 주 어떤 통계가 발표되는지 일정을 확인할 때", { isNew: true }),
+  I("종합·국가통계", "e-나라지표 · 지표누리", "https://www.index.go.kr/",
+    "국정 핵심 지표를 분야별로 정리하고 국제비교 지표도 제공. Open API 있음.", "한 지표의 장기 추이와 해설을 빠르게 볼 때", { api: true }),
+  I("종합·국가통계", "통계지리정보서비스 (SGIS)", "https://sgis.mods.go.kr/",
+    "행정구역·격자 단위 인구·가구·사업체 통계를 지도로 보고 내려받기. 주소가 sgis.mods.go.kr로 바뀜.",
+    "'우리 동네' 단위 통계 지도가 필요할 때", { api: true, isNew: true }),
+  I("종합·국가통계", "마이크로데이터 통합서비스 (MDIS)", "https://mdis.kostat.go.kr/",
+    "국가승인통계 원자료(개인·가구 단위) 다운로드·분석.", "발표된 표 말고 원자료로 직접 교차분석할 때", { cost: "일부유료", warn: "통계청 개편에 따라 주소가 바뀔 수 있음. 이동되면 국가데이터처에서 찾기" }),
+  I("종합·국가통계", "주민등록 인구통계", "https://jumin.mois.go.kr/",
+    "행정안전부. 행정동별·연령별 월간 주민등록 인구.", "읍면동 단위 최신 인구·고령화율을 볼 때", { star: true }),
+  I("종합·국가통계", "한국사회과학자료원 (KOSSDA)", "https://kossda.snu.ac.kr/",
+    "사회조사·여론조사 원자료 아카이브.", "사회 인식 변화를 조사 원자료로 확인할 때"),
+  I("종합·국가통계", "한국갤럽 · 한국리서치 여론속의 여론", "https://www.gallup.co.kr/",
+    "정기 여론조사 결과 공개(한국리서치: hrcopinion.co.kr).", "정당 지지율·사회 인식 조사 결과를 인용할 때", { cost: "일부유료" }),
+
+  // ===== 정보공개·공공기관 =====
+  I("정보공개·공공기관", "정보공개포털", "https://www.open.go.kr/",
+    "공공기관에 정보공개 청구·결과 조회. '원문정보'에서 결재문서를 청구 없이 검색 가능.",
+    "기관이 공개 안 한 자료를 받아내거나, 결재문서 원문을 찾을 때", { star: true }),
+  I("정보공개·공공기관", "정보공개센터", "https://www.opengirok.or.kr/",
+    "시민단체. 청구 요령·청구서 예시·청구 결과 공유.", "처음 청구서를 쓸 때 예시를 보고 싶을 때"),
+  I("정보공개·공공기관", "알리오 (공공기관 경영정보)", "https://www.alio.go.kr/",
+    "공공기관 임원 연봉·채용·부채·징계·감사 결과 등 의무 공시.", "공공기관 기관장 연봉, 성과급, 채용 비리 취재", { star: true }),
+  I("정보공개·공공기관", "클린아이 (지방공기업 경영정보)", "https://www.cleaneye.go.kr/",
+    "지방공기업·출자출연기관의 경영 공시.", "지역 공사·공단의 부채와 경영 실적을 볼 때"),
+  I("정보공개·공공기관", "감사원 감사결과", "https://www.bai.go.kr/",
+    "기관별 감사보고서 원문.", "기관 비위·예산 낭비의 공식 근거가 필요할 때"),
+  I("정보공개·공공기관", "국회입법조사처", "https://www.nars.go.kr/",
+    "쟁점 이슈 보고서·현안 분석.", "복잡한 정책의 배경과 쟁점을 빠르게 이해할 때"),
+  I("정보공개·공공기관", "정책브리핑 보도자료", "https://www.korea.kr/briefing/pressReleaseList.do",
+    "전 부처 보도자료를 한곳에. RSS 제공.", "부처 발표를 놓치지 않고 모니터링할 때"),
+  I("정보공개·공공기관", "국민참여입법센터", "https://opinion.lawmaking.go.kr/",
+    "정부 입법예고·행정예고.", "시행령·규칙 개정을 미리 잡아 기사화할 때"),
+
+  // ===== 재정·예산·조달 =====
+  I("재정·예산·조달", "열린재정 (재정정보공개시스템)", "https://www.openfiscaldata.go.kr/",
+    "중앙정부 예산·결산·기금·보조금 집행. Open API.", "정부 사업 예산이 얼마나 집행됐는지 확인할 때", { star: true, api: true }),
+  I("재정·예산·조달", "지방재정365", "https://www.lofin365.go.kr/",
+    "지자체 예산·결산·재정 공시, 업무추진비 등.", "우리 시·군·구 예산과 재정 상태를 비교할 때", { star: true }),
+  I("재정·예산·조달", "나라장터 (KONEPS)", "https://www.g2b.go.kr/",
+    "공공 입찰·계약 정보. 조달청 입찰·낙찰 API 제공(공공데이터포털).", "수의계약·특정 업체 쏠림을 추적할 때", { api: true }),
+  I("재정·예산·조달", "NABOSTATS (국회예산정책처)", "https://www.nabostats.go.kr/",
+    "재정·경제 통계와 예산 분석 자료.", "국가채무·조세 부담 장기 통계가 필요할 때", { api: true }),
+  I("재정·예산·조달", "보조금24 · 정부24", "https://www.gov.kr/",
+    "정부 지원금·공공서비스 목록.", "지원 사업 중복·사각지대를 살펴볼 때"),
+
+  // ===== 정치·국회·선거 =====
+  I("정치·국회·선거", "국회 의안정보시스템", "https://likms.assembly.go.kr/bill/main.do",
+    "발의 법안·처리 상태·제안 이유·의원별 의안.", "의원이 낸 법안과 처리 결과를 확인할 때", { star: true }),
+  I("정치·국회·선거", "열린국회정보 (Open API)", "https://open.assembly.go.kr/",
+    "의원 표결·발의·인적사항·회의 정보 API.", "표결 데이터를 모아 의원별로 분석할 때", { api: true }),
+  I("정치·국회·선거", "국회 회의록", "https://record.assembly.go.kr/",
+    "본회의·상임위 회의록 전문 검색.", "누가 어떤 발언을 했는지 원문으로 확인할 때", { star: true }),
+  I("정치·국회·선거", "지방의정포털 (CLIK)", "https://clik.nanet.go.kr/",
+    "전국 지방의회 회의록·의안·의원 정보.", "시·도의회, 구의회 발언과 조례를 찾을 때"),
+  I("정치·국회·선거", "선거통계시스템", "https://info.nec.go.kr/",
+    "중앙선관위. 역대 선거 개표 결과(투표구 단위)·투표율.", "동네별 득표 변화를 분석할 때", { star: true }),
+  I("정치·국회·선거", "선거정보 개방포털", "http://data.nec.go.kr/",
+    "선거 데이터 파일·API.", "선거 데이터를 대량으로 내려받을 때", { api: true }),
+  I("정치·국회·선거", "공직윤리시스템 · 전자관보", "https://www.peti.go.kr/",
+    "공직자 재산공개 원문(전자관보 gwanbo.go.kr에서도 검색).", "고위공직자 재산 변동을 확인할 때"),
+  I("정치·국회·선거", "뉴스타파 공직자 재산 정보", "https://jaesan.newstapa.org/",
+    "공직자 재산공개 데이터를 검색·비교 가능하게 정리.", "재산 데이터를 표로 비교할 때", { star: true }),
+  I("정치·국회·선거", "오픈워치", "https://docs.openwatch.kr/",
+    "정치후원금·의원 재산·지방의원 데이터 API.", "정치자금 흐름을 데이터로 분석할 때", { api: true }),
+  I("정치·국회·선거", "오마이뉴스 KA-money (국회의원 정치자금)", "https://github.com/OhmyNews/KA-money",
+    "국회의원 정치자금 지출내역 전수 데이터 공개.", "정치자금 지출 패턴 기사", { isNew: true }),
+  I("정치·국회·선거", "정치자금 제도 안내 (중앙선관위)", "https://www.nec.go.kr/",
+    "정당·후보자 정치자금 수입·지출 공개 제도.", "회계보고서 열람 절차를 확인할 때", { warn: "회계보고서는 일정 기간 현장 열람만 가능(복사 제한) — 열람 기간 확인" }),
+  I("정치·국회·선거", "열려라국회 (참여연대)", "https://watch.peoplepower21.org/",
+    "의원 활동·표결을 시민단체가 정리.", "의원별 활동을 한눈에 볼 때"),
+
+  // ===== 법률·법원 =====
+  I("법률·법원", "국가법령정보센터", "https://www.law.go.kr/",
+    "현행·연혁 법령, 자치법규, 판례. Open API.", "법 조문과 개정 이력을 정확히 인용할 때", { star: true, api: true }),
+  I("법률·법원", "대법원 종합법률정보", "https://glaw.scourt.go.kr/",
+    "판례·법령 검색, 화제의 판결.", "주요 판례 원문을 찾을 때"),
+  I("법률·법원", "법고을 (새 판례 검색)", "https://lx.scourt.go.kr/search/precedent",
+    "법원의 새 판례 검색 서비스.", "키워드로 판결을 폭넓게 찾을 때", { isNew: true }),
+  I("법률·법원", "판결서 인터넷 열람", "https://www.scourt.go.kr/portal/information/finalruling/guide/index.html",
+    "확정·미확정 판결서를 사건번호·키워드로 열람.", "특정 사건 판결문 전문이 필요할 때", { cost: "유료", warn: "건당 열람 수수료 있음" }),
+  I("법률·법원", "사법정보공개포털", "https://portal.scourt.go.kr/",
+    "법원 통계·사법 정보.", "사건 처리 기간·접수 건수 통계를 볼 때"),
+  I("법률·법원", "법원 판례속보", "https://www.scourt.go.kr/portal/news/NewsListAction.work?gubun=4&type=5",
+    "대법원 판례속보, 전국 법원 주요 판결.", "주목할 판결 소식을 빠르게 받을 때"),
+
+  // ===== 경제·기업·금융 =====
+  I("경제·기업·금융", "한국은행 경제통계시스템 (ECOS)", "https://ecos.bok.or.kr/",
+    "금리·환율·물가·국민계정 등 경제통계. 증감률 계산, Open API.", "경제 기사에 공식 지표와 추이를 붙일 때", { star: true, api: true }),
+  I("경제·기업·금융", "전자공시시스템 (DART)", "https://dart.fss.or.kr/",
+    "상장·외감법인 공시 원문(사업보고서, 감사보고서, 지분 변동).", "기업의 재무·지배구조·특수관계 거래 확인", { star: true }),
+  I("경제·기업·금융", "OpenDART (공시 API)", "https://opendart.fss.or.kr/",
+    "공시·재무제표를 대량으로 받는 API(키 발급 무료).", "여러 기업 재무제표를 한꺼번에 비교할 때", { api: true }),
+  I("경제·기업·금융", "KIND (한국거래소 공시)", "https://kind.krx.co.kr/",
+    "상장사 공시, 불성실공시·관리종목.", "상장사 리스크 공시를 볼 때"),
+  I("경제·기업·금융", "KRX 정보데이터시스템", "http://data.krx.co.kr/",
+    "주식·채권·파생상품 시세와 거래 데이터.", "종목·업종 주가 흐름 데이터가 필요할 때", { api: true }),
+  I("경제·기업·금융", "공정위 기업집단포털", "https://www.egroup.go.kr/",
+    "대기업집단 계열사·지배구조·내부거래.", "재벌 내부거래·지배구조 기사", { star: true }),
+  I("경제·기업·금융", "금융통계정보시스템 (FISIS)", "https://fisis.fss.or.kr/",
+    "금융감독원. 은행·보험·증권사 경영 통계.", "금융회사 건전성·실적 비교"),
+  I("경제·기업·금융", "금융소비자포털 파인", "https://fine.fss.or.kr/",
+    "금융상품 비교, 금융회사 민원·제재 정보.", "금융 소비자 피해·민원 기사"),
+  I("경제·기업·금융", "한국무역협회 무역통계", "https://stat.kita.net/",
+    "품목·국가별 수출입 통계.", "수출 증감 기사 근거"),
+  I("경제·기업·금융", "관세청 수출입 무역통계", "https://tradedata.go.kr/",
+    "관세청 공식 수출입 통계.", "특정 품목의 수출입 추이 확인"),
+  I("경제·기업·금융", "산업통계분석시스템 (ISTANS)", "https://www.istans.or.kr/",
+    "산업연구원. 업종별 산업 통계.", "산업 구조 변화 기사"),
+  I("경제·기업·금융", "크레탑 (CRETOP)", "https://www.cretop.kr/",
+    "비상장 중소기업 재무·신용 정보.", "비상장 회사의 매출·대표자 확인", { cost: "유료", warn: "언론사 단체 계약 여부 확인" }),
+
+  // ===== 부동산·국토·교통 =====
+  I("부동산·국토·교통", "국토교통부 실거래가 공개시스템", "https://rt.molit.go.kr/",
+    "아파트·연립·단독·오피스텔·토지 실거래가 조회·다운로드. API는 공공데이터포털.",
+    "특정 단지·지역 집값 변화를 직접 확인할 때", { star: true, api: true }),
+  I("부동산·국토·교통", "한국부동산원 부동산통계 (R-ONE)", "https://www.reb.or.kr/r-one/",
+    "주택가격지수·전세가율 등 공식 부동산 통계. Open API.", "주간·월간 집값 통계 인용", { api: true }),
+  I("부동산·국토·교통", "대법원 인터넷등기소", "https://www.iros.go.kr/",
+    "부동산·법인 등기부 열람.", "소유자·근저당·법인 임원 확인", { cost: "유료", warn: "건당 열람 수수료" }),
+  I("부동산·국토·교통", "국토교통통계누리", "https://stat.molit.go.kr/",
+    "국토·주택·건설·교통·항공 통계.", "주택 공급·미분양 통계"),
+  I("부동산·국토·교통", "교통사고분석시스템 (TAAS)", "https://taas.koroad.or.kr/",
+    "도로교통공단. 사고 다발 지점·유형별 교통사고 데이터와 지도.", "스쿨존·노인보호구역 사고 지점 기사", { star: true }),
+  I("부동산·국토·교통", "국가교통 데이터베이스 (KTDB)", "https://www.ktdb.go.kr/",
+    "교통량·여객·화물 이동(O/D) 데이터.", "통근 흐름·교통 수요 분석"),
+  I("부동산·국토·교통", "국가교통정보센터 (ITS)", "https://www.its.go.kr/opendata/",
+    "실시간 교통 소통·돌발상황·CCTV 데이터 API.", "명절 귀성길·사고 정체 기사", { api: true }),
+  I("부동산·국토·교통", "브이월드 (국토 공간정보)", "https://www.vworld.kr/",
+    "국토지리정보원 지도·지적·건물 공간정보 API.", "필지·건물 단위 지도 작업", { api: true }),
+
+  // ===== 사회·복지·보건의료 =====
+  I("사회·복지·보건의료", "보건의료빅데이터개방시스템 (HIRA)", "https://opendata.hira.or.kr/",
+    "건강보험심사평가원. 질병·진료·의약품 처방 통계, 의료기관 정보.", "지역별 진료과 공백·질병 추이 기사", { star: true, api: true }),
+  I("사회·복지·보건의료", "질병관리청 감염병포털", "https://dportal.kdca.go.kr/",
+    "법정 감염병 발생 통계.", "독감·감염병 유행 기사"),
+  I("사회·복지·보건의료", "질병관리청 (건강조사)", "https://www.kdca.go.kr/",
+    "국민건강영양조사·지역사회건강조사 등.", "흡연율·비만율 등 건강 지표"),
+  I("사회·복지·보건의료", "국민건강보험공단 통계 (KOSIS 경유)", "https://kosis.kr/",
+    "건강보험·장기요양 통계.", "요양시설·의료비 기사"),
+  I("사회·복지·보건의료", "대검찰청 범죄분석 · 경찰청 범죄통계", "https://www.spo.go.kr/",
+    "범죄 유형·지역별 발생·검거 현황(경찰청 police.go.kr).", "범죄 증감 기사 — 통계 정의를 반드시 확인", { warn: "기관마다 집계 기준이 다르므로 비교 시 주의" }),
+  I("사회·복지·보건의료", "복지로", "https://www.bokjiro.go.kr/",
+    "보건복지부 복지서비스 통합 안내.", "복지 제도 대상·요건 확인"),
+  I("사회·복지·보건의료", "생활안전정보 (생활안전지도)", "https://safemap.go.kr/",
+    "범죄·교통사고·화재·안전시설 위치 정보.", "동네 안전 지도 기사", { api: true }),
+
+  // ===== 노동·산업안전·재난 =====
+  I("노동·산업안전·재난", "고용노동부 노동통계", "https://laborstat.moel.go.kr/",
+    "임금·근로시간·고용 형태 통계.", "임금 격차·노동시간 기사"),
+  I("노동·산업안전·재난", "고용행정통계", "https://eis.work24.go.kr/",
+    "고용보험·실업급여·구인구직 행정 통계. 주소가 eis.work24.go.kr로 이전.", "실업급여 신청자 증감 기사", { isNew: true }),
+  I("노동·산업안전·재난", "안전보건공단 산업재해 통계", "https://portal.kosha.or.kr/",
+    "업종·규모별 산업재해 현황.", "산재 사망 기사"),
+  I("노동·산업안전·재난", "재난안전데이터공유플랫폼", "https://www.safetydata.go.kr/",
+    "재난 발생 현황·피해 통계·안전 데이터 API.", "폭우·산불 피해 기사", { api: true }),
+  I("노동·산업안전·재난", "국가화재정보시스템", "https://www.nfds.go.kr/",
+    "화재 발생·원인·피해 통계.", "화재 원인별 통계 기사"),
+
+  // ===== 교육 =====
+  I("교육", "학교알리미", "https://www.schoolinfo.go.kr/",
+    "초·중·고 공시(학생 수, 학교폭력, 급식, 재정, 교원).", "우리 동네 학교 비교 기사", { star: true }),
+  I("교육", "대학알리미", "https://www.academyinfo.go.kr/",
+    "대학 공시(등록금, 신입생 충원율, 취업률, 장학금).", "지방대 충원율·등록금 기사", { star: true }),
+  I("교육", "교육통계서비스 (KESS)", "https://kess.kedi.re.kr/",
+    "한국교육개발원. 유·초·중등·고등교육 통계.", "학생 수 감소·교원 통계"),
+  I("교육", "학술연구정보서비스 (RISS)", "https://www.riss.kr/",
+    "학위논문·학술지 통합 검색.", "전문가 연구를 배경 취재로 찾을 때"),
+  I("교육", "DBpia", "https://www.dbpia.co.kr/",
+    "국내 학술논문 데이터베이스.", "논문 원문 확인", { cost: "일부유료" }),
+  I("교육", "KCI 한국학술지인용색인", "https://www.kci.go.kr/",
+    "국내 학술지 논문·인용 정보.", "전문가 연구 실적 확인"),
+
+  // ===== 환경·기후·에너지 =====
+  I("환경·기후·에너지", "기후에너지환경 통계포털", "https://stat.mcee.go.kr/",
+    "기후에너지환경부(옛 환경부) 분야별 환경통계·환경통계연감.", "폐기물·수질·환경 통계 인용", { isNew: true }),
+  I("환경·기후·에너지", "기상자료개방포털", "https://data.kma.go.kr/",
+    "기상청 기온·강수·바람 관측 자료.", "폭염일수·강수량 비교 기사", { star: true, api: true }),
+  I("환경·기후·에너지", "기상청 API허브", "https://apihub.kma.go.kr/",
+    "관측·예보·위성·레이더 등 기상 API.", "날씨 데이터를 자동으로 받아올 때", { api: true }),
+  I("환경·기후·에너지", "에어코리아", "https://www.airkorea.or.kr/",
+    "실시간 대기오염도(미세먼지·초미세먼지·오존). API는 공공데이터포털.", "미세먼지 기사", { api: true }),
+  I("환경·기후·에너지", "온실가스종합정보센터", "https://ngms.gir.go.kr/",
+    "국가 온실가스 배출량 통계.", "배출량 추이·감축 목표 기사"),
+  I("환경·기후·에너지", "국가에너지통계종합정보시스템 (KESIS)", "https://www.kesis.net/",
+    "에너지 수급·소비 통계.", "전력·에너지 소비 기사"),
+  I("환경·기후·에너지", "전력통계정보시스템 (EPSIS)", "https://epsis.kpx.or.kr/",
+    "전력거래소. 발전량·전력 수급 통계.", "전력 피크·발전원 비중 기사"),
+  I("환경·기후·에너지", "환경영향평가정보지원시스템 (EIASS)", "https://www.eiass.go.kr/",
+    "개발사업 환경영향평가서 원문.", "개발 사업의 환경 영향 평가 내용 확인"),
+
+  // ===== 미디어·여론·뉴스 =====
+  I("미디어·여론·뉴스", "빅카인즈 (BIG KINDS)", "https://www.bigkinds.or.kr/",
+    "한국언론진흥재단. 1990년 이후 뉴스 검색·키워드 추이·관계도, AI 요약(빅카인즈 AI).", "이 주제를 언론이 언제, 얼마나 다뤘나 확인할 때", { star: true, isNew: true }),
+  I("미디어·여론·뉴스", "네이버 데이터랩", "https://datalab.naver.com/",
+    "검색어 트렌드·쇼핑인사이트. API 제공.", "대중 관심이 언제 치솟았는지 볼 때", { star: true, api: true }),
+  I("미디어·여론·뉴스", "Google Trends", "https://trends.google.com/explore",
+    "국내외 검색 관심도 비교.", "해외와 국내 관심도 비교", X({ star: true })),
+  I("미디어·여론·뉴스", "썸트렌드", "https://some.co.kr/",
+    "SNS·커뮤니티 언급량·연관어·긍부정 분석.", "온라인 여론 흐름 확인", { cost: "일부유료" }),
+  I("미디어·여론·뉴스", "한국언론진흥재단 조사·연구 (미디어 AI)", "https://media.kpf.or.kr/",
+    "언론수용자 조사 등 재단 발간물을 AI로 검색, PDF·HWP 업로드 분석.", "미디어 이용 통계를 찾을 때", { isNew: true }),
+  I("미디어·여론·뉴스", "방송통계포털", "https://www.mediastat.or.kr/",
+    "방송 산업·매체 이용 통계(방송미디어통신위원회).", "TV·OTT 이용 행태 기사", { warn: "방송통신위원회는 2025.10 방송미디어통신위원회로 개편" }),
+  I("미디어·여론·뉴스", "방송통신광고 통계시스템", "https://adstat.kobaco.co.kr/",
+    "한국방송광고진흥공사 광고비 통계.", "광고 시장 변화 기사"),
+  I("미디어·여론·뉴스", "KISDI 미디어통계포털", "https://stat.kisdi.re.kr/",
+    "미디어 산업·이용 통계.", "미디어 패널 데이터 기사"),
+  I("미디어·여론·뉴스", "중앙선거여론조사심의위원회", "https://www.nesdc.go.kr/",
+    "등록된 선거 여론조사 결과·방법론 공개.", "여론조사 보도 전 등록 여부·표본 확인", { star: true }),
+
+  // ===== 과학·특허·문화 =====
+  I("과학·특허·문화", "특허정보검색서비스 (KIPRIS)", "https://www.kipris.or.kr/",
+    "국내외 특허·실용신안·디자인·상표 검색. API(KIPRIS Plus).", "기업 기술 경쟁·상표 분쟁 기사", { api: true }),
+  I("과학·특허·문화", "국가과학기술지식정보서비스 (NTIS)", "https://www.ntis.go.kr/",
+    "국가 R&D 과제·연구비·성과.", "R&D 예산이 어디로 갔나 추적", { api: true }),
+  I("과학·특허·문화", "한국관광 데이터랩", "https://datalab.visitkorea.or.kr/",
+    "관광객 방문·소비·이동 빅데이터.", "지역 축제·관광 효과 기사"),
+  I("과학·특허·문화", "영화관입장권 통합전산망 (KOBIS)", "https://www.kobis.or.kr/",
+    "박스오피스·영화 정보. API 제공.", "흥행 기록 기사", { api: true }),
+  I("과학·특허·문화", "공연예술통합전산망 (KOPIS)", "https://www.kopis.or.kr/",
+    "공연 예매·공연장 통계.", "공연 시장 기사", { api: true }),
+
+  // ===== 지역 데이터 =====
+  I("지역 데이터", "서울 열린데이터광장", "https://data.seoul.go.kr/",
+    "서울시 공공데이터와 Open API(교통·환경·복지·상권).", "서울 자치구별 비교 기사", { star: true, api: true }),
+  I("지역 데이터", "경기데이터드림", "https://data.gg.go.kr/",
+    "경기도·시군 공공데이터.", "경기 시군 비교 기사", { api: true }),
+  I("지역 데이터", "부산 공공데이터포털", "https://data.busan.go.kr/",
+    "부산시 공공데이터.", "부산 지역 기사", { api: true }),
+  I("지역 데이터", "인천 데이터포털", "https://data.incheon.go.kr/",
+    "인천시 공공데이터.", "인천 지역 기사", { api: true }),
+  I("지역 데이터", "대구 공공데이터포털", "https://data.daegu.go.kr/",
+    "대구시 공공데이터.", "대구 지역 기사", { api: true }),
+  I("지역 데이터", "소상공인 상권정보 (소상공인365)", "https://bigdata.sbiz.or.kr/",
+    "업종별 상가·개폐업·상권 데이터.", "골목상권 폐업 기사", { api: true }),
+  I("지역 데이터", "내고장알리미", "https://laiis.go.kr/",
+    "지방자치단체 행정·재정 지표.", "지자체 간 행정 지표 비교"),
+
+  // ===== 국제기구 통계 =====
+  I("국제기구 통계", "World Bank Open Data", "https://data.worldbank.org/",
+    "200여 개국 개발 지표(WDI). API.", "한국과 다른 나라 비교", X({ star: true, api: true })),
+  I("국제기구 통계", "IMF Data", "https://data.imf.org/",
+    "세계경제전망(WEO)·국가별 GDP·물가·부채.", "성장률 전망 비교", X({ api: true })),
+  I("국제기구 통계", "OECD Data Explorer", "https://data-explorer.oecd.org/",
+    "OECD 회원국 경제·교육·보건·환경 비교.", "'OECD 최하위' 같은 표현 검증", X({ star: true, api: true })),
+  I("국제기구 통계", "UN Data", "https://data.un.org/",
+    "유엔 데이터베이스 통합 검색.", "인구·무역·환경 국제 비교", X()),
+  I("국제기구 통계", "UN Comtrade", "https://comtradeplus.un.org/",
+    "국가 간 상품 무역 통계.", "특정 품목 국가 간 교역 추적", X({ cost: "일부유료", api: true })),
+  I("국제기구 통계", "WHO Global Health Observatory", "https://www.who.int/data/gho",
+    "세계 보건 지표·사망 원인.", "건강 지표 국제 비교", X()),
+  I("국제기구 통계", "ILOSTAT", "https://ilostat.ilo.org/",
+    "국제노동기구 노동시장 통계.", "노동시간·임금 국제 비교", X()),
+  I("국제기구 통계", "UNESCO 통계연구소", "https://uis.unesco.org/",
+    "교육·과학·문화 국제 통계.", "교육 투자 국제 비교", X()),
+  I("국제기구 통계", "FAOSTAT", "https://www.fao.org/faostat/",
+    "식량·농업 통계.", "식량 가격·생산 국제 비교", X()),
+  I("국제기구 통계", "UNHCR 난민 통계", "https://www.unhcr.org/refugee-statistics/",
+    "난민·실향민 통계.", "난민 기사", X()),
+  I("국제기구 통계", "Eurostat", "https://ec.europa.eu/eurostat",
+    "EU 통계청.", "유럽 사례 비교", X({ api: true })),
+  I("국제기구 통계", "SIPRI 데이터베이스", "https://www.sipri.org/databases",
+    "군사비·무기 거래 데이터.", "방산 수출·국방비 기사", X()),
+  I("국제기구 통계", "V-Dem (민주주의 지표)", "https://www.v-dem.net/",
+    "국가별 민주주의 지표.", "민주주의 후퇴 기사", X()),
+  I("국제기구 통계", "국제투명성기구 부패인식지수 (CPI)", "https://www.transparency.org/cpi",
+    "국가별 부패인식지수.", "한국 부패지수 순위 기사", X()),
+
+  // ===== 해외 정부·오픈데이터 =====
+  I("해외 정부·오픈데이터", "Our World in Data", "https://ourworldindata.org/",
+    "옥스퍼드대. 주제별 국제 비교 차트와 데이터.", "국제 비교 그래프를 빠르게 찾을 때", X({ star: true })),
+  I("해외 정부·오픈데이터", "FRED (세인트루이스 연준)", "https://fred.stlouisfed.org/",
+    "미국·글로벌 경제 시계열 수십만 개. API.", "미국 금리·물가 추이", X({ api: true })),
+  I("해외 정부·오픈데이터", "Data.gov (미국)", "https://data.gov/",
+    "미국 연방정부 공공데이터.", "미국 사례 비교", X({ api: true })),
+  I("해외 정부·오픈데이터", "data.gov.uk (영국)", "https://www.data.gov.uk/",
+    "영국 정부 오픈데이터.", "영국 사례 비교", X()),
+  I("해외 정부·오픈데이터", "data.europa.eu", "https://data.europa.eu/",
+    "EU 기관·회원국 데이터.", "유럽 정책 데이터", X()),
+  I("해외 정부·오픈데이터", "e-Stat (일본 정부통계)", "https://www.e-stat.go.jp/",
+    "일본 정부 공식 통계 포털.", "한일 비교 기사", X({ api: true })),
+  I("해외 정부·오픈데이터", "US Census Bureau", "https://data.census.gov/",
+    "미국 인구총조사.", "미국 인구·이민 통계", X({ api: true })),
+  I("해외 정부·오픈데이터", "Humanitarian Data Exchange (HDX)", "https://data.humdata.org/",
+    "유엔 OCHA 인도주의 위기 데이터.", "분쟁·재난 지역 기사", X()),
+  I("해외 정부·오픈데이터", "ACLED (분쟁·시위 데이터)", "https://acleddata.com/",
+    "정치적 폭력·시위 이벤트 데이터.", "분쟁 추이 기사", X({ cost: "일부유료", warn: "등록 필요, 이용 등급별 제한" })),
+  I("해외 정부·오픈데이터", "GDELT Project", "https://www.gdeltproject.org/",
+    "전 세계 뉴스 이벤트·논조 데이터. API.", "국제 보도량 추이 분석", X({ api: true })),
+  I("해외 정부·오픈데이터", "Gapminder", "https://www.gapminder.org/data/",
+    "국가별 건강·소득·인구 장기 시계열.", "장기 변화 설명 그래픽", X()),
+  I("해외 정부·오픈데이터", "Climate Watch", "https://www.climatewatchdata.org/",
+    "온실가스 배출·기후 정책(NDC) 데이터.", "국가별 감축 목표 비교", X()),
+  I("해외 정부·오픈데이터", "Global Forest Watch", "https://www.globalforestwatch.org/",
+    "전 세계 산림 훼손 모니터링.", "산림 파괴·개발 기사", X()),
+
+  // ===== 기업·제재·탐사 DB =====
+  I("기업·제재·탐사 DB", "OpenCorporates", "https://opencorporates.com/",
+    "전 세계 법인 등기 검색(2억 개 이상).", "해외 법인의 설립지·임원 확인", X({ star: true, cost: "일부유료", api: true })),
+  I("기업·제재·탐사 DB", "ICIJ Offshore Leaks Database", "https://offshoreleaks.icij.org/",
+    "파나마·판도라 페이퍼스 등 역외 법인 DB.", "인물·기업의 조세회피처 연루 확인", X({ star: true })),
+  I("기업·제재·탐사 DB", "OpenSanctions", "https://www.opensanctions.org/",
+    "제재 대상·정치적 주요 인물(PEP) 통합 DB.", "제재 명단 연루 기업·인물 확인", X({ isNew: true, api: true })),
+  I("기업·제재·탐사 DB", "OCCRP Aleph", "https://aleph.occrp.org/",
+    "유출 문서·기업·제재 데이터 교차 검색.", "탐사보도용 대량 문서 검색", X({ isNew: true, warn: "Aleph Pro로 전환 — 비영리·언론 무료 신청" })),
+  I("기업·제재·탐사 DB", "뉴스타파 데이터포털", "https://data.newstapa.org/",
+    "뉴스타파 취재 원본 데이터 공개.", "국내 탐사 데이터 재활용", { star: true }),
+
+  // ===== 위성·지도·공간 =====
+  I("위성·지도·공간", "Copernicus Browser", "https://browser.dataspace.copernicus.eu/",
+    "유럽 Sentinel 위성영상 무료 열람·비교.", "산불·홍수 전후 위성사진 비교", X({ star: true, isNew: true, warn: "EO Browser는 2026.3 종료 — 이것으로 대체" })),
+  I("위성·지도·공간", "NASA FIRMS", "https://firms.modaps.eosdis.nasa.gov/",
+    "실시간 화재 감지 지도.", "대형 산불 확산 추적", X()),
+  I("위성·지도·공간", "Google Earth Pro", "https://www.google.com/earth/about/versions/",
+    "과거 위성사진 타임라인.", "개발·훼손 전후 비교", X()),
+  I("위성·지도·공간", "OpenStreetMap", "https://www.openstreetmap.org/",
+    "누구나 쓰는 오픈 지도 데이터.", "지도 기반 인터랙티브 기사", X()),
+  I("위성·지도·공간", "국토정보플랫폼", "https://map.ngii.go.kr/",
+    "국토지리정보원 수치지도·항공사진.", "과거 항공사진으로 지형 변화 확인", { api: true }),
+
+  // ===== 웹 기록·아카이브 =====
+  I("웹 기록·아카이브", "Wayback Machine (인터넷 아카이브)", "https://web.archive.org/",
+    "웹페이지의 과거 모습 확인·저장(Save Page Now).", "삭제·수정된 보도자료·공지 확인", X({ star: true, warn: "일부 사이트는 수집 차단 — 중요한 페이지는 직접 캡처도 함께" })),
+  I("웹 기록·아카이브", "archive.today", "https://archive.ph/",
+    "웹페이지 스냅샷 저장.", "Wayback이 안 될 때 보조", X({ warn: "2026년 신뢰성 논란(위키백과 링크 금지) — 증거 보존용 단독 사용 비권장" })),
+  I("웹 기록·아카이브", "국가기록원 기록정보", "https://www.archives.go.kr/",
+    "국가기록물 검색.", "과거 정부 문서·기록 확인", { api: true }),
+  I("웹 기록·아카이브", "국립중앙도서관 · 대한민국 신문 아카이브", "https://www.nl.go.kr/",
+    "소장자료·옛 신문 디지털 컬렉션.", "과거 보도·자료 확인", { api: true }),
+  I("웹 기록·아카이브", "Common Crawl", "https://commoncrawl.org/",
+    "대규모 웹 크롤 데이터(고급).", "웹 전체 규모의 텍스트 분석", X()),
+
+  // ===== 저널리즘 데이터·사례 =====
+  I("저널리즘 데이터·사례", "Sigma Awards (데이터저널리즘상)", "https://www.sigmaawards.org/",
+    "세계 데이터저널리즘상. 2026년 84개국 543개 출품. 전 출품작 데이터는 GitHub 공개.", "해외 우수 데이터 기사의 방법을 배울 때", X({ star: true, isNew: true })),
+  I("저널리즘 데이터·사례", "2026 시그마 수상작 10편 (GIJN)", "https://gijn.org/stories/2026-data-journalism-sigma-award-winners/",
+    "위성영상·선박 위치·OCR·정보공개청구로 만든 수상작과 링크.", "데이터를 '만드는' 탐사 사례", X({ isNew: true })),
+  I("저널리즘 데이터·사례", "한국 데이터 저널리즘 어워드 수상작 해설 (뉴스젤리)", "https://newsjel.ly/archives/newsjelly-report/visual-curation/17265",
+    "2025 제8회 수상작 속 인터랙티브 요소 분석.", "국내 데이터 기사 사례", { star: true, isNew: true }),
+  I("저널리즘 데이터·사례", "한국 데이터 저널리즘 어워드", "https://datajournalismawards.kr/",
+    "국내 데이터 저널리즘 수상작 아카이브.", "역대 국내 수상작 보기", { warn: "사이트 접속이 불안정할 수 있음 — 안 열리면 위 해설 글 참고" }),
+  I("저널리즘 데이터·사례", "경향신문 인터랙티브", "https://www.khan.co.kr/interactive",
+    "경향신문 데이터저널리즘팀 인터랙티브 기사 모음.", "국내 인터랙티브 데이터 기사 사례"),
+  I("저널리즘 데이터·사례", "SBS 마부작침", "https://news.sbs.co.kr/news/mabuMain.do",
+    "SBS 데이터저널리즘팀 기획.", "방송사 데이터 기사 사례"),
+  I("저널리즘 데이터·사례", "뉴스타파", "https://newstapa.org/",
+    "한국탐사저널리즘센터. 데이터 탐사보도.", "국내 탐사 데이터 기사"),
+  I("저널리즘 데이터·사례", "ProPublica Data Store", "https://www.propublica.org/datastore/",
+    "탐사보도에 쓴 데이터 공개·판매.", "데이터가 상품이 되는 사례", X()),
+  I("저널리즘 데이터·사례", "The Markup — Show Your Work", "https://themarkup.org/series/show-your-work",
+    "방법론을 공개하는 데이터 기사 연재.", "분석 방법을 어떻게 공개하나 배울 때", X()),
+  I("저널리즘 데이터·사례", "GIJN Resource Center", "https://gijn.org/resource/",
+    "탐사·데이터 팁시트와 가이드.", "취재 기법 가이드", X({ star: true })),
+  I("저널리즘 데이터·사례", "DataJournalism.com", "https://datajournalism.com/",
+    "유럽저널리즘센터. 데이터저널리즘 핸드북·강좌.", "기초 개념 학습", X()),
+  I("저널리즘 데이터·사례", "ICIJ (국제탐사보도언론인협회)", "https://www.icij.org/",
+    "국제 협업 탐사보도.", "국경을 넘는 데이터 탐사 사례", X()),
+  I("저널리즘 데이터·사례", "IRE 수상작 아카이브", "https://www.ire.org/awards/past-award-winners/",
+    "미국 탐사보도 수상작.", "탐사보도 사례 학습", X()),
+
+  // ===== 시각화 도구 =====
+  I("시각화 도구", "Datawrapper", "https://www.datawrapper.de/",
+    "코딩 없이 차트·지도·표. 한글 지원, 뉴스룸 표준.", "기사에 넣을 차트를 10분 안에 만들 때", X({ star: true, cost: "일부유료" })),
+  I("시각화 도구", "Datawrapper Academy", "https://academy.datawrapper.de/",
+    "차트 선택법·사용법 교육 자료.", "어떤 차트를 써야 할지 모를 때", X()),
+  I("시각화 도구", "Flourish", "https://flourish.studio/",
+    "인터랙티브 차트·지도·바 차트 레이스·스토리.", "움직이는 인터랙티브 그래픽", X({ cost: "일부유료" })),
+  I("시각화 도구", "Tableau Public", "https://public.tableau.com/",
+    "무료 대시보드 공개 플랫폼.", "여러 차트를 묶은 대시보드", X()),
+  I("시각화 도구", "RAWGraphs", "https://www.rawgraphs.io/",
+    "특수 차트용 오픈소스(데이터는 브라우저 안에서만 처리).", "Sankey·Alluvial 등 특수 차트", X()),
+  I("시각화 도구", "Infogram", "https://infogram.com/",
+    "인포그래픽·대시보드 제작.", "SNS용 인포그래픽", X({ cost: "일부유료" })),
+  I("시각화 도구", "Felt", "https://felt.com/",
+    "협업형 웹 지도 제작.", "위치 데이터를 지도로", X({ cost: "일부유료" })),
+  I("시각화 도구", "Kepler.gl", "https://kepler.gl/",
+    "대용량 위치 데이터 시각화.", "수만 개 지점 지도", X()),
+  I("시각화 도구", "Observable", "https://observablehq.com/",
+    "D3 기반 시각화 노트북.", "코드로 맞춤 시각화", X({ cost: "일부유료" })),
+  I("시각화 도구", "From Data to Viz", "https://www.data-to-viz.com/",
+    "데이터 유형별 알맞은 차트 선택 가이드.", "차트 종류를 고를 때", X()),
+  I("시각화 도구", "Gephi", "https://gephi.org/",
+    "네트워크(관계망) 분석·시각화.", "인맥·거래 관계 분석", X()),
+  I("시각화 도구", "QGIS", "https://qgis.org/",
+    "무료 GIS 지도 분석 프로그램.", "행정구역별 지도 분석", X()),
+  I("시각화 도구", "SGIS 통계지도", "https://sgis.mods.go.kr/",
+    "통계 지도를 바로 만들기.", "코딩 없이 지역 통계 지도", { isNew: true })
+];
+
+
+(function () {
+  const S = { cat: 'all', q: '', star: false, free: false, region: 'all', type: 'all' };
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const norm = (s) => String(s ?? '').toLowerCase();
+  const catKeys = CATS.map((c) => c.key);
+  const catOf = (k) => CATS.find((c) => c.key === k) || { key: k, icon: '📁', desc: '' };
+
+  // ---- Type segmented control (AI page) ----
+  if (typeof TYPES !== 'undefined' && TYPES.length) {
+    $('typeBlock').hidden = false;
+    $('typeSeg').innerHTML = [{ v: 'all', label: '전체' }, ...TYPES]
+      .map((t) => `<button type="button" data-v="${t.v}" class="${t.v === 'all' ? 'on' : ''}">${t.label}</button>`).join('');
+  }
+
+  function passBase(d, ignoreCat) {
+    if (S.star && !d.star) return false;
+    if (S.free && d.cost !== '무료') return false;
+    if (S.region !== 'all' && d.region !== S.region) return false;
+    if (S.type !== 'all' && (d.kind === 'tool' ? 'ai' : d.kind) !== S.type) return false;
+    if (!ignoreCat && S.cat !== 'all' && d.cat !== S.cat) return false;
+    if (S.q) {
+      const hay = norm([d.name, d.desc, d.use, d.url, d.cat, d.warn, d.cost, d.region === 'kr' ? '국내' : '해외', d.api ? 'api' : '', (d.kw || '')].join(' '));
+      if (!S.q.split(/\s+/).every((w) => hay.includes(w))) return false;
+    }
+    return true;
+  }
+
+  function renderCats() {
+    const counts = {};
+    DATA.forEach((d) => { if (passBase(d, true)) counts[d.cat] = (counts[d.cat] || 0) + 1; });
+    const total = Object.values(counts).reduce((a, b) => a + b, 0);
+    let html = `<button type="button" class="cat-btn ${S.cat === 'all' ? 'on' : ''}" data-cat="all"><span class="ico">📚</span><span class="nm">전체 보기</span><span class="ct">${total}</span></button>`;
+    CATS.forEach((c) => {
+      const n = counts[c.key] || 0;
+      html += `<button type="button" class="cat-btn ${S.cat === c.key ? 'on' : ''} ${n ? '' : 'empty'}" data-cat="${esc(c.key)}"><span class="ico">${c.icon}</span><span class="nm">${esc(c.key)}</span><span class="ct">${n}</span></button>`;
+    });
+    $('cats').innerHTML = html;
+  }
+
+  const KIND_LABEL = { ai: 'AI 도구', api: 'API', tool: '도구', src: '' };
+  const TYPE_LABEL = { ai: '도구', api: 'API' };
+
+  function card(d) {
+    const tags = [];
+    if (d.star) tags.push('<span class="tag star">⭐ 추천</span>');
+    if (d.cost) tags.push(`<span class="tag ${d.cost === '무료' ? 'free' : ''}">${esc(d.cost)}</span>`);
+    tags.push(`<span class="tag">${d.region === 'kr' ? '🇰🇷 국내' : '🌐 해외'}</span>`);
+    if (d.api) tags.push('<span class="tag apitag">API</span>');
+    if (d.isNew) tags.push('<span class="tag new">신규·변경</span>');
+    const kind = d.kind && KIND_LABEL[d.kind] ? `<span class="kind ${d.kind}">${KIND_LABEL[d.kind]}</span>` : '';
+    const shortUrl = d.url.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '');
+    return `<article class="card ${d.star ? 'featured' : ''}">
+      <div class="card-top"><a class="card-name" href="${esc(d.url)}" target="_blank" rel="noopener">${esc(d.name)}</a>${kind}</div>
+      <div class="card-desc">${esc(d.desc)}</div>
+      ${d.use ? `<div class="card-use">${esc(d.use)}</div>` : ''}
+      ${d.warn ? `<div class="card-warn">⚠️ ${esc(d.warn)}</div>` : ''}
+      <div class="url">${esc(shortUrl)}</div>
+      <div class="card-foot">${tags.join('')}<a class="open" href="${esc(d.url)}" target="_blank" rel="noopener">열기 ↗</a></div>
+    </article>`;
+  }
+
+  function render() {
+    renderCats();
+    const items = DATA.filter((d) => passBase(d, false));
+    const groups = {};
+    items.forEach((d) => (groups[d.cat] = groups[d.cat] || []).push(d));
+    let html = '';
+    catKeys.forEach((k) => {
+      const arr = groups[k];
+      if (!arr) return;
+      arr.sort((a, b) => (b.star ? 1 : 0) - (a.star ? 1 : 0));
+      const c = catOf(k);
+      html += `<section class="section" id="sec-${catKeys.indexOf(k)}">
+        <div class="sec-head"><div class="sec-ico">${c.icon}</div><div>
+          <div class="sec-title">${esc(k)}<span class="ct">${arr.length}개</span></div>
+          ${c.desc ? `<div class="sec-desc">${esc(c.desc)}</div>` : ''}
+        </div></div>
+        <div class="grid">${arr.map(card).join('')}</div></section>`;
+    });
+    $('content').innerHTML = html || `<div class="empty-state">조건에 맞는 항목이 없습니다.<br>검색어를 줄이거나 필터를 지워 보세요.<br><button class="reset" type="button" onclick="document.getElementById('reset').click()">필터 모두 지우기</button></div>`;
+
+    const act = [];
+    if (S.cat !== 'all') act.push(S.cat);
+    if (S.star) act.push('⭐ 추천만');
+    if (S.free) act.push('무료만');
+    if (S.region !== 'all') act.push(S.region === 'kr' ? '국내' : '해외');
+    if (S.type !== 'all') act.push(TYPE_LABEL[S.type] || S.type);
+    if (S.q) act.push(`“${S.q}”`);
+    $('resultbar').innerHTML = `전체 ${DATA.length}개 중 <strong>${items.length}개</strong> 표시 ${act.map((a) => `<span class="chip-active">${esc(a)}</span>`).join(' ')}`;
+  }
+
+  // ---- Events ----
+  let t;
+  $('q').addEventListener('input', (e) => { clearTimeout(t); t = setTimeout(() => { S.q = norm(e.target.value.trim()); render(); }, 120); });
+  $('cats').addEventListener('click', (e) => {
+    const b = e.target.closest('.cat-btn'); if (!b) return;
+    S.cat = b.dataset.cat; render();
+    if (window.innerWidth > 920) window.scrollTo({ top: 0, behavior: 'smooth' });
+    else document.querySelector('main').scrollIntoView({ behavior: 'smooth' });
+  });
+  const bindToggle = (id, key) => $(id).addEventListener('click', () => { S[key] = !S[key]; $(id).classList.toggle('on', S[key]); render(); });
+  bindToggle('tStar', 'star'); bindToggle('tFree', 'free');
+  const bindSeg = (id, key) => $(id).addEventListener('click', (e) => {
+    const b = e.target.closest('button'); if (!b) return;
+    S[key] = b.dataset.v; $(id).querySelectorAll('button').forEach((x) => x.classList.toggle('on', x === b)); render();
+  });
+  bindSeg('regionSeg', 'region'); bindSeg('typeSeg', 'type');
+  $('reset').addEventListener('click', () => {
+    Object.assign(S, { cat: 'all', q: '', star: false, free: false, region: 'all', type: 'all' });
+    $('q').value = ''; $('tStar').classList.remove('on'); $('tFree').classList.remove('on');
+    ['regionSeg', 'typeSeg'].forEach((id) => $(id).querySelectorAll('button').forEach((x) => x.classList.toggle('on', x.dataset.v === 'all')));
+    render();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === '/' && document.activeElement !== $('q')) { e.preventDefault(); $('q').focus(); }
+    if (e.key === 'Escape' && document.activeElement === $('q')) { $('q').value = ''; S.q = ''; render(); }
+  });
+  window.addEventListener('scroll', () => $('totop').classList.toggle('show', window.scrollY > 600), { passive: true });
+  $('totop').addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+  render();
+})();
+</script>
+</body>
+</html>
