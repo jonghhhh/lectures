@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AI 자동화 도구 소개 및 활용법 — 방송기자연합회 특강</title>
+<meta content="아이디어 발굴 → 취재 → 보도 → 유통, 기자의 일을 단계별로 자동화하기 · 데이터저널리즘 고도화 · 바이브코딩" name="description"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800&amp;display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #f6f7f9; --surface: #fff; --surface-2: #f1f4f8; --border: #e2e6ec; --border-strong: #cfd6e0;
+    --text: #1b2230; --text-2: #3f4858; --muted: #6b7486;
+    --accent: #1f5bd6; --accent-2: #1849b0; --accent-soft: #e8effc;
+    --warn: #8a5300; --warn-soft: #fff6e0; --green: #1f8a4c; --green-soft: #e6f5ec;
+    --s1: #1f5bd6; --s2: #0f8a7a; --s3: #b45309; --s4: #9333ea;
+    --shadow: 0 1px 2px rgba(16,24,40,.05); --radius: 12px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; scroll-padding-top: 16px; }
+  @media (max-width: 960px) { html { scroll-padding-top: 70px; } }
+  body { font-family: 'Noto Sans KR', -apple-system, 'Apple SD Gothic Neo', sans-serif; background: var(--bg); color: var(--text); line-height: 1.75; font-size: 16px; -webkit-font-smoothing: antialiased; }
+  a { color: var(--accent); }
+
+  .progress { position: fixed; top: 0; left: 0; height: 3px; background: var(--accent); width: 0; z-index: 50; }
+
+  /* ---------- hero ---------- */
+  .hero { background: var(--surface); border-bottom: 1px solid var(--border); }
+  .hero-inner { max-width: 1320px; margin: 0 auto; padding: 36px 28px 28px; }
+  .host { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; color: var(--accent); background: var(--accent-soft); padding: 4px 12px; border-radius: 999px; }
+  .hero h1 { font-size: 34px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.3; margin: 14px 0 6px; }
+  .hero .sub { font-size: 17px; color: var(--text-2); }
+  .hero .meta { font-size: 14px; color: var(--muted); margin-top: 10px; }
+  .lec-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 22px; }
+  .lec-card { display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); text-decoration: none; color: var(--text); transition: border-color .15s, box-shadow .15s; }
+  .lec-card:hover { border-color: var(--accent); box-shadow: 0 6px 16px rgba(31,91,214,.10); }
+  .lec-card .ic { font-size: 22px; line-height: 1; margin-top: 2px; }
+  .lec-card b { display: block; font-size: 15px; }
+  .lec-card span { font-size: 13px; color: var(--muted); }
+  .lec-card em { font-style: normal; font-size: 12.5px; color: var(--accent); font-weight: 700; }
+
+  /* ---------- layout ---------- */
+  .layout { max-width: 1320px; margin: 0 auto; padding: 24px 28px 60px; display: grid; grid-template-columns: 280px minmax(0, 1fr); gap: 32px; }
+  .layout > * { min-width: 0; }
+  aside { position: sticky; top: 16px; align-self: start; max-height: calc(100vh - 32px); overflow-y: auto; padding-right: 4px; }
+  aside::-webkit-scrollbar { width: 6px; } aside::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
+  .side-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 12px; margin-bottom: 14px; box-shadow: var(--shadow); }
+  .side-title { font-size: 12px; font-weight: 800; color: var(--muted); letter-spacing: .04em; padding: 0 6px 8px; }
+  .toc { list-style: none; }
+  .toc a { display: block; text-decoration: none; color: var(--text-2); border-radius: 7px; }
+  .toc .t2 > a { font-size: 14.5px; font-weight: 700; padding: 7px 8px; color: var(--text); }
+  .toc .t2 > a:hover, .toc .t3 a:hover { background: var(--surface-2); }
+  .toc .sub { list-style: none; margin: 0 0 4px 10px; border-left: 2px solid var(--border); display: none; }
+  .toc .t2.open .sub { display: block; }
+  .toc .t3 a { font-size: 13.5px; padding: 4px 10px; line-height: 1.5; }
+  .toc a.on { color: var(--accent); background: var(--accent-soft); }
+  .toc .t3 a.on { font-weight: 700; }
+  .quick a { display: flex; gap: 8px; align-items: center; padding: 8px; border-radius: 8px; text-decoration: none; color: var(--text); font-size: 14px; font-weight: 500; }
+  .quick a:hover { background: var(--accent-soft); color: var(--accent); }
+  .side-note { font-size: 12.5px; color: var(--muted); padding: 0 6px; line-height: 1.6; }
+  .toc-toggle { display: none; }
+  .tt-l { white-space: nowrap; flex-shrink: 0; }
+  .tt-r { font-weight: 500; font-size: 13px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-left: 12px; min-width: 0; }
+
+  /* ---------- content ---------- */
+  main { min-width: 0; }
+  .chapter { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 30px 34px; margin-bottom: 22px; box-shadow: var(--shadow); }
+  main h2 { font-size: 25px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.35; margin-bottom: 18px; padding-bottom: 12px; border-bottom: 2px solid var(--surface-2); }
+  main h3 { font-size: 19px; font-weight: 800; letter-spacing: -0.01em; margin: 30px 0 12px; padding-left: 12px; border-left: 4px solid var(--accent); line-height: 1.4; }
+  main h4 { font-size: 16px; font-weight: 700; margin: 18px 0 8px; }
+  main p { margin: 10px 0; color: var(--text-2); }
+  main p strong, main li strong, main td strong { color: var(--text); }
+  main ul, main ol { margin: 10px 0 10px 22px; color: var(--text-2); }
+  main li { margin: 5px 0; }
+  main li::marker { color: var(--accent); }
+  main hr { display: none; }
+
+  .table-wrap { overflow-x: auto; margin: 14px 0; border: 1px solid var(--border); border-radius: 10px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14.5px; line-height: 1.6; }
+  th { background: var(--surface-2); text-align: left; font-weight: 700; padding: 10px 12px; color: var(--text); white-space: nowrap; border-bottom: 1px solid var(--border); }
+  td { padding: 10px 12px; border-top: 1px solid var(--border); vertical-align: top; color: var(--text-2); }
+  tr:first-child td { border-top: 0; }
+  td:first-child { font-weight: 700; color: var(--text); min-width: 7em; }
+  tbody tr:hover td { background: #fafbfd; }
+
+  a.src { display: inline-block; font-size: 12.5px; font-weight: 700; text-decoration: none; background: var(--accent-soft); color: var(--accent); padding: 1px 8px; border-radius: 999px; margin: 1px 2px; white-space: nowrap; line-height: 1.7; }
+  a.src:hover { background: var(--accent); color: #fff; }
+  a.tool { font-weight: 700; text-decoration: none; border-bottom: 1px dashed rgba(31,91,214,.45); }
+  a.tool:hover { border-bottom-style: solid; }
+  a.lec-link { display: inline-block; font-weight: 800; text-decoration: none; background: var(--accent); color: #fff; padding: 3px 12px; border-radius: 8px; margin: 2px 0; }
+  a.lec-link:hover { background: var(--accent-2); }
+
+  blockquote.callout { margin: 16px 0; padding: 14px 18px; background: var(--accent-soft); border-left: 4px solid var(--accent); border-radius: 0 10px 10px 0; }
+  blockquote.callout p { margin: 4px 0; color: var(--text); }
+
+  pre { background: #0f172a; color: #e2e8f0; padding: 16px 18px; border-radius: 10px; overflow-x: auto; font-size: 13.5px; line-height: 1.7; margin: 14px 0; }
+  code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .92em; }
+  :not(pre) > code { background: var(--surface-2); padding: 1px 6px; border-radius: 5px; color: #b42318; }
+
+  /* diagrams */
+  .flow { display: flex; align-items: stretch; gap: 8px; flex-wrap: wrap; margin: 16px 0; }
+  .flow-step { flex: 1 1 140px; background: var(--surface-2); border-radius: 10px; padding: 12px 14px; display: flex; flex-direction: column; gap: 2px; }
+  .flow-step b { font-size: 14.5px; line-height: 1.4; }
+  .flow-step small { font-size: 12px; color: var(--muted); }
+  .fs-tag { font-size: 12px; font-weight: 800; color: var(--accent); }
+  .flow-arrow { align-self: center; color: var(--muted); font-weight: 800; }
+  .cycle { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 16px 0; padding: 16px; background: var(--surface-2); border-radius: 12px; }
+  .cyc { flex: 1 1 120px; text-align: center; padding: 12px 8px; border-radius: 10px; color: #fff; font-weight: 800; font-size: 15px; }
+  .cyc span { display: block; font-size: 13px; opacity: .85; }
+  .s1 { background: var(--s1); } .s2 { background: var(--s2); } .s3 { background: var(--s3); } .s4 { background: var(--s4); }
+  .cyc.s4 { flex: 0 1 132px; background: transparent; border: 2px dashed var(--s4); color: var(--s4); font-size: 13.5px; padding: 8px 6px; }
+  .cyc.s4 span { font-size: 11.5px; }
+  td small.note { font-weight: 500; font-size: 12px; color: var(--muted); white-space: nowrap; }
+  .cyc-ext { opacity: .6; }
+  .cycle-back { width: 100%; text-align: center; font-size: 13.5px; color: var(--text-2); font-weight: 700; margin-top: 4px; }
+  .versus { display: grid; grid-template-columns: 1fr auto 1fr; gap: 12px; align-items: center; margin: 16px 0; }
+  .vs-col { border-radius: 12px; padding: 16px 18px; }
+  .vs-col h4 { margin: 0 0 6px; }
+  .vs-col ul { margin: 0 0 0 18px; }
+  .vs-a { background: var(--surface-2); } .vs-b { background: var(--green-soft); }
+  .vs-b h4 { color: var(--green); }
+  .vs-mid { font-weight: 800; color: var(--muted); }
+
+  footer { max-width: 1320px; margin: 0 auto; padding: 0 28px 40px; color: var(--muted); font-size: 13px; text-align: center; line-height: 1.8; }
+  .totop { position: fixed; right: 18px; bottom: 18px; width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--border-strong); background: var(--surface); font-size: 18px; cursor: pointer; display: none; color: var(--text-2); box-shadow: 0 6px 16px rgba(16,24,40,.08); }
+  .totop.show { display: block; }
+
+  @media (max-width: 960px) {
+    .layout { grid-template-columns: 1fr; padding: 14px 14px 40px; gap: 12px; }
+    aside { position: sticky; top: 0; z-index: 20; max-height: none; overflow: visible; padding: 0; }
+    .toc-toggle { display: flex; width: 100%; align-items: center; justify-content: space-between; padding: 12px 16px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; font: inherit; font-weight: 700; font-size: 15px; color: var(--text); cursor: pointer; box-shadow: var(--shadow); }
+    .side-panel { display: none; margin-top: 8px; max-height: 70vh; overflow-y: auto; }
+    aside.open .side-panel { display: block; }
+    .toc .sub { display: block; }
+    .hero-inner { padding: 24px 16px 20px; }
+    .hero h1 { font-size: 26px; }
+    .lec-cards { grid-template-columns: 1fr; }
+    .chapter { padding: 20px 16px; border-radius: 12px; }
+    main h2 { font-size: 21px; }
+    .versus { grid-template-columns: 1fr; }
+    .vs-mid { text-align: center; }
+    .flow-arrow { display: none; }
+    .table-wrap { border: 0; overflow: visible; }
+    table, tbody, tr, td { display: block; width: 100%; }
+    thead { display: none; }
+    tr { border: 1px solid var(--border); border-radius: 10px; margin-bottom: 10px; padding: 6px 0; background: var(--surface); }
+    td { border: 0 !important; padding: 5px 12px; }
+    td::before { content: attr(data-label); display: block; font-size: 11.5px; font-weight: 700; color: var(--muted); }
+    td:first-child { font-size: 15px; }
+    td:first-child::before { display: none; }
+    td:empty { display: none; }
+    tbody tr:hover td { background: transparent; }
+  }
+  @media print {
+    aside, .totop, .progress { display: none; }
+    .layout { display: block; }
+    .chapter { break-inside: auto; box-shadow: none; }
+  }
+
+  .s4tag { display:inline-block; border:1.5px dashed #7c3aed; color:#7c3aed; border-radius:6px; padding:0 6px; font-weight:700; font-size:.92em; white-space:nowrap; }
+  pre { position: relative; white-space: pre-wrap; word-break: break-word; padding-right: 64px; }
+  main :not(pre) > code { word-break: break-all; overflow-wrap: anywhere; }
+  .copy-btn { position:absolute; top:8px; right:8px; font:600 12px/1 inherit; font-family:inherit; background:#334155; color:#e2e8f0; border:0; border-radius:6px; padding:6px 9px; cursor:pointer; opacity:.85; }
+  .copy-btn:hover { opacity:1; background:#475569; }
+  .copy-btn.done { background:#15803d; }
+  @media print { .copy-btn { display:none; } }
+  /* ---------- glossary terms ---------- */
+  a.term { color: inherit; text-decoration: none; border-bottom: 2px solid #9ad8cf; background: linear-gradient(transparent 62%, #e3f6f2 62%); cursor: help; scroll-margin-top: 90px; }
+  a.term:hover, a.term:focus { border-bottom-color: #0f8a7a; background: #d4f1eb; outline: none; }
+  .term-demo { border-bottom: 2px solid #9ad8cf; background: linear-gradient(transparent 62%, #e3f6f2 62%); font-weight: 600; }
+  .pill-demo { background: var(--accent-soft); color: var(--accent); font-weight: 700; padding: 0 6px; border-radius: 999px; font-size: .92em; }
+  .tool-demo { color: var(--accent); border-bottom: 1px dashed var(--accent); }
+  .howto { margin-top: 16px; font-size: 13.5px; color: var(--text-2); background: var(--surface-2); border-radius: 10px; padding: 9px 14px; line-height: 1.7; }
+  .gpop { position: fixed; z-index: 60; max-width: 320px; background: #102a43; color: #f0f4f8; border-radius: 10px; padding: 10px 13px 11px; font-size: 13.5px; line-height: 1.6; box-shadow: 0 10px 28px rgba(16,24,40,.25); pointer-events: none; opacity: 0; transform: translateY(4px); transition: opacity .12s, transform .12s; }
+  .gpop.show { opacity: 1; transform: none; }
+  .gpop b { display: block; color: #8ee6d6; font-size: 14px; margin-bottom: 2px; }
+  .gpop small { display: block; color: #9fb3c8; margin-top: 5px; font-size: 12px; }
+  /* ---------- glossary section ---------- */
+  .glossary .g-intro { color: var(--text-2); margin: 4px 0 12px; }
+  .g-search { display: flex; align-items: center; gap: 10px; position: sticky; top: 0; z-index: 5; background: var(--surface); padding: 8px 0; }
+  .g-search input { flex: 1; font: inherit; font-size: 15px; padding: 9px 14px; border: 1.5px solid var(--border-strong); border-radius: 10px; background: var(--surface); }
+  .g-search input:focus { outline: none; border-color: #0f8a7a; box-shadow: 0 0 0 3px #d4f1eb; }
+  #gcount { font-size: 13px; color: var(--muted); white-space: nowrap; }
+  .g-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin: 8px 0 6px; }
+  .g-item { border: 1px solid var(--border); border-left: 4px solid #0f8a7a; border-radius: 10px; padding: 10px 14px; background: var(--surface); scroll-margin-top: 80px; transition: box-shadow .2s, background .2s; }
+  .g-item.hit { background: #effaf7; box-shadow: 0 0 0 3px #b8ebe1; }
+  .g-item[hidden] { display: none !important; }
+  .g-h b { font-size: 16px; } .g-en { font-size: 12.5px; color: var(--muted); margin-left: 6px; }
+  .g-item p { font-size: 14.5px; line-height: 1.65; color: var(--text-2); margin: 3px 0 5px; }
+  .g-more { display: inline-block; font-size: 12.5px; font-weight: 700; color: var(--accent); text-decoration: none; margin-right: 8px; }
+  .g-more:hover { text-decoration: underline; }
+  .g-back { font-size: 12.5px; color: var(--muted); margin-top: 2px; }
+  .g-back a { color: #0f8a7a; text-decoration: none; font-weight: 600; }
+  .g-return { position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%); z-index: 40; border: 0; border-radius: 999px; background: #0f8a7a; color: #fff; font: inherit; font-weight: 700; font-size: 14px; padding: 9px 18px; box-shadow: 0 8px 20px rgba(15,138,122,.35); cursor: pointer; display: none; }
+  .g-return.show { display: block; }
+  a.term.flash { animation: flash 1.6s ease; }
+  @keyframes flash { 0%,40% { background: #9ad8cf; } 100% { background: linear-gradient(transparent 62%, #e3f6f2 62%); } }
+  @media (max-width: 760px) { .g-grid { grid-template-columns: 1fr; } .gpop { display: none; } }
+  @media (max-width: 960px) { .g-search { top: 64px; } }
+  @media print { .g-search, .g-return, .gpop { display: none !important; } a.term { background: none; border-bottom: 1px solid #9ad8cf; } }
+  /* ---------- ladder ---------- */
+  .basics { border: 1px solid var(--border); background: var(--surface-2); border-radius: 12px; padding: 12px 18px; margin: 10px 0 14px; }
+  .basics-t { font-weight: 800; font-size: 14.5px; color: var(--text); margin-bottom: 2px; }
+  .basics ul { margin: 0 0 0 4px; list-style: none; } .basics li { margin: 2px 0; }
+  .lv1 { --lv: #7b8aa3; } .lv2 { --lv: #3b6fd8; } .lv3 { --lv: #0f8a7a; } .lv4 { --lv: #b45309; } .lv5 { --lv: #c2410c; }
+  .stairs { position: relative; display: flex; align-items: flex-end; gap: 6px; height: 190px; margin: 6px 0 34px; }
+  .st-step { flex: 1; border-radius: 10px 10px 4px 4px; background: var(--lv); color: #fff; padding: 8px 10px; display: flex; flex-direction: column; min-width: 0; }
+  .st-step b { font-size: 14px; line-height: 1.3; } .st-n { font-size: 20px; font-weight: 800; line-height: 1.1; opacity: .9; }
+  .st-mark { position: absolute; left: 40%; width: 20%; bottom: -24px; text-align: center; font-size: 12.5px; font-weight: 800; color: #0f8a7a; }
+  .lv-badge { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 6px; background: var(--lv); color: #fff; font-weight: 800; font-size: 13px; }
+  table.ladder td:first-child { white-space: nowrap; }
+  table.ladder tr.lv3 td { background: #effaf7; }
+  .lv-now { display: inline-block; background: #0f8a7a; color: #fff; font-size: 12px; font-weight: 700; border-radius: 999px; padding: 0 8px; margin-left: 4px; }
+  @media (min-width: 761px) { table.ladder th:nth-child(1){width:15%} table.ladder th:nth-child(2){width:16%} table.ladder th:nth-child(3){width:21%} table.ladder th:nth-child(4){width:26%} }
+  .st-mark { white-space: nowrap; }
+  @media (max-width: 760px) { .st-mark { left: 25%; width: 50%; } .stairs { height: 160px; gap: 4px; } .st-step { padding: 6px 5px; } .st-step b { font-size: 11.5px; } .st-n { font-size: 16px; } .st-mark { font-size: 11px; } table.ladder td:first-child { white-space: normal; } }
+</style>
+
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<header class="hero">
+<div class="hero-inner">
+<span class="host">📺 방송기자연합회 주최 · 기자 대상 특강</span>
+<h1>AI 자동화 도구 소개 및 활용법</h1>
+<p class="sub">아이디어 발굴 → 취재 → 보도 → 유통, 기자의 일을 단계별로 자동화하기 · 데이터저널리즘 고도화 · 바이브코딩 실습</p>
+<p class="meta">강사 이종혁 (경희대학교 미디어학과 교수 · 미디어혁신연구소장) · 자료 기준일 2026년 11월 (실습 데이터 2026.9 기준 검증)</p>
+<div class="lec-cards">
+<a class="lec-card" href="https://jonghhhh.github.io/lectures/sources/datajour_ai.html" rel="noopener" target="_blank">
+<span class="ic">🤖</span><div><b>취재보도용 AI 도구·API 가이드</b><span>160여 개 도구·API — 단계별 분류·검색·필터</span><br/><em>열기 ↗</em></div></a>
+<a class="lec-card" href="https://jonghhhh.github.io/lectures/sources/datajour_source.html" rel="noopener" target="_blank">
+<span class="ic">🗂️</span><div><b>데이터저널리즘 데이터 소스 디렉토리</b><span>180여 개 국내외 데이터 — 취재 분야별 분류</span><br/><em>열기 ↗</em></div></a>
+<a class="lec-card" href="#lab">
+<span class="ic">🛠️</span><div><b>8장 실습: 우리 동네 소아과는 몇 곳?</b><span>데이터 2종 구하기 → 대화형 배포 → 에이전트로 재현</span><br/><em>바로 가기 ↓</em></div></a>
+</div><p class="howto">📖 <b>읽는 법</b> — <span class="term-demo">밑줄 용어</span>는 누르면 맨 뒤 <a href="#glossary">용어 사전</a>으로 이동(마우스를 올리면 뜻이 보입니다) · <span class="pill-demo">도메인 ↗</span>은 출처 원문 · <b class="tool-demo">점선 이름</b>은 도구·사이트 바로가기</p>
+</div>
+</header>
+<div class="layout">
+<aside id="aside">
+<button aria-expanded="false" class="toc-toggle" id="tocToggle" type="button"><span class="tt-l">📑 목차</span><span class="tt-r" id="curSec">펼치기</span></button>
+<div class="side-panel">
+<div class="side-box">
+<div class="side-title">목차</div>
+<ul class="toc" id="toc"><li class="t2"><a data-id="s1" href="#s1">오늘의 메시지</a><ul class="sub"><li class="t3"><a data-id="s2" href="#s2">논리 흐름</a></li></ul></li><li class="t2"><a data-id="s3" href="#s3">1. 왜 지금, 기자의 일을 단계별로 자동화해야 하나</a><ul class="sub"><li class="t3"><a data-id="s4" href="#s4">1-1. 뉴스 산업의 2026년 — 숫자로 보기</a></li><li class="t3"><a data-id="s5" href="#s5">1-2. 기자의 하루를 4단계로 — 무엇을 자동화하나</a></li></ul></li><li class="t2"><a data-id="s6" href="#s6">2. 국내외 동향</a><ul class="sub"><li class="t3"><a data-id="s7" href="#s7">2-1. 해외: 4단계별 사례</a></li><li class="t3"><a data-id="s8" href="#s8">2-2. 조사로 본 흐름</a></li><li class="t3"><a data-id="s9" href="#s9">2-3. 그림자: 대체냐 증강이냐</a></li><li class="t3"><a data-id="s10" href="#s10">2-4. 국내</a></li></ul></li><li class="t2"><a data-id="s11" href="#s11">3. 단계별 주요 도구 (핵심만)</a></li><li class="t2"><a data-id="s12" href="#s12">4. 데이터 소스와 RSS·API (핵심만)</a><ul class="sub"><li class="t3"><a data-id="s13" href="#s13">4-1. 취재 분야별 "먼저 열어 볼 곳"</a></li><li class="t3"><a data-id="s14" href="#s14">4-2. RSS·API·크롤링</a></li></ul></li><li class="t2"><a data-id="s15" href="#s15">5. 직접 만든 취재 보조 도구</a></li><li class="t2"><a data-id="s16" href="#s16">6. 자동화를 넘어 — 데이터저널리즘 고도화</a><ul class="sub"><li class="t3"><a data-id="s17" href="#s17">6-1. 2026 시그마 어워드가 보여 준 것</a></li><li class="t3"><a data-id="s18" href="#s18">6-2. 자동화는 비용, 데이터는 상품</a></li><li class="t3"><a data-id="s18b" href="#s18b">6-3. 고도화 5단계 — 수준을 높여 가며 점검</a></li></ul></li><li class="t2"><a data-id="vibe" href="#vibe">7. 바이브코딩 — 대화형 AI에서 코딩 에이전트로</a><ul class="sub"><li class="t3"><a data-id="v1" href="#v1">7-1. 바이브코딩이란</a></li><li class="t3"><a data-id="v2" href="#v2">7-2. 두 가지 길 — 언제 무엇을 쓰나</a></li><li class="t3"><a data-id="v3" href="#v3">7-3. 에이전트를 '팀'으로 만드는 세 장치</a></li><li class="t3"><a data-id="v4" href="#v4">7-4. 일하는 방식 — 다섯 가지만</a></li><li class="t3"><a data-id="v5" href="#v5">7-5. 돌아가는 서비스로 — 자체 서버 사례</a></li></ul></li><li class="t2"><a data-id="lab" href="#lab">8. 실습: '우리 동네 소아과는 몇 곳?'</a><ul class="sub"><li class="t3"><a data-id="l1" href="#l1">8-1. 무엇을 만드나</a></li><li class="t3"><a data-id="l2" href="#l2">8-2. 데이터 구하기 — 어디서, 어떤 파일을</a></li><li class="t3"><a data-id="l3" href="#l3">8-3. 트랙 A — 대화형으로 완성·배포</a></li><li class="t3"><a data-id="l4" href="#l4">8-4. 트랙 B — 코딩 에이전트로 재현</a></li><li class="t3"><a data-id="l5" href="#l5">8-5. 점검하고 넓히기</a></li></ul></li><li class="t2"><a data-id="s33" href="#s33">9. 배우는 길과 AI 사용 원칙</a><ul class="sub"><li class="t3"><a data-id="s34" href="#s34">9-1. 학습 로드맵</a></li><li class="t3"><a data-id="s35" href="#s35">9-2. 기자의 AI 사용 5원칙</a></li></ul></li><li class="t2"><a data-id="s36" href="#s36">마무리</a></li><li class="t2"><a data-id="s37" href="#s37">참고 자료</a></li><li class="t2"><a data-id="glossary" href="#glossary">부록. 용어 사전</a><ul class="sub"><li class="t3"><a data-id="gc1" href="#gc1">저널리즘 개념·이론</a></li><li class="t3"><a data-id="gc2" href="#gc2">데이터·수집</a></li><li class="t3"><a data-id="gc3" href="#gc3">AI 개념</a></li><li class="t3"><a data-id="gc4" href="#gc4">바이브코딩</a></li><li class="t3"><a data-id="gc5" href="#gc5">배포·협업</a></li></ul></li></ul>
+</div>
+<div class="side-box quick">
+<div class="side-title">강의 자료 바로가기</div>
+<a href="https://jonghhhh.github.io/lectures/sources/datajour_ai.html" rel="noopener" target="_blank">🤖 AI 도구·API 가이드</a>
+<a href="https://jonghhhh.github.io/lectures/sources/datajour_source.html" rel="noopener" target="_blank">🗂️ 데이터 소스 디렉토리</a>
+<a href="#vibe">🧑‍💻 바이브코딩 개념 (7장)</a>
+<a href="#l2">📥 실습 데이터 구하기 (8-2)</a>
+<a href="#lab">🛠️ 실습 A·B → GitHub 배포 (8장)</a>
+<a href="#glossary">📖 용어 사전 (부록)</a></div>
+<div class="side-note"><span class="term-demo">밑줄 용어</span> = 용어 사전(마우스를 올리면 뜻) · <span class="pill-demo">도메인 ↗</span> = 출처 원문 · <b class="tool-demo">점선 이름</b> = 도구·사이트. 바깥 링크는 새 창으로 열립니다.</div>
+</div>
+</aside>
+<main id="main"><section class="chapter"><h2 id="s1">오늘의 메시지</h2>
+<ol>
+<li><strong>기자의 일 전체가 자동화 대상</strong> — 아이디어 발굴 → 취재 → 보도 → 유통, 단계마다 반복 작업을 도구·<a class="term" data-g="g14" href="#g14" id="g14-u1">API</a>·<a class="term" data-g="g16" href="#g16" id="g16-u1">크롤링</a>에.</li>
+<li><strong>세계 뉴스룸은 이미 그렇게 일한다</strong> — 퓰리처 수상작 8건이 AI 사용 공개. 동시에 검색 유입 급감·AI 오류·감원.</li>
+<li><strong>자동화는 비용 절감일 뿐</strong> — 아낀 시간은 <strong><a class="term" data-g="g0" href="#g0" id="g0-u1">데이터저널리즘</a> 고도화</strong>에.</li>
+<li><strong><a class="term" data-g="g37" href="#g37" id="g37-u1">바이브코딩</a>이 출발점</strong> — 대화형 AI로 '우리 동네 소아과' 데이터 기사를 만들어 <a class="term" data-g="g58" href="#g58" id="g58-u1">GitHub</a>에 공개하고, 코딩 에이전트로 다시 만들어 갱신 가능하게 한다(8장 실습).</li>
+</ol>
+<h3 id="s2">논리 흐름</h3>
+<div class="flow">
+<div class="flow-step"><span class="fs-tag">왜?</span><b>1. 4단계 자동화의 필요</b></div>
+<div class="flow-arrow">→</div>
+<div class="flow-step"><span class="fs-tag">누가 어떻게?</span><b>2. 국내외 동향</b></div>
+<div class="flow-arrow">→</div>
+<div class="flow-step"><span class="fs-tag">무엇으로?</span><b>3·4. 도구·데이터 소스</b><small>5. 직접 만든 취재 보조 도구</small></div>
+<div class="flow-arrow">→</div>
+<div class="flow-step"><span class="fs-tag">그래서 무엇을?</span><b>6. 데이터저널리즘 고도화</b></div>
+<div class="flow-arrow">→</div>
+<div class="flow-step"><span class="fs-tag">어떻게 시작?</span><b>7. 바이브코딩 개념 · 8. 실습</b><small>데이터 구하기 → 대화형 배포 → 에이전트 재현</small></div>
+</div>
+<hr/>
+</section><section class="chapter"><h2 id="s3">1. 왜 지금, 기자의 일을 단계별로 자동화해야 하나</h2>
+<h3 id="s4">1-1. 뉴스 산업의 2026년 — 숫자로 보기</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>지표</th>
+<th>수치</th>
+<th>출처</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="지표">언론사 예상 향후 3년 검색 유입 감소</td>
+<td data-label="수치"><strong>40% 이상</strong></td>
+<td data-label="출처"><a class="src" href="https://reutersinstitute.politics.ox.ac.uk/journalism-media-and-technology-trends-and-predictions-2026" rel="noopener" target="_blank" title="https://reutersinstitute.politics.ox.ac.uk/journalism-media-and-technology-trends-and-predictions-2026">로이터연구소 2026 ↗</a></td>
+</tr>
+<tr>
+<td data-label="지표">구글 검색 유입 1년 변화(전 세계 뉴스 사이트)</td>
+<td data-label="수치"><strong>−40.2%</strong></td>
+<td data-label="출처"><a class="src" href="https://www.searchenginejournal.com/google-search-decline-publishers-chartbeat/590681/" rel="noopener" target="_blank" title="https://www.searchenginejournal.com/google-search-decline-publishers-chartbeat/590681/">Chartbeat (SEJ 보도) ↗</a></td>
+</tr>
+<tr>
+<td data-label="지표"><a class="term" data-g="g31" href="#g31" id="g31-u1">클릭 없이</a> 끝나는 미국 구글 검색</td>
+<td data-label="수치"><strong>68%</strong></td>
+<td data-label="출처"><a class="src" href="https://sparktoro.com/blog/in-2026-less-than-one-third-of-google-searches-still-send-a-click/" rel="noopener" target="_blank" title="https://sparktoro.com/blog/in-2026-less-than-one-third-of-google-searches-still-send-a-click/">SparkToro ↗</a></td>
+</tr>
+<tr>
+<td data-label="지표"><a class="term" data-g="g32" href="#g32" id="g32-u1">AI 요약</a> 뜰 때 링크 클릭률</td>
+<td data-label="수치"><strong>8%</strong> (없을 때 15%)</td>
+<td data-label="출처"><a class="src" href="https://www.pewresearch.org/short-reads/2025/07/22/google-users-are-less-likely-to-click-on-links-when-an-ai-summary-appears-in-the-results/" rel="noopener" target="_blank" title="https://www.pewresearch.org/short-reads/2025/07/22/google-users-are-less-likely-to-click-on-links-when-an-ai-summary-appears-in-the-results/">Pew Research ↗</a></td>
+</tr>
+<tr>
+<td data-label="지표">AI 챗봇 주간 뉴스 이용</td>
+<td data-label="수치">세계 10% · <strong>한국 14%</strong>(전년 7%)</td>
+<td data-label="출처"><a class="src" href="https://reutersinstitute.politics.ox.ac.uk/digital-news-report/2026/dnr-executive-summary" rel="noopener" target="_blank" title="https://reutersinstitute.politics.ox.ac.uk/digital-news-report/2026/dnr-executive-summary">디지털뉴스리포트 2026 ↗</a> · <a class="src" href="https://www.newsis.com/view/NISX20260616_0003671612" rel="noopener" target="_blank" title="https://www.newsis.com/view/NISX20260616_0003671612">한국 결과 ↗</a></td>
+</tr>
+<tr>
+<td data-label="지표">백엔드 자동화가 중요하다는 언론사</td>
+<td data-label="수치"><strong>97%</strong></td>
+<td data-label="출처"><a class="src" href="https://reutersinstitute.politics.ox.ac.uk/journalism-media-and-technology-trends-and-predictions-2026" rel="noopener" target="_blank" title="https://reutersinstitute.politics.ox.ac.uk/journalism-media-and-technology-trends-and-predictions-2026">로이터연구소 2026 ↗</a></td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li><strong>언론사 전략</strong>: 늘릴 것 — 현장 취재·탐사 +91, 해설 +82, 팩트체크 +63 / 줄일 것 — 서비스형 기사 −42, 일반 뉴스 −38</li>
+<li><strong><a class="term" data-g="g1" href="#g1" id="g1-u1">바벨 효과</a></strong>: 차별화 저널리즘 ↔ 철저한 자동화. <strong>어중간한 범용 뉴스가 가장 위험</strong> <a class="src" href="https://reutersinstitute.politics.ox.ac.uk/journalism-media-and-technology-trends-and-predictions-2026" rel="noopener" target="_blank" title="https://reutersinstitute.politics.ox.ac.uk/journalism-media-and-technology-trends-and-predictions-2026">로이터연구소 2026 ↗</a></li>
+</ul>
+<h3 id="s5">1-2. 기자의 하루를 4단계로 — 무엇을 자동화하나</h3>
+<div class="cycle">
+<div class="cyc s1"><span>①</span>아이디어 발굴</div><div class="flow-arrow">→</div>
+<div class="cyc s2"><span>②</span>취재</div><div class="flow-arrow">→</div>
+<div class="cyc s3"><span>③</span>보도</div><div class="flow-arrow cyc-ext">⇢</div>
+<div class="cyc s4"><span>④ 출고 이후</span>유통·독자 반응</div>
+<div class="cycle-back">↺ 내 기사에 대한 독자 반응·피드백이 다음 아이디어로 이어진다</div>
+</div>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>단계</th>
+<th>세부 업무</th>
+<th>자동화하면</th>
+<th>대표 도구</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="단계"><strong>① 아이디어 발굴</strong></td>
+<td data-label="세부 업무">이슈·트렌드 탐지</td>
+<td data-label="자동화하면">검색·SNS 언급량 추적, 키워드 알림</td>
+<td data-label="대표 도구"><a class="tool" href="https://www.bigkinds.or.kr/" rel="noopener" target="_blank" title="https://www.bigkinds.or.kr/">빅카인즈</a>, <a class="tool" href="https://datalab.naver.com/" rel="noopener" target="_blank" title="https://datalab.naver.com/">네이버 데이터랩</a>, <a class="tool" href="https://trends.google.com/explore" rel="noopener" target="_blank" title="https://trends.google.com/explore">Google Trends</a></td>
+</tr>
+<tr>
+<td data-label="단계"></td>
+<td data-label="세부 업무">출입처 모니터링</td>
+<td data-label="자동화하면"><strong><a class="term" data-g="g18" href="#g18" id="g18-u1">RSS</a> 구독</strong>, 웹페이지 <a class="term" data-g="g19" href="#g19" id="g19-u1">변경 감시</a>, <a class="term" data-g="g16" href="#g16" id="g16-u2">크롤러</a>가 아침마다 단서 메일</td>
+<td data-label="대표 도구">RSS 리더, <a class="tool" href="https://docs.rsshub.app/" rel="noopener" target="_blank" title="https://docs.rsshub.app/">RSSHub</a>, <a class="tool" href="https://visualping.io/journalists" rel="noopener" target="_blank" title="https://visualping.io/journalists">Visualping</a>, <a class="tool" href="https://www.google.com/alerts" rel="noopener" target="_blank" title="https://www.google.com/alerts">Google Alerts</a></td>
+</tr>
+<tr>
+<td data-label="단계"></td>
+<td data-label="세부 업무">데이터에서 아이템</td>
+<td data-label="자동화하면"><strong>공공 <a class="term" data-g="g14" href="#g14" id="g14-u2">API</a></strong>로 지표 자동 수집 → 급변 알림</td>
+<td data-label="대표 도구"><a class="tool" href="https://www.data.go.kr/" rel="noopener" target="_blank" title="https://www.data.go.kr/">공공데이터포털</a>·<a class="tool" href="https://ecos.bok.or.kr/" rel="noopener" target="_blank" title="https://ecos.bok.or.kr/">ECOS</a>·<a class="tool" href="https://kosis.kr/" rel="noopener" target="_blank" title="https://kosis.kr/">KOSIS</a>·<a class="tool" href="https://opendart.fss.or.kr/" rel="noopener" target="_blank" title="https://opendart.fss.or.kr/">OpenDART</a> API</td>
+</tr>
+<tr>
+<td data-label="단계"><strong>② 취재</strong></td>
+<td data-label="세부 업무">자료 수집</td>
+<td data-label="자동화하면"><strong>API 대량 수집</strong>, <strong>웹 크롤링</strong>, <a class="term" data-g="g20" href="#g20" id="g20-u1">정보공개청구</a></td>
+<td data-label="대표 도구"><a class="term" data-g="g46" href="#g46" id="g46-u1">파이썬</a>(<a class="tool" href="https://requests.readthedocs.io/" rel="noopener" target="_blank" title="https://requests.readthedocs.io/">requests</a>·<a class="tool" href="https://www.crummy.com/software/BeautifulSoup/" rel="noopener" target="_blank" title="https://www.crummy.com/software/BeautifulSoup/">BeautifulSoup</a>·<a class="tool" href="https://playwright.dev/python/" rel="noopener" target="_blank" title="https://playwright.dev/python/">Playwright</a>), <a class="tool" href="https://www.open.go.kr/" rel="noopener" target="_blank" title="https://www.open.go.kr/">정보공개포털</a></td>
+</tr>
+<tr>
+<td data-label="단계"></td>
+<td data-label="세부 업무">정리·분석</td>
+<td data-label="자동화하면">근거 인용 요약, <strong><a class="term" data-g="g26" href="#g26" id="g26-u1">LLM</a>으로 문서 수천 건 분류</strong></td>
+<td data-label="대표 도구"><a class="tool" href="https://notebooklm.google.com/" rel="noopener" target="_blank" title="https://notebooklm.google.com/">NotebookLM</a>, <a class="tool" href="https://journaliststudio.google.com/pinpoint/" rel="noopener" target="_blank" title="https://journaliststudio.google.com/pinpoint/">Google Pinpoint</a>, <a class="tool" href="https://tabula.technology/" rel="noopener" target="_blank" title="https://tabula.technology/">Tabula</a>, <a class="tool" href="https://openrefine.org/" rel="noopener" target="_blank" title="https://openrefine.org/">OpenRefine</a></td>
+</tr>
+<tr>
+<td data-label="단계"></td>
+<td data-label="세부 업무">녹취</td>
+<td data-label="자동화하면">자동 <a class="term" data-g="g25" href="#g25" id="g25-u1">전사</a>·화자 분리 (민감 녹취는 로컬)</td>
+<td data-label="대표 도구"><a class="tool" href="https://clovanote.naver.com/" rel="noopener" target="_blank" title="https://clovanote.naver.com/">클로바노트</a>, <a class="tool" href="https://daglo.ai/" rel="noopener" target="_blank" title="https://daglo.ai/">다글로</a>, <a class="tool" href="https://github.com/openai/whisper" rel="noopener" target="_blank" title="https://github.com/openai/whisper">Whisper</a></td>
+</tr>
+<tr>
+<td data-label="단계"></td>
+<td data-label="세부 업무">사실 확인</td>
+<td data-label="자동화하면">기존 팩트체크 검색, 이미지 <a class="term" data-g="g36" href="#g36" id="g36-u1">역추적</a>, 통계 대조</td>
+<td data-label="대표 도구"><a class="tool" href="https://toolbox.google.com/factcheck/explorer" rel="noopener" target="_blank" title="https://toolbox.google.com/factcheck/explorer">Fact Check Explorer</a>, <a class="tool" href="https://weverify.eu/verification-plugin/" rel="noopener" target="_blank" title="https://weverify.eu/verification-plugin/">InVID</a>, <a class="tool" href="https://lens.google/" rel="noopener" target="_blank" title="https://lens.google/">Google Lens</a></td>
+</tr>
+<tr>
+<td data-label="단계"><strong>③ 보도</strong></td>
+<td data-label="세부 업무">작성·교열</td>
+<td data-label="자동화하면">구조·리드 후보 제안(<strong>초안은 기자가</strong>), 맞춤법 점검</td>
+<td data-label="대표 도구"><a class="tool" href="https://nara-speller.co.kr/" rel="noopener" target="_blank" title="https://nara-speller.co.kr/">바른한글</a>, <a class="tool" href="https://stdict.korean.go.kr/" rel="noopener" target="_blank" title="https://stdict.korean.go.kr/">표준국어대사전</a></td>
+</tr>
+<tr>
+<td data-label="단계"></td>
+<td data-label="세부 업무">시각화·재가공</td>
+<td data-label="자동화하면">노코드 차트, 숏폼 대본·자막·번역 초안</td>
+<td data-label="대표 도구"><a class="tool" href="https://www.datawrapper.de/" rel="noopener" target="_blank" title="https://www.datawrapper.de/">Datawrapper</a>, <a class="tool" href="https://flourish.studio/" rel="noopener" target="_blank" title="https://flourish.studio/">Flourish</a>, <a class="tool" href="https://www.canva.com/" rel="noopener" target="_blank" title="https://www.canva.com/">Canva</a>, <a class="tool" href="https://www.capcut.com/" rel="noopener" target="_blank" title="https://www.capcut.com/">CapCut</a></td>
+</tr>
+<tr>
+<td data-label="단계"><span class="s4tag">④ 출고 이후</span></td>
+<td data-label="세부 업무">내 기사 반응</td>
+<td data-label="자동화하면">유입 경로·체류시간 확인, 댓글 수집 → AI 쟁점 분류 → 후속 아이템</td>
+<td data-label="대표 도구"><a class="tool" href="https://analytics.google.com/" rel="noopener" target="_blank" title="https://analytics.google.com/">GA4</a>, <a class="tool" href="https://chartbeat.com/" rel="noopener" target="_blank" title="https://chartbeat.com/">Chartbeat</a>, <a class="tool" href="https://studio.youtube.com/" rel="noopener" target="_blank" title="https://studio.youtube.com/">유튜브 스튜디오</a>, <a class="tool" href="https://developers.google.com/youtube/v3" rel="noopener" target="_blank" title="https://developers.google.com/youtube/v3">YouTube Data API</a></td>
+</tr>
+</tbody>
+</table></div>
+<blockquote class="callout">
+<p><strong>원칙</strong>: 매일 반복하는 일·많아서 못 읽는 일·놓치기 쉬운 일을 맡긴다. <strong>판단·현장·검증은 기자의 몫.</strong></p>
+</blockquote>
+<hr/>
+</section><section class="chapter"><h2 id="s6">2. 국내외 동향</h2>
+<h3 id="s7">2-1. 해외: 4단계별 사례</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>단계</th>
+<th>사례</th>
+<th>핵심</th>
+<th>원문</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="단계">① 발굴</td>
+<td data-label="사례">Philadelphia Inquirer 'Scrape' (2026.9)</td>
+<td data-label="핵심">AI가 지자체 회의·학교 일정을 매일 훑어 단서 메일 — 편집자 주 12시간 대체</td>
+<td data-label="원문"><a class="src" href="https://lenfestinstitute.org/solutions-resources/philadelphia-inquirer-scrape-ai-hyperlocal-news" rel="noopener" target="_blank" title="https://lenfestinstitute.org/solutions-resources/philadelphia-inquirer-scrape-ai-hyperlocal-news">lenfestinstitute.org ↗</a></td>
+</tr>
+<tr>
+<td data-label="단계">① 발굴</td>
+<td data-label="사례">Connecticut Public</td>
+<td data-label="핵심">지자체 회의 영상 자동 <a class="term" data-g="g25" href="#g25" id="g25-u2">전사</a> → 기삿거리 후보를 Slack으로</td>
+<td data-label="원문"><a class="src" href="https://localmedia.org/2026/07/how-connecticut-public-used-ai-to-uncover-more-local-stories/" rel="noopener" target="_blank" title="https://localmedia.org/2026/07/how-connecticut-public-used-ai-to-uncover-more-local-stories/">localmedia.org ↗</a></td>
+</tr>
+<tr>
+<td data-label="단계">① 발굴</td>
+<td data-label="사례">로이터 Lynx Insight</td>
+<td data-label="핵심">보도자료에서 핵심 사실 추출 → 기자 검증 후 발행</td>
+<td data-label="원문"><a class="src" href="https://www.niemanlab.org/2026/07/how-three-newsrooms-are-charting-different-paths-for-ai-use/" rel="noopener" target="_blank" title="https://www.niemanlab.org/2026/07/how-three-newsrooms-are-charting-different-paths-for-ai-use/">niemanlab.org ↗</a></td>
+</tr>
+<tr>
+<td data-label="단계">② 취재</td>
+<td data-label="사례">2026 퓰리처상</td>
+<td data-label="핵심">AI 사용 공개 <strong>역대 최다 8건</strong> — 번역·문서 분류·DB화 보조</td>
+<td data-label="원문"><a class="src" href="https://www.niemanlab.org/2026/08/a-record-breaking-eight-pulitzer-awardees-disclosed-ai-use-this-year/" rel="noopener" target="_blank" title="https://www.niemanlab.org/2026/08/a-record-breaking-eight-pulitzer-awardees-disclosed-ai-use-this-year/">niemanlab.org ↗</a></td>
+</tr>
+<tr>
+<td data-label="단계">② 취재</td>
+<td data-label="사례">뉴욕타임스 'Cheatsheet'</td>
+<td data-label="핵심">문서 300만 쪽 분석 — "AI는 보조, 저자가 아니다"</td>
+<td data-label="원문"><a class="src" href="https://awards.journalists.org/entries/the-new-york-timess-a-i-toolkit-for-investigative-journalism/" rel="noopener" target="_blank" title="https://awards.journalists.org/entries/the-new-york-timess-a-i-toolkit-for-investigative-journalism/">awards.journalists.org ↗</a></td>
+</tr>
+<tr>
+<td data-label="단계">② 취재</td>
+<td data-label="사례">Sanoma(핀란드)</td>
+<td data-label="핵심">인터뷰→전사→요약→초안 파이프라인, 녹음 방식부터 표준화</td>
+<td data-label="원문"><a class="src" href="https://wan-ifra.org/2026/04/sanoma-tried-to-build-an-ai-tool-it-ended-up-rebuilding-its-workflow/" rel="noopener" target="_blank" title="https://wan-ifra.org/2026/04/sanoma-tried-to-build-an-ai-tool-it-ended-up-rebuilding-its-workflow/">wan-ifra.org ↗</a></td>
+</tr>
+<tr>
+<td data-label="단계">③ 보도</td>
+<td data-label="사례">BBC 'At a Glance'</td>
+<td data-label="핵심">승인된 <a class="term" data-g="g27" href="#g27" id="g27-u1">프롬프트</a>로 요약, 기자 전수 검토, <a class="term" data-g="g35" href="#g35" id="g35-u1">AI 사용 표시</a></td>
+<td data-label="원문"><a class="src" href="https://www.newscaststudio.com/2025/06/27/bbc-begins-public-trials-of-two-generative-ai-news-production-tools/" rel="noopener" target="_blank" title="https://www.newscaststudio.com/2025/06/27/bbc-begins-public-trials-of-two-generative-ai-news-production-tools/">newscaststudio.com ↗</a></td>
+</tr>
+<tr>
+<td data-label="단계">③ 보도</td>
+<td data-label="사례">Newsquest(영국)</td>
+<td data-label="핵심">'AI 보조 기자' 36명 — 자동화 쪽 <a class="term" data-g="g1" href="#g1" id="g1-u2">바벨</a></td>
+<td data-label="원문"><a class="src" href="https://pressgazette.co.uk/publishers/regional-newspapers/newsquest-36-ai-assisted-reporters-non-canon-news-disintermediation/" rel="noopener" target="_blank" title="https://pressgazette.co.uk/publishers/regional-newspapers/newsquest-36-ai-assisted-reporters-non-canon-news-disintermediation/">pressgazette.co.uk ↗</a></td>
+</tr>
+<tr>
+<td data-label="단계">③ 보도</td>
+<td data-label="사례">⚠️ WaPo AI 팟캐스트</td>
+<td data-label="핵심">스크립트 68~84% 기준 미달인데 출시 → 비판</td>
+<td data-label="원문"><a class="src" href="https://www.semafor.com/article/12/14/2025/iterate-through-why-the-washington-post-launched-an-error-ridden-ai-product" rel="noopener" target="_blank" title="https://www.semafor.com/article/12/14/2025/iterate-through-why-the-washington-post-launched-an-error-ridden-ai-product">semafor.com ↗</a></td>
+</tr>
+<tr>
+<td data-label="단계">④ 유통</td>
+<td data-label="사례">TIME AI Agent</td>
+<td data-label="핵심">자사 아카이브 기반 AI 답변 — 재방문 139%↑</td>
+<td data-label="원문"><a class="src" href="https://digitalcontentnext.org/blog/2026/04/16/inside-times-rollout-of-its-timeai-interactive-agent/" rel="noopener" target="_blank" title="https://digitalcontentnext.org/blog/2026/04/16/inside-times-rollout-of-its-timeai-interactive-agent/">digitalcontentnext.org ↗</a></td>
+</tr>
+<tr>
+<td data-label="단계">④ 유통</td>
+<td data-label="사례">Cloudflare</td>
+<td data-label="핵심"><a class="term" data-g="g33" href="#g33" id="g33-u1">AI 크롤러</a> 기본 차단·과금</td>
+<td data-label="원문"><a class="src" href="https://techcrunch.com/2026/07/01/cloudflares-new-policy-pushes-ai-companies-to-pay-for-publishers-content/" rel="noopener" target="_blank" title="https://techcrunch.com/2026/07/01/cloudflares-new-policy-pushes-ai-companies-to-pay-for-publishers-content/">techcrunch.com ↗</a></td>
+</tr>
+<tr>
+<td data-label="단계">④ 유통</td>
+<td data-label="사례">AI <a class="term" data-g="g34" href="#g34" id="g34-u1">라이선스</a>·소송</td>
+<td data-label="핵심">Meta–News Corp 등 계약과 소송 동시 진행</td>
+<td data-label="원문"><a class="src" href="https://pressgazette.co.uk/platforms/news-publisher-ai-deals-lawsuits-openai-google/" rel="noopener" target="_blank" title="https://pressgazette.co.uk/platforms/news-publisher-ai-deals-lawsuits-openai-google/">pressgazette.co.uk ↗</a></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="s8">2-2. 조사로 본 흐름</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>조사</th>
+<th>핵심</th>
+<th>원문</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="조사">EBU·BBC (2025.10)</td>
+<td data-label="핵심">AI 비서 뉴스 답변 <strong>45%에 중대한 문제</strong></td>
+<td data-label="원문"><a class="src" href="https://www.ebu.ch/news/2025/10/ai-s-systemic-distortion-of-news-is-consistent-across-languages-and-territories-international-study-by-public-service-broadcaste" rel="noopener" target="_blank" title="https://www.ebu.ch/news/2025/10/ai-s-systemic-distortion-of-news-is-consistent-across-languages-and-territories-international-study-by-public-service-broadcaste">ebu.ch ↗</a></td>
+</tr>
+<tr>
+<td data-label="조사">Tow Center (2025.3)</td>
+<td data-label="핵심">AI 검색 인용 오류 60% 이상</td>
+<td data-label="원문"><a class="src" href="https://www.niemanlab.org/2025/03/ai-search-engines-fail-to-produce-accurate-citations-in-over-60-of-tests-according-to-new-tow-center-study/" rel="noopener" target="_blank" title="https://www.niemanlab.org/2025/03/ai-search-engines-fail-to-produce-accurate-citations-in-over-60-of-tests-according-to-new-tow-center-study/">niemanlab.org ↗</a></td>
+</tr>
+<tr>
+<td data-label="조사">FT Strategies·WAN-IFRA (2026.7)</td>
+<td data-label="핵심"><strong>공식 AI 교육 없는 언론사 61%</strong></td>
+<td data-label="원문"><a class="src" href="https://pressgazette.co.uk/publishing-services-content/cultural-resistance-hampers-use-of-ai-in-newsrooms-new-global-survey-finds/" rel="noopener" target="_blank" title="https://pressgazette.co.uk/publishing-services-content/cultural-resistance-hampers-use-of-ai-in-newsrooms-new-global-survey-finds/">pressgazette.co.uk ↗</a></td>
+</tr>
+<tr>
+<td data-label="조사"><a class="term" data-g="g10" href="#g10" id="g10-u1">디지털뉴스리포트</a> 2026</td>
+<td data-label="핵심">챗봇에서 원문 이동 4% · 뉴스 신뢰 37%</td>
+<td data-label="원문"><a class="src" href="https://reutersinstitute.politics.ox.ac.uk/digital-news-report/2026/dnr-executive-summary" rel="noopener" target="_blank" title="https://reutersinstitute.politics.ox.ac.uk/digital-news-report/2026/dnr-executive-summary">reutersinstitute.politics.ox.ac.uk ↗</a></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="s9">2-3. 그림자: 대체냐 증강이냐</h3>
+<ul>
+<li><strong>WaPo</strong> 뉴스룸 약 3분의 1 감축 <a class="src" href="https://www.poynter.org/business-work/2026/washington-post-layoffs-sports-books-metro/" rel="noopener" target="_blank" title="https://www.poynter.org/business-work/2026/washington-post-layoffs-sports-books-metro/">poynter.org ↗</a></li>
+<li><strong>McClatchy</strong> AI 도구 도입과 함께 90명 이상 해고 <a class="src" href="https://www.cjr.org/analysis/mcclatchys-post-layoff-future-artificial-intelligence-ai-labor-union.php" rel="noopener" target="_blank" title="https://www.cjr.org/analysis/mcclatchys-post-layoff-future-artificial-intelligence-ai-labor-union.php">cjr.org ↗</a></li>
+<li><strong>ProPublica 노조</strong> 미국 최초 'AI 파업' 92% 찬성 <a class="src" href="https://www.niemanlab.org/2026/03/propublicas-union-authorizes-the-first-u-s-newsroom-strike-over-ai-protections/" rel="noopener" target="_blank" title="https://www.niemanlab.org/2026/03/propublicas-union-authorizes-the-first-u-s-newsroom-strike-over-ai-protections/">niemanlab.org ↗</a></li>
+<li>교훈: <strong>대체</strong>로 쓰면 신뢰·인력을 잃고, <strong><a class="term" data-g="g2" href="#g2" id="g2-u1">증강</a></strong>으로 쓰면 더 깊은 기사(퓰리처)</li>
+</ul>
+<h3 id="s10">2-4. 국내</h3>
+<ul>
+<li><strong>독자</strong>: AI 챗봇 주간 뉴스 14%·원문 이동 56%(세계 최고)·신뢰 30% <a class="src" href="https://www.newsis.com/view/NISX20260616_0003671612" rel="noopener" target="_blank" title="https://www.newsis.com/view/NISX20260616_0003671612">newsis.com ↗</a> · AI 이미지 쓴 기사 "뉴스 아니다" 60% <a class="src" href="https://www.journalist.or.kr/news/article.html?no=59349" rel="noopener" target="_blank" title="https://www.journalist.or.kr/news/article.html?no=59349">journalist.or.kr ↗</a></li>
+<li><strong>포털</strong>: 네이버 AI탭(2026.6) <a class="src" href="https://www.navercorp.com/media/pressReleasesDetail?seq=10034429" rel="noopener" target="_blank" title="https://www.navercorp.com/media/pressReleasesDetail?seq=10034429">navercorp.com ↗</a> · 다음 <a class="term" data-g="g32" href="#g32" id="g32-u2">AI 요약</a>(2026.7) <a class="src" href="https://www.fntimes.com/html/view.php?ud=2026071514305171797fd637f543_18" rel="noopener" target="_blank" title="https://www.fntimes.com/html/view.php?ud=2026071514305171797fd637f543_18">fntimes.com ↗</a></li>
+<li><strong>언론사</strong>: TV조선 AI 리포터 <a class="src" href="https://www.journalist.or.kr/news/article.html?no=61137" rel="noopener" target="_blank" title="https://www.journalist.or.kr/news/article.html?no=61137">journalist.or.kr ↗</a> · KBS AI 앵커 <a class="src" href="https://www.munhwa.com/article/11588427" rel="noopener" target="_blank" title="https://www.munhwa.com/article/11588427">munhwa.com ↗</a> · 연합뉴스 AI콘텐츠부 <a class="src" href="https://www.journalist.or.kr/news/article.html?no=59106" rel="noopener" target="_blank" title="https://www.journalist.or.kr/news/article.html?no=59106">journalist.or.kr ↗</a> · 조선일보 AI 교열 <a class="src" href="https://www.mediatoday.co.kr/news/articleView.html?idxno=324253" rel="noopener" target="_blank" title="https://www.mediatoday.co.kr/news/articleView.html?idxno=324253">mediatoday.co.kr ↗</a></li>
+<li><strong>제도</strong>: AI 기본법 시행(2026.1.22) — 생성물 표시 의무 <a class="src" href="https://www.kmib.co.kr/article/view.asp?arcid=1768984300" rel="noopener" target="_blank" title="https://www.kmib.co.kr/article/view.asp?arcid=1768984300">kmib.co.kr ↗</a> · 방송 AI 표시 윤리원칙 <a class="src" href="https://www.etnews.com/20260930000440" rel="noopener" target="_blank" title="https://www.etnews.com/20260930000440">etnews.com ↗</a></li>
+<li><strong>분쟁</strong>: 지상파 3사 vs OpenAI 소송 <a class="src" href="https://www.mediatoday.co.kr/news/articleView.html?idxno=332582" rel="noopener" target="_blank" title="https://www.mediatoday.co.kr/news/articleView.html?idxno=332582">mediatoday.co.kr ↗</a> · 신문협회, 네이버 AI 학습 공정위 신고 <a class="src" href="https://www.journalist.or.kr/news/article.html?no=58549" rel="noopener" target="_blank" title="https://www.journalist.or.kr/news/article.html?no=58549">journalist.or.kr ↗</a></li>
+<li><strong>과제</strong>: 효율화(초고·교열·AI 앵커)에 비해 <strong>데이터 탐사·자체 DB·기자 교육</strong> 투자 부족</li>
+</ul>
+<hr/>
+</section><section class="chapter"><h2 id="s11">3. 단계별 주요 도구 (핵심만)</h2>
+<blockquote class="callout">
+<p>📌 160여 개 도구·<a class="term" data-g="g14" href="#g14" id="g14-u3">API</a> 전체 → <strong>취재보도용 AI 도구·API 가이드</strong> <a class="lec-link" href="https://jonghhhh.github.io/lectures/sources/datajour_ai.html" rel="noopener" target="_blank" title="https://jonghhhh.github.io/lectures/sources/datajour_ai.html">취재보도용 AI 도구·API 가이드 ↗</a></p>
+</blockquote>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>단계</th>
+<th>먼저 써 볼 도구 (⭐ 추천)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="단계">공통: AI 비서</td>
+<td data-label="먼저 써 볼 도구 (⭐ 추천)">⭐<a class="tool" href="https://chatgpt.com/" rel="noopener" target="_blank" title="https://chatgpt.com/">ChatGPT</a>, ⭐<a class="tool" href="https://claude.ai/" rel="noopener" target="_blank" title="https://claude.ai/">Claude</a>, ⭐<a class="tool" href="https://gemini.google.com/" rel="noopener" target="_blank" title="https://gemini.google.com/">Gemini</a>, ⭐<a class="tool" href="https://www.perplexity.ai/" rel="noopener" target="_blank" title="https://www.perplexity.ai/">Perplexity</a></td>
+</tr>
+<tr>
+<td data-label="단계">① 아이디어 발굴</td>
+<td data-label="먼저 써 볼 도구 (⭐ 추천)">⭐<a class="tool" href="https://www.bigkinds.or.kr/" rel="noopener" target="_blank" title="https://www.bigkinds.or.kr/">빅카인즈</a>, ⭐<a class="tool" href="https://datalab.naver.com/" rel="noopener" target="_blank" title="https://datalab.naver.com/">네이버 데이터랩</a>, <a class="tool" href="https://trends.google.com/explore" rel="noopener" target="_blank" title="https://trends.google.com/explore">Google Trends</a>, ⭐<a class="tool" href="https://www.google.com/alerts" rel="noopener" target="_blank" title="https://www.google.com/alerts">Google Alerts</a>, <a class="tool" href="https://visualping.io/journalists" rel="noopener" target="_blank" title="https://visualping.io/journalists">Visualping</a>, ⭐<a class="term" data-g="g18" href="#g18" id="g18-u2">RSS</a> 리더(<a class="tool" href="https://feedly.com/" rel="noopener" target="_blank" title="https://feedly.com/">Feedly</a>·<a class="tool" href="https://www.inoreader.com/" rel="noopener" target="_blank" title="https://www.inoreader.com/">Inoreader</a>)</td>
+</tr>
+<tr>
+<td data-label="단계">② 취재</td>
+<td data-label="먼저 써 볼 도구 (⭐ 추천)">⭐<a class="tool" href="https://www.data.go.kr/" rel="noopener" target="_blank" title="https://www.data.go.kr/">공공데이터포털</a> API, ⭐<a class="tool" href="https://notebooklm.google.com/" rel="noopener" target="_blank" title="https://notebooklm.google.com/">NotebookLM</a>, ⭐<a class="tool" href="https://journaliststudio.google.com/pinpoint/" rel="noopener" target="_blank" title="https://journaliststudio.google.com/pinpoint/">Google Pinpoint</a>, <a class="tool" href="https://tabula.technology/" rel="noopener" target="_blank" title="https://tabula.technology/">Tabula</a>, ⭐<a class="tool" href="https://clovanote.naver.com/" rel="noopener" target="_blank" title="https://clovanote.naver.com/">클로바노트</a>, ⭐<a class="tool" href="https://toolbox.google.com/factcheck/explorer" rel="noopener" target="_blank" title="https://toolbox.google.com/factcheck/explorer">Google Fact Check Explorer</a>, ⭐<a class="tool" href="https://weverify.eu/verification-plugin/" rel="noopener" target="_blank" title="https://weverify.eu/verification-plugin/">InVID-WeVerify</a></td>
+</tr>
+<tr>
+<td data-label="단계">③ 보도</td>
+<td data-label="먼저 써 볼 도구 (⭐ 추천)">⭐<a class="tool" href="https://nara-speller.co.kr/" rel="noopener" target="_blank" title="https://nara-speller.co.kr/">바른한글</a>, ⭐<a class="tool" href="https://www.datawrapper.de/" rel="noopener" target="_blank" title="https://www.datawrapper.de/">Datawrapper</a>, <a class="tool" href="https://flourish.studio/" rel="noopener" target="_blank" title="https://flourish.studio/">Flourish</a>, <a class="tool" href="https://www.canva.com/" rel="noopener" target="_blank" title="https://www.canva.com/">Canva</a>, <a class="tool" href="https://www.capcut.com/" rel="noopener" target="_blank" title="https://www.capcut.com/">CapCut</a>, <a class="tool" href="https://www.deepl.com/" rel="noopener" target="_blank" title="https://www.deepl.com/">DeepL</a>·<a class="tool" href="https://papago.naver.com/" rel="noopener" target="_blank" title="https://papago.naver.com/">파파고</a></td>
+</tr>
+<tr>
+<td data-label="단계">④ 출고 이후</td>
+<td data-label="먼저 써 볼 도구 (⭐ 추천)"><a class="tool" href="https://analytics.google.com/" rel="noopener" target="_blank" title="https://analytics.google.com/">GA4</a>, <a class="tool" href="https://chartbeat.com/" rel="noopener" target="_blank" title="https://chartbeat.com/">Chartbeat</a>, <a class="tool" href="https://search.google.com/search-console" rel="noopener" target="_blank" title="https://search.google.com/search-console">Google Search Console</a>, <a class="tool" href="https://developers.google.com/youtube/v3" rel="noopener" target="_blank" title="https://developers.google.com/youtube/v3">YouTube Data API</a></td>
+</tr>
+<tr>
+<td data-label="단계">보안</td>
+<td data-label="먼저 써 볼 도구 (⭐ 추천)">⭐<a class="tool" href="https://signal.org/" rel="noopener" target="_blank" title="https://signal.org/">Signal</a>, <a class="tool" href="https://freedom.press/digisec/blog/journalists-digital-security-checklist/" rel="noopener" target="_blank" title="https://freedom.press/digisec/blog/journalists-digital-security-checklist/">FPF 기자 보안 체크리스트</a></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>⚠️ 2025~26년에 바뀐 것</strong></p>
+<ul>
+<li>네이버 CLOVA X 종료(2026.4) → AI 브리핑·AI탭 <a class="src" href="https://www.etnews.com/20260224000227" rel="noopener" target="_blank" title="https://www.etnews.com/20260224000227">전자신문 ↗</a></li>
+<li>SNU팩트체크 운영 중단 <a class="src" href="https://www.journalist.or.kr/news/article.html?no=56539" rel="noopener" target="_blank" title="https://www.journalist.or.kr/news/article.html?no=56539">기자협회 ↗</a> · <a class="term" data-g="g8" href="#g8" id="g8-u1">IFCN</a> 인증은 JTBC·단비뉴스 <a class="src" href="https://www.journalist.or.kr/news/article.html?no=61305" rel="noopener" target="_blank" title="https://www.journalist.or.kr/news/article.html?no=61305">기자협회 ↗</a></li>
+<li>부산대 맞춤법 검사기 → 바른한글 <a class="src" href="https://channelpnu.pusan.ac.kr/news/articleView.html?idxno=37377" rel="noopener" target="_blank" title="https://channelpnu.pusan.ac.kr/news/articleView.html?idxno=37377">채널PNU ↗</a></li>
+<li>엑셀 <code>=COPILOT()</code> 폐지 <a class="src" href="https://www.techradar.com/pro/microsoft-is-dropping-its-excel-copilot-function-after-only-a-year-and-without-ever-getting-a-full-public-launch" rel="noopener" target="_blank" title="https://www.techradar.com/pro/microsoft-is-dropping-its-excel-copilot-function-after-only-a-year-and-without-ever-getting-a-full-public-launch">TechRadar ↗</a> · Perspective API 2026년 말 종료 <a class="src" href="https://www.perspectiveapi.com/" rel="noopener" target="_blank" title="https://www.perspectiveapi.com/">perspectiveapi.com ↗</a></li>
+<li>긴 요약은 사실의 절반만 담는다 — 요약은 짧게, 원문 대조 필수 <a class="src" href="https://www.cjr.org/analysis/i-tested-how-well-ai-tools-work-for-journalism.php" rel="noopener" target="_blank" title="https://www.cjr.org/analysis/i-tested-how-well-ai-tools-work-for-journalism.php">CJR ↗</a></li>
+</ul>
+<hr/>
+</section><section class="chapter"><h2 id="s12">4. 데이터 소스와 RSS·API (핵심만)</h2>
+<blockquote class="callout">
+<p>📌 180여 개 국내외 데이터 전체 → <strong><a class="term" data-g="g0" href="#g0" id="g0-u2">데이터저널리즘</a> 데이터 소스 디렉토리</strong> <a class="lec-link" href="https://jonghhhh.github.io/lectures/sources/datajour_source.html" rel="noopener" target="_blank" title="https://jonghhhh.github.io/lectures/sources/datajour_source.html">데이터저널리즘 데이터 소스 디렉토리 ↗</a></p>
+</blockquote>
+<h3 id="s13">4-1. 취재 분야별 "먼저 열어 볼 곳"</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>분야</th>
+<th>먼저 볼 곳</th>
+<th>기사 아이디어 예</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="분야">출발점</td>
+<td data-label="먼저 볼 곳"><a class="tool" href="https://www.data.go.kr/" rel="noopener" target="_blank" title="https://www.data.go.kr/">공공데이터포털</a>, <a class="tool" href="https://kosis.kr/" rel="noopener" target="_blank" title="https://kosis.kr/">KOSIS</a>, <a class="tool" href="https://www.open.go.kr/" rel="noopener" target="_blank" title="https://www.open.go.kr/">정보공개포털</a>, <a class="tool" href="https://github.com/yybmion/public-apis-4Kr" rel="noopener" target="_blank" title="https://github.com/yybmion/public-apis-4Kr">한국 Public API 모음</a></td>
+<td data-label="기사 아이디어 예">"정부 데이터가 있나?"</td>
+</tr>
+<tr>
+<td data-label="분야">정치·선거</td>
+<td data-label="먼저 볼 곳"><a class="tool" href="https://likms.assembly.go.kr/bill/main.do" rel="noopener" target="_blank" title="https://likms.assembly.go.kr/bill/main.do">의안정보시스템</a>, <a class="tool" href="https://record.assembly.go.kr/" rel="noopener" target="_blank" title="https://record.assembly.go.kr/">국회 회의록</a>, <a class="tool" href="https://info.nec.go.kr/" rel="noopener" target="_blank" title="https://info.nec.go.kr/">선거통계시스템</a></td>
+<td data-label="기사 아이디어 예">지역구 의원 법안 통과율</td>
+</tr>
+<tr>
+<td data-label="분야">재정·공공기관</td>
+<td data-label="먼저 볼 곳"><a class="tool" href="https://www.lofin365.go.kr/" rel="noopener" target="_blank" title="https://www.lofin365.go.kr/">지방재정365</a>, <a class="tool" href="https://www.openfiscaldata.go.kr/" rel="noopener" target="_blank" title="https://www.openfiscaldata.go.kr/">열린재정</a>, <a class="tool" href="https://www.alio.go.kr/" rel="noopener" target="_blank" title="https://www.alio.go.kr/">알리오</a>, <a class="tool" href="https://www.g2b.go.kr/" rel="noopener" target="_blank" title="https://www.g2b.go.kr/">나라장터</a></td>
+<td data-label="기사 아이디어 예">수의계약 쏠림</td>
+</tr>
+<tr>
+<td data-label="분야">경제·기업</td>
+<td data-label="먼저 볼 곳"><a class="tool" href="https://ecos.bok.or.kr/" rel="noopener" target="_blank" title="https://ecos.bok.or.kr/">ECOS</a>, <a class="tool" href="https://dart.fss.or.kr/" rel="noopener" target="_blank" title="https://dart.fss.or.kr/">DART</a>, <a class="tool" href="https://www.egroup.go.kr/" rel="noopener" target="_blank" title="https://www.egroup.go.kr/">공정위 기업집단포털</a></td>
+<td data-label="기사 아이디어 예">내부거래 비중</td>
+</tr>
+<tr>
+<td data-label="분야">부동산·교통</td>
+<td data-label="먼저 볼 곳"><a class="tool" href="https://rt.molit.go.kr/" rel="noopener" target="_blank" title="https://rt.molit.go.kr/">실거래가 공개시스템</a>, <a class="tool" href="https://www.reb.or.kr/r-one/" rel="noopener" target="_blank" title="https://www.reb.or.kr/r-one/">R-ONE</a>, <a class="tool" href="https://taas.koroad.or.kr/" rel="noopener" target="_blank" title="https://taas.koroad.or.kr/">TAAS</a></td>
+<td data-label="기사 아이디어 예">스쿨존 사고 다발 지점</td>
+</tr>
+<tr>
+<td data-label="분야">보건·교육</td>
+<td data-label="먼저 볼 곳"><a class="tool" href="https://opendata.hira.or.kr/" rel="noopener" target="_blank" title="https://opendata.hira.or.kr/">HIRA 빅데이터</a>, <a class="tool" href="https://www.schoolinfo.go.kr/" rel="noopener" target="_blank" title="https://www.schoolinfo.go.kr/">학교알리미</a>, <a class="tool" href="https://www.academyinfo.go.kr/" rel="noopener" target="_blank" title="https://www.academyinfo.go.kr/">대학알리미</a></td>
+<td data-label="기사 아이디어 예">소아과 없는 시군구</td>
+</tr>
+<tr>
+<td data-label="분야">환경·재난</td>
+<td data-label="먼저 볼 곳"><a class="tool" href="https://data.kma.go.kr/" rel="noopener" target="_blank" title="https://data.kma.go.kr/">기상자료개방포털</a>, <a class="tool" href="https://www.airkorea.or.kr/" rel="noopener" target="_blank" title="https://www.airkorea.or.kr/">에어코리아</a>, <a class="tool" href="https://www.safetydata.go.kr/" rel="noopener" target="_blank" title="https://www.safetydata.go.kr/">재난안전데이터</a></td>
+<td data-label="기사 아이디어 예">폭염일수 변화</td>
+</tr>
+<tr>
+<td data-label="분야">국제</td>
+<td data-label="먼저 볼 곳"><a class="tool" href="https://data-explorer.oecd.org/" rel="noopener" target="_blank" title="https://data-explorer.oecd.org/">OECD</a>, <a class="tool" href="https://data.worldbank.org/" rel="noopener" target="_blank" title="https://data.worldbank.org/">World Bank</a>, <a class="tool" href="https://ourworldindata.org/" rel="noopener" target="_blank" title="https://ourworldindata.org/">Our World in Data</a></td>
+<td data-label="기사 아이디어 예">"<a class="tool" href="https://data-explorer.oecd.org/" rel="noopener" target="_blank" title="https://data-explorer.oecd.org/">OECD</a> 최하위" 검증</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>⚠️ 기관 개편(2025.10): 통계청 → 국가데이터처 <a class="src" href="https://www.khan.co.kr/article/202509301439001/" rel="noopener" target="_blank" title="https://www.khan.co.kr/article/202509301439001/">경향신문 ↗</a> · 방통위 → 방송미디어통신위원회 <a class="src" href="https://www.hankookilbo.com/News/Read/A2025100110200003485" rel="noopener" target="_blank" title="https://www.hankookilbo.com/News/Read/A2025100110200003485">한국일보 ↗</a></li>
+</ul>
+<h3 id="s14">4-2. RSS·API·크롤링</h3>
+<ul>
+<li><strong><a class="term" data-g="g18" href="#g18" id="g18-u3">RSS</a></strong>: 국내 언론사 목록 <a class="src" href="https://github.com/seokhoonj/newswatcher/blob/main/docs/korean-news-rss.md" rel="noopener" target="_blank" title="https://github.com/seokhoonj/newswatcher/blob/main/docs/korean-news-rss.md">github.com ↗</a> · 해외 <a class="src" href="https://github.com/plenaryapp/awesome-rss-feeds" rel="noopener" target="_blank" title="https://github.com/plenaryapp/awesome-rss-feeds">github.com ↗</a> · 정부 보도자료 <a class="src" href="https://www.korea.kr/etc/rss.do" rel="noopener" target="_blank" title="https://www.korea.kr/etc/rss.do">korea.kr ↗</a> · RSS 없는 사이트 → <a class="src" href="https://docs.rsshub.app" rel="noopener" target="_blank" title="https://docs.rsshub.app">docs.rsshub.app ↗</a></li>
+<li><strong>구글 뉴스 RSS</strong>: 검색어만 바꿔 리더에 등록</li>
+</ul>
+<pre><code>https://news.google.com/rss/search?q=검색어&amp;hl=ko&amp;gl=KR&amp;ceid=KR:ko
+  q="전세사기"  정확한 구문 · q=intitle:중대재해  제목 · q=site:korea.kr  사이트 · q=스쿨존+when:7d  최근 7일
+</code></pre>
+<ul>
+<li><strong><a class="term" data-g="g14" href="#g14" id="g14-u4">API</a></strong>: 기관이 열어 둔 데이터 창구. 키 발급 → 매일 자동 수집. 목록 → 한국 Public API 모음 <a class="src" href="https://github.com/yybmion/public-apis-4Kr" rel="noopener" target="_blank" title="https://github.com/yybmion/public-apis-4Kr">github.com ↗</a></li>
+<li><strong><a class="term" data-g="g16" href="#g16" id="g16-u3">크롤링</a></strong>: API 없는 웹페이지를 프로그램으로 수집. AI에게 "이 목록을 표로 모으는 코드"를 요청</li>
+<li><strong>지킬 것</strong>: 약관·<a class="term" data-g="g17" href="#g17" id="g17-u1">robots.txt</a> 확인 · 요청 간격 두기 · 개인정보 수집 금지 · 기사 원문은 제목·링크만 · <strong><a class="term" data-g="g15" href="#g15" id="g15-u1">API 키</a>는 코드·<a class="term" data-g="g58" href="#g58" id="g58-u2">깃허브</a>에 올리지 않기</strong></li>
+</ul>
+<hr/>
+</section><section class="chapter"><h2 id="s15">5. 직접 만든 취재 보조 도구</h2>
+<p>강사가 위 도구·데이터·AI를 조합해 연구용으로 쓰는 도구들.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>단계</th>
+<th>만든 것</th>
+<th>한 줄 요약</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="단계">아이디어</td>
+<td data-label="만든 것">취재 전략 상담 챗봇</td>
+<td data-label="한 줄 요약">방송기자상 수상작 추천서 근거로 취재 경로 조언</td>
+</tr>
+<tr>
+<td data-label="단계">수집</td>
+<td data-label="만든 것">국제뉴스·경제 브리핑 <a class="src" href="https://khmedia.duckdns.org/projects/ai_econ_desk/news/" rel="noopener" target="_blank" title="https://khmedia.duckdns.org/projects/ai_econ_desk/news/">경제 산책 ↗</a></td>
+<td data-label="한 줄 요약"><a class="term" data-g="g18" href="#g18" id="g18-u4">RSS</a>·공시·지표 자동 수집 → 사건 묶기·뉴스가치 채점</td>
+</tr>
+<tr>
+<td data-label="단계">확인</td>
+<td data-label="만든 것">팩트체크 에이전트</td>
+<td data-label="한 줄 요약">검증할 문장 선별 → 웹 근거로 판정</td>
+</tr>
+<tr>
+<td data-label="단계">검증</td>
+<td data-label="만든 것">출고 전 점검 도구</td>
+<td data-label="한 줄 요약">신문윤리·뉴스평가지수·품질지수로 자가 점검</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>뼈대는 같다: <strong>모은다 → 기준을 준다 → 표(<a class="term" data-g="g22" href="#g22" id="g22-u1">JSON</a>)로 뽑는다 → 보여 준다</strong></li>
+<li>숫자·출처는 코드가, AI는 읽고 분류만</li>
+<li>차이를 만드는 건 <strong>어떤 데이터를 넣느냐</strong> → 6장</li>
+</ul>
+<hr/>
+</section><section class="chapter"><h2 id="s16">6. 자동화를 넘어 — 데이터저널리즘 고도화</h2>
+<h3 id="s17">6-1. 2026 시그마 어워드가 보여 준 것</h3>
+<p>84개국 543개 출품, 10편 수상 <a class="src" href="https://gijn.org/stories/2026-data-journalism-sigma-award-winners/" rel="noopener" target="_blank" title="https://gijn.org/stories/2026-data-journalism-sigma-award-winners/">gijn.org ↗</a></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>수상작</th>
+<th>핵심 방법</th>
+<th>바로 보기</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="수상작">Green to Grey (유럽 11개국)</td>
+<td data-label="핵심 방법">위성영상 + 공간데이터 + AI 분석</td>
+<td data-label="바로 보기"><a class="src" href="https://greentogrey.eu/" rel="noopener" target="_blank" title="https://greentogrey.eu/">greentogrey.eu ↗</a></td>
+</tr>
+<tr>
+<td data-label="수상작">FT, 발트해 그림자 전쟁</td>
+<td data-label="핵심 방법">선박 위치신호(<a class="term" data-g="g24" href="#g24" id="g24-u1">AIS</a>) + 해저 인프라</td>
+<td data-label="바로 보기"><a class="src" href="https://ig.ft.com/baltic-sea/" rel="noopener" target="_blank" title="https://ig.ft.com/baltic-sea/">ig.ft.com ↗</a></td>
+</tr>
+<tr>
+<td data-label="수상작">Quinto Elemento Lab (멕시코)</td>
+<td data-label="핵심 방법"><a class="term" data-g="g20" href="#g20" id="g20-u2">정보공개청구</a> 수천 건으로 <strong>자체 DB</strong></td>
+<td data-label="바로 보기"><a class="src" href="https://quintoelab.org/fantasmas-del-erario/" rel="noopener" target="_blank" title="https://quintoelab.org/fantasmas-del-erario/">quintoelab.org ↗</a></td>
+</tr>
+<tr>
+<td data-label="수상작">Lighthouse Reports 외</td>
+<td data-label="핵심 방법">종이 기록 <a class="term" data-g="g21" href="#g21" id="g21-u1">OCR</a> 디지털화</td>
+<td data-label="바로 보기"><a class="src" href="https://www.lighthousereports.com/investigation/syrias-stolen-children/" rel="noopener" target="_blank" title="https://www.lighthousereports.com/investigation/syrias-stolen-children/">lighthousereports.com ↗</a></td>
+</tr>
+<tr>
+<td data-label="수상작">The Examination·NYT</td>
+<td data-label="핵심 방법">무역 기록 + 토양·혈액 조사 → 공장 7곳 폐쇄</td>
+<td data-label="바로 보기"><a class="src" href="https://www.theexamination.org/articles/battery-recycling-nigeria-lead-poisoning-us-automakers" rel="noopener" target="_blank" title="https://www.theexamination.org/articles/battery-recycling-nigeria-lead-poisoning-us-automakers">theexamination.org ↗</a></td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>공통점: 데이터를 <strong>만든다</strong> · AI는 분석 도구로 · <strong><a class="term" data-g="g6" href="#g6" id="g6-u1">방법론 공개</a></strong> · <strong><a class="term" data-g="g7" href="#g7" id="g7-u1">임팩트</a></strong></li>
+<li>국내: 경향신문 「예산으로 보는 이재명 vs 윤석열」 <a class="src" href="https://www.khan.co.kr/kh_storytelling/2025/budget/" rel="noopener" target="_blank" title="https://www.khan.co.kr/kh_storytelling/2025/budget/">khan.co.kr ↗</a> — 독자가 필터로 직접 탐색하는 <strong><a class="term" data-g="g4" href="#g4" id="g4-u1">인터랙티브</a></strong> <a class="src" href="https://newsjel.ly/archives/newsjelly-report/visual-curation/17265" rel="noopener" target="_blank" title="https://newsjel.ly/archives/newsjelly-report/visual-curation/17265">newsjel.ly ↗</a></li>
+</ul>
+<h3 id="s18">6-2. 자동화는 비용, 데이터는 상품</h3>
+<div class="versus">
+<div class="vs-col vs-a"><h4>자동화</h4><ul><li>시간·비용 절감</li><li>누구나 같은 도구 → 평준화</li><li>AI 답변 엔진과 같은 판에서 경쟁</li></ul></div>
+<div class="vs-mid">vs</div>
+<div class="vs-col vs-b"><h4>고도화된 데이터저널리즘</h4><ul><li>차별화된 '팔리는' 상품</li><li>우리만 가진 데이터 → 대체 불가</li><li>요약 몇 줄로 대체되지 않음</li></ul></div>
+</div>
+<ul>
+<li><strong>팔리는 형태</strong>: 탐사 시리즈 · <strong>독자 맞춤 인터랙티브 DB</strong>(내 동네·내 학교 검색) · 지수·랭킹 · B2B 브리핑 · 데이터 판매 (예: <a class="src" href="https://www.propublica.org/datastore" rel="noopener" target="_blank" title="https://www.propublica.org/datastore">propublica.org ↗</a>)</li>
+</ul>
+<h3 id="s18b">6-3. 고도화 5단계 — 수준을 높여 가며 점검</h3>
+<ul>
+<li>체크리스트 항목은 성격이 다르다 → <b>올라가는 단계</b>와 <b>어느 단계에서나 지킬 기본기</b>로 나눠 점검</li>
+</ul>
+<div class="basics"><div class="basics-t">모든 단계 공통 기본기 — 매번 점검</div><ul>
+<li>☐ 출처·기준일 표기, 숫자는 <a class="term" data-g="g13" href="#g13" id="g13-x7">원자료</a>로 다시 계산 (코드가 계산)</li>
+<li>☐ <a class="term" data-g="g6" href="#g6" id="g6-x8">방법론·한계 공개</a> (README 또는 "어떻게 분석했나")</li>
+<li>☐ <a class="term" data-g="g5" href="#g5" id="g5-u1">재현 가능</a> (같은 데이터·코드로 같은 결과)</li>
+<li>☐ 현장·사람 이야기로 완성 (숫자가 가리키는 현장을 취재)</li></ul></div>
+<div class="stairs" role="img" aria-label="고도화 5단계: 1 인용, 2 결합·분석, 3 독자 탐색(오늘 실습), 4 직접 생산·갱신, 5 임팩트·상품"><div class="st-step lv1" style="height:42%"><span class="st-n">1</span><b>인용</b></div><div class="st-step lv2" style="height:56%"><span class="st-n">2</span><b>결합·분석</b></div><div class="st-step lv3" style="height:70%"><span class="st-n">3</span><b>독자 탐색</b></div><div class="st-step lv4" style="height:84%"><span class="st-n">4</span><b>직접 생산·갱신</b></div><div class="st-step lv5" style="height:98%"><span class="st-n">5</span><b>임팩트·상품</b></div><div class="st-mark">▲ 오늘 8장 실습</div></div>
+<div class="table-wrap"><table class="ladder"><thead><tr><th>단계</th><th>핵심 질문</th><th>점검 기준</th><th>사례</th><th>소아과 실습이라면</th></tr></thead><tbody><tr class="lv1"><td data-label="단계"><span class="lv-badge lv1">1</span> <b>인용</b></td><td data-label="핵심 질문">남의 숫자를 정확히 옮겼나</td><td data-label="점검 기준">☐ 원문 수치 대조<br>☐ 맥락(분모·기간) 확인</td><td data-label="사례">"OECD 최하위" 표현 검증</td><td data-label="소아과 실습이라면">"229곳 중 0~2명 70곳" 보도를 <a class="term" data-g="g13" href="#g13" id="g13-x1">원자료</a>로 다시 세기 → 2026.9 기준 230곳 중 71곳</td></tr><tr class="lv2"><td data-label="단계"><span class="lv-badge lv2">2</span> <b>결합·분석</b></td><td data-label="핵심 질문">공개 데이터를 합쳐 새 사실을 찾았나</td><td data-label="점검 기준">☐ 두 개 이상 결합<br>☐ <a class="term" data-g="g12" href="#g12" id="g12-x2">인구 대비</a> 같은 공정한 비교 지표</td><td data-label="사례">시그마 수상작 FT 발트해(선박 신호 + 해저 인프라) <a class="src" href="https://ig.ft.com/baltic-sea/" rel="noopener" target="_blank" title="https://ig.ft.com/baltic-sea/">ig.ft.com ↗</a></td><td data-label="소아과 실습이라면">병의원 × 0~14세 인구 → 1만 명당 전문의 수</td></tr><tr class="lv3"><td data-label="단계"><span class="lv-badge lv3">3</span> <b>독자 탐색</b></td><td data-label="핵심 질문">독자가 "내 이야기"로 찾아보나</td><td data-label="점검 기준">☐ 내 동네·내 학교 검색<br>☐ 모바일 대응</td><td data-label="사례">경향신문 「예산으로 보는…」 <a class="src" href="https://www.khan.co.kr/kh_storytelling/2025/budget/" rel="noopener" target="_blank" title="https://www.khan.co.kr/kh_storytelling/2025/budget/">khan.co.kr ↗</a></td><td data-label="소아과 실습이라면">내 시군구 선택 → 순위·비교 <span class="lv-now">오늘 실습 A·B</span></td></tr><tr class="lv4"><td data-label="단계"><span class="lv-badge lv4">4</span> <b>직접 생산·갱신</b></td><td data-label="핵심 질문">남에게 없는 데이터를 만들고 계속 업데이트하나</td><td data-label="점검 기준">☐ <a class="term" data-g="g20" href="#g20" id="g20-x3">정보공개청구</a>·<a class="term" data-g="g21" href="#g21" id="g21-x4">OCR</a>·<a class="term" data-g="g16" href="#g16" id="g16-x5">크롤링</a>·현장 측정<br>☐ 자체 DB<br>☐ 정기 갱신</td><td data-label="사례">Quinto Elemento(정보공개청구로 DB) <a class="src" href="https://quintoelab.org/fantasmas-del-erario/" rel="noopener" target="_blank" title="https://quintoelab.org/fantasmas-del-erario/">quintoelab.org ↗</a> · Lighthouse(종이 기록 OCR) <a class="src" href="https://www.lighthousereports.com/investigation/syrias-stolen-children/" rel="noopener" target="_blank" title="https://www.lighthousereports.com/investigation/syrias-stolen-children/">lighthousereports.com ↗</a></td><td data-label="소아과 실습이라면">야간·휴일 진료 여부를 정보공개청구와 전화 확인으로 자체 DB → 분기마다 갱신</td></tr><tr class="lv5"><td data-label="단계"><span class="lv-badge lv5">5</span> <b>임팩트·상품</b></td><td data-label="핵심 질문">세상이 바뀌었나, 팔 수 있나</td><td data-label="점검 기준">☐ 후속 보도·제도 변화 추적<br>☐ DB·지수·B2B로 상품화</td><td data-label="사례">The Examination·NYT(공장 7곳 폐쇄) <a class="src" href="https://www.theexamination.org/articles/battery-recycling-nigeria-lead-poisoning-us-automakers" rel="noopener" target="_blank" title="https://www.theexamination.org/articles/battery-recycling-nigeria-lead-poisoning-us-automakers">theexamination.org ↗</a> · ProPublica Data Store <a class="src" href="https://www.propublica.org/datastore" rel="noopener" target="_blank" title="https://www.propublica.org/datastore">propublica.org ↗</a></td><td data-label="소아과 실습이라면"><a class="term" data-g="g7" href="#g7" id="g7-x6">임팩트</a>: 지자체 대응 추적, '우리 동네 의료 지수' 시리즈</td></tr></tbody></table></div>
+<ul>
+<li><b>읽는 법</b>: 아래 단계를 갖춰야 위로 올라간다. 6-2의 '팔리는 데이터저널리즘'은 <b>4~5단계</b>의 이야기</li>
+<li><b>수업 연결</b>: 8장 트랙 A = 2~3단계, 트랙 B = 4단계로 가는 준비(계속 갱신). 4단계부터 갱신·재현하려면 7장의 <a class="term" data-g="g43" href="#g43" id="g43-x10">메모리</a>·<a class="term" data-g="g44" href="#g44" id="g44-x11">스킬</a>·<a class="term" data-g="g45" href="#g45" id="g45-x12">서브에이전트</a>가 필요해진다</li>
+</ul>
+<hr/>
+</section><section class="chapter"><h2 id="vibe">7. 바이브코딩 — 대화형 AI에서 코딩 에이전트로</h2>
+<h3 id="v1">7-1. 바이브코딩이란</h3>
+<ul>
+<li><strong>원하는 것을 말로 설명 → AI가 코드를 쓰고 실행·수정</strong> (로이터연구소 2026 주목 단어). 기자는 코드를 외우지 않고 <strong>결과를 검증</strong>한다</li>
+<li>쓰는 이유: 개발자 없이 수집·분석·<a class="term" data-g="g4" href="#g4" id="g4-n1">인터랙티브</a> 페이지 제작 · AI가 어디서 틀리는지 직접 체감</li>
+<li>오늘은 개념만 정리하고, 손으로 해 보는 것은 <strong>8장 실습 하나</strong>로 몰아서 한다</li>
+</ul>
+<h3 id="v2">7-2. 두 가지 길 — 언제 무엇을 쓰나</h3>
+<div class="table-wrap"><table><thead><tr><th>구분</th><th>① <a class="term" data-g="g38" href="#g38" id="g38-n1">대화형 AI</a> (Claude·ChatGPT 대화창)</th><th>② <a class="term" data-g="g39" href="#g39" id="g39-n1">코딩 에이전트</a> (VS Code + Claude Code·Codex)</th></tr></thead><tbody><tr><td data-label="구분">설치</td><td data-label="① 대화형 AI (Claude·ChatGPT 대화창)">없음 — 브라우저만</td><td data-label="② 코딩 에이전트 (VS Code + Claude Code·Codex)"><a class="term" data-g="g40" href="#g40" id="g40-n1">VS Code</a> + 확장 1개 (Python·Git은 에이전트가 설치)</td></tr><tr><td data-label="구분">작업 위치</td><td data-label="① 대화형 AI (Claude·ChatGPT 대화창)">대화창 안의 임시 실행 환경 — 끝나면 사라짐</td><td data-label="② 코딩 에이전트 (VS Code + Claude Code·Codex)">내 컴퓨터 폴더 — 파일이 그대로 남음</td></tr><tr><td data-label="구분">규칙 기억</td><td data-label="① 대화형 AI (Claude·ChatGPT 대화창)">대화가 길어지면 잊음 (<a class="term" data-g="g30" href="#g30" id="g30-n1">컨텍스트</a> 한계)</td><td data-label="② 코딩 에이전트 (VS Code + Claude Code·Codex)"><a class="term" data-g="g43" href="#g43" id="g43-n1">메모리</a> 파일을 매번 자동으로 읽음</td></tr><tr><td data-label="구분">고치기</td><td data-label="① 대화형 AI (Claude·ChatGPT 대화창)">파일을 새로 받아 다시 올림</td><td data-label="② 코딩 에이전트 (VS Code + Claude Code·Codex)">폴더 안 파일을 바로 수정</td></tr><tr><td data-label="구분">검산</td><td data-label="① 대화형 AI (Claude·ChatGPT 대화창)">스스로 다시 계산하지 않음</td><td data-label="② 코딩 에이전트 (VS Code + Claude Code·Codex)"><a class="term" data-g="g45" href="#g45" id="g45-n1">서브에이전트</a>가 원자료와 따로 대조</td></tr><tr><td data-label="구분">새 데이터</td><td data-label="① 대화형 AI (Claude·ChatGPT 대화창)">처음부터 다시 설명</td><td data-label="② 코딩 에이전트 (VS Code + Claude Code·Codex)"><a class="term" data-g="g48" href="#g48" id="g48-n1">스크립트</a> 다시 실행 → 페이지 갱신</td></tr><tr><td data-label="구분">맞는 일</td><td data-label="① 대화형 AI (Claude·ChatGPT 대화창)"><strong>한 번 만들어 보기</strong>, 시연</td><td data-label="② 코딩 에이전트 (VS Code + Claude Code·Codex)"><strong>계속 갱신하는 기사·시리즈</strong>, 팀 작업</td></tr></tbody></table></div>
+<ul><li>정리: <strong>대화형으로 감을 잡고 → 반복할 일이면 에이전트로 옮긴다.</strong> 8장도 이 순서(A → B)로 진행</li>
+<li>6-3 고도화 4단계(직접 생산·계속 갱신)와 공통 기본기(<a class="term" data-g="g5" href="#g5" id="g5-n1">재현 가능</a>·<a class="term" data-g="g6" href="#g6" id="g6-n1">방법론 공개</a>)를 지키려면 결국 에이전트가 필요</li></ul>
+<h3 id="v3">7-3. 에이전트를 '팀'으로 만드는 세 장치</h3>
+<div class="table-wrap"><table><thead><tr><th>장치</th><th>하는 일</th><th>뉴스룸에 비유하면</th><th>Claude Code</th><th>Codex</th></tr></thead><tbody><tr><td data-label="장치"><a class="term" data-g="g43" href="#g43" id="g43-n2">메모리</a></td><td data-label="하는 일">프로젝트 목적·출처·규칙을 매번 자동으로 읽음</td><td data-label="뉴스룸에 비유하면">취재 수첩·기사 작성 원칙</td><td data-label="Claude Code"><code>CLAUDE.md</code></td><td data-label="Codex"><code>AGENTS.md</code></td></tr><tr><td data-label="장치"><a class="term" data-g="g44" href="#g44" id="g44-n1">스킬</a></td><td data-label="하는 일">반복 작업 절차를 저장 → 요청이 맞으면 자동 호출</td><td data-label="뉴스룸에 비유하면">데스크의 하우스 스타일</td><td data-label="Claude Code"><code>.claude/skills/이름/SKILL.md</code></td><td data-label="Codex"><code>.agents/skills/이름/SKILL.md</code></td></tr><tr><td data-label="장치"><a class="term" data-g="g45" href="#g45" id="g45-n2">서브에이전트</a></td><td data-label="하는 일">별도 대화에서 한 가지 일(예: 검산)만 하고 결과 보고</td><td data-label="뉴스룸에 비유하면">팩트체커·교열</td><td data-label="Claude Code"><code>.claude/agents/이름.md</code> (자동 위임)</td><td data-label="Codex"><code>.codex/agents/이름.toml</code> (요청 시)</td></tr></tbody></table></div>
+<ul>
+<li>파일을 직접 쓸 필요 없음 — <strong>"이 프로젝트용 메모리 파일 만들어 줘"</strong>처럼 말로 시키면 된다</li>
+<li>둘 다 쓰는 팀: <code>CLAUDE.md</code>에 <code>@AGENTS.md</code> 한 줄로 같은 규칙 공유 · 메모리는 짧게(200줄 이내)</li>
+<li>참고: Claude Code <a class="src" href="https://github.com/luongnv89/claude-howto" rel="noopener" target="_blank" title="https://github.com/luongnv89/claude-howto">github.com ↗</a> · Codex <a class="src" href="https://developers.openai.com/codex" rel="noopener" target="_blank" title="https://developers.openai.com/codex">developers.openai.com ↗</a></li>
+</ul>
+<h3 id="v4">7-4. 일하는 방식 — 다섯 가지만</h3>
+<ol>
+<li><strong><a class="term" data-g="g41" href="#g41" id="g41-n1">계획 먼저</a></strong>: "바로 만들지 말고 계획부터" (Claude Code: Plan 모드)</li>
+<li><strong>읽고 승인</strong>: 파일 수정·명령 실행마다 허락을 묻는다 → 무엇을 하는지 읽고 누른다</li>
+<li><strong>작게 반복</strong>: 한 번에 한 기능 → 브라우저로 확인 → 오류는 그대로 붙여 넣기</li>
+<li><strong>되돌릴 길</strong>: <a class="term" data-g="g42" href="#g42" id="g42-n1">체크포인트</a>(되감기)·Git <a class="term" data-g="g56" href="#g56" id="g56-n1">커밋</a></li>
+<li><strong>비밀 지키기</strong>: <a class="term" data-g="g15" href="#g15" id="g15-n1">API 키</a>·취재원 자료는 프롬프트·파일에 넣지 않기</li>
+</ol>
+<h3 id="v5">7-5. 에이전트가 진짜 힘을 내는 곳 — '한 번 만든 페이지'에서 '돌아가는 서비스'로</h3>
+<ul>
+<li>HTML을 만들어 보내는 일은 <strong>결과물 한 장</strong>. 에이전트의 강점(파일·명령·반복)은 <strong>매일 같은 일을 스스로 다시 하는 시스템</strong>에서 극대화된다</li>
+<li>그 무대가 <strong><a class="term" data-g="g62" href="#g62" id="g62-n1">자체 서버</a></strong>(연구실·사무실 PC, 소형 리눅스 서버, 클라우드 VM) — 에이전트가 코드를 쓰고, 서버가 <a class="term" data-g="g63" href="#g63" id="g63-n1">정해진 시각에 실행</a>한다</li>
+</ul>
+<div class="table-wrap"><table><thead><tr><th>구분</th><th>정적 페이지 (GitHub Pages)</th><th>자체 서버 + 코딩 에이전트</th></tr></thead><tbody><tr><td data-label="구분">갱신</td><td data-label="정적 페이지 (GitHub Pages)">사람이 다시 만들어 올릴 때만</td><td data-label="자체 서버 + 코딩 에이전트"><strong>스케줄 실행</strong>(매일·매시) → 수집·분석·발행 자동</td></tr><tr><td data-label="구분">데이터</td><td data-label="정적 페이지 (GitHub Pages)">페이지에 박힌 스냅숏</td><td data-label="자체 서버 + 코딩 에이전트"><strong>DB에 누적</strong> → 시계열·아카이브·지난 판</td></tr><tr><td data-label="구분">AI 호출</td><td data-label="정적 페이지 (GitHub Pages)">불가(키를 페이지에 넣으면 유출)</td><td data-label="자체 서버 + 코딩 에이전트"><strong>서버가 키를 보관</strong>하고 LLM으로 분류·요약·채점</td></tr><tr><td data-label="구분">민감 자료</td><td data-label="정적 페이지 (GitHub Pages)">공개 저장소 → 원자료 못 올림</td><td data-label="자체 서버 + 코딩 에이전트">원자료·녹취는 <strong>내 서버 안에서만</strong> 처리</td></tr><tr><td data-label="구분">독자 기능</td><td data-label="정적 페이지 (GitHub Pages)">보기·필터까지</td><td data-label="자체 서버 + 코딩 에이전트">검색·챗봇·알림·구독 등 <strong>서버가 응답</strong>하는 기능</td></tr><tr><td data-label="구분">부담</td><td data-label="정적 페이지 (GitHub Pages)">거의 없음(무료)</td><td data-label="자체 서버 + 코딩 에이전트">보안·백업·장애 관리 필요 → 이것도 에이전트가 돕는다</td></tr></tbody></table></div>
+<p><strong>사례 — 「경제 산책」 (미디어혁신연구소·경제저널리즘 수업, 강사 자체 서버)</strong> <a class="src" href="https://khmedia.duckdns.org/projects/ai_econ_desk/news/" rel="noopener" target="_blank" title="https://khmedia.duckdns.org/projects/ai_econ_desk/news/">경제 산책 바로가기 ↗</a></p>
+<div class="flow">
+<div class="flow-step"><span class="fs-tag">수집</span><b>경제 기사·연구·정책 보고서</b><small>국내외 언론, 한국은행·KDI 등 45곳</small></div><div class="flow-arrow">→</div>
+<div class="flow-step"><span class="fs-tag">AI 정리</span><b>이슈로 묶고 분야·난이도 분류</b><small>637건 → 이슈 87개 (11.5 오후판)</small></div><div class="flow-arrow">→</div>
+<div class="flow-step"><span class="fs-tag">해설</span><b>'쉽게 말하면' 요약·용어 풀이</b><small>숫자로 보는 오늘, 꼭 알 세 가지</small></div><div class="flow-arrow">→</div>
+<div class="flow-step"><span class="fs-tag">발행</span><b>하루 두 번 신문처럼</b><small>오전 7:40 · 오후 5:40, 지난 판 보관</small></div>
+</div>
+<ul>
+<li>사람(교수·학생)은 <strong>기준과 편집 원칙</strong>을 정하고 결과를 검토, 반복 작업은 서버가 매일 수행 — 에이전트는 코드 작성·수정·장애 대응 담당</li>
+<li>오늘 실습과의 관계: 소아과 페이지(정적) → 분기마다 자동 갱신 → 지역 의료 지표 상시 관측 서비스로 키우면 같은 구조</li>
+</ul>
+<p><strong>자체 서버에서 특히 효과적인 용도</strong></p>
+<div class="table-wrap"><table><thead><tr><th>용도</th><th>예</th><th>고도화 단계(6-3)</th></tr></thead><tbody><tr><td data-label="용도">정기 수집·발행</td><td data-label="예">출입처 공지·보도자료·공시 아침 브리핑, 「경제 산책」 같은 일간 판</td><td data-label="고도화 단계(6-3)">4</td></tr><tr><td data-label="용도">상시 관측 DB</td><td data-label="예">분기마다 쌓는 의료·교육·재정 지표, 지난 값과 비교해 급변 알림</td><td data-label="고도화 단계(6-3)">4</td></tr><tr><td data-label="용도">AI 대량 분석</td><td data-label="예">판결문·회의록·댓글 수천 건 분류 — 키는 서버에, 결과만 공개</td><td data-label="고도화 단계(6-3)">2~4</td></tr><tr><td data-label="용도">내부 취재 도구</td><td data-label="예">팩트체크·출고 전 점검·취재원 메모 검색(외부 공개 없이 팀만)</td><td data-label="고도화 단계(6-3)">공통 기본기</td></tr><tr><td data-label="용도">독자 서비스</td><td data-label="예">내 동네 검색, 자사 기사 기반 챗봇, 키워드 알림</td><td data-label="고도화 단계(6-3)">5</td></tr></tbody></table></div>
+<ul>
+<li><strong>중간 단계</strong>: 서버가 없으면 GitHub Actions 스케줄로 "매주 새 데이터 받아 페이지 갱신"까지는 무료로 가능 (키가 필요한 AI 호출은 저장소 비밀값 설정)</li>
+<li><strong>주의</strong>: 외부 공개 서버는 보안 갱신·접근 제한·백업이 필수. 에이전트에게 "포트·권한·키 노출 점검"을 정기적으로 시키기</li>
+</ul>
+<hr/></section><section class="chapter"><h2 id="lab">8. 실습: '우리 동네 소아과는 몇 곳?' — 데이터 구하기부터 GitHub 배포까지</h2>
+<h3 id="l1">8-1. 무엇을 만드나</h3>
+<ul>
+<li><strong>기사 질문</strong>: 아이 키우기 어려운 시군구는 어디인가</li>
+<li><strong><a class="term" data-g="g3" href="#g3" id="g3-n1">뉴스 페그</a></strong>: "전국 229개 시군구 중 70곳이 소아청소년과 전문의 0~2명" (심평원 자료, 2026.7 보도) <a class="src" href="https://www.pressian.com/pages/articles/2026072005475833399" rel="noopener" target="_blank" title="https://www.pressian.com/pages/articles/2026072005475833399">pressian.com ↗</a> → <strong>원자료로 직접 다시 세어 본다</strong></li>
+<li><strong>독자 맞춤</strong>: 내 시군구를 고르면 어린이 <a class="term" data-g="g12" href="#g12" id="g12-n1">1만 명당</a> 소아과 전문의 수·전국 순위·비슷한 지역 비교</li>
+<li><strong>결과물</strong>: <code>https://아이디.github.io/kids-clinic-gap/</code> — 누구나 여는 주소</li>
+</ul>
+<div class="flow">
+<div class="flow-step"><span class="fs-tag">8-2</span><b>데이터 2종 구하기</b><small>심평원 + KOSIS, 기준월 맞추기</small></div><div class="flow-arrow">→</div>
+<div class="flow-step"><span class="fs-tag">8-3 · 트랙 A</span><b>대화형으로 완성·배포</b><small>설치 없이 약 40분</small></div><div class="flow-arrow">→</div>
+<div class="flow-step"><span class="fs-tag">8-4 · 트랙 B</span><b>코딩 에이전트로 재현</b><small>폴더·스크립트로 계속 갱신</small></div><div class="flow-arrow">→</div>
+<div class="flow-step"><span class="fs-tag">8-5</span><b>점검·확장</b><small>검산 기준값과 대조</small></div>
+</div>
+<h3 id="l2">8-2. 데이터 구하기 — 어디서, 어떤 파일을</h3>
+<p><strong>① 병의원: 건강보험심사평가원 「전국 병의원 및 약국 현황」</strong> — 분기 갱신, 무료, 로그인 없이 다운로드</p>
+<div class="table-wrap"><table><thead><tr><th>순서</th><th>할 일</th></tr></thead><tbody><tr><td data-label="순서">1</td><td data-label="할 일"><a class="tool" href="https://www.data.go.kr/" rel="noopener" target="_blank" title="https://www.data.go.kr/">공공데이터포털</a> 검색창에 <strong>전국 병의원 및 약국 현황</strong> → 결과에서 <strong>파일데이터</strong> 「건강보험심사평가원_전국 병의원 및 약국 현황」 (바로가기 <a class="src" href="https://www.data.go.kr/data/15051059/fileData.do" rel="noopener" target="_blank" title="https://www.data.go.kr/data/15051059/fileData.do">data.go.kr/data/15051059 ↗</a>)</td></tr><tr><td data-label="순서">2</td><td data-label="할 일"><strong>다운로드</strong> → <code>전국 병의원 및 약국 현황 2026.9.zip</code> (약 21MB, 2026-10-19 등록)</td></tr><tr><td data-label="순서">3</td><td data-label="할 일">압축을 풀면 CSV 12개 — <strong>두 개만 쓴다</strong></td></tr></tbody></table></div>
+<div class="table-wrap"><table><thead><tr><th>파일</th><th>쓰는 열</th><th>비고</th></tr></thead><tbody><tr><td data-label="파일"><code>1.병원정보서비스(2026.9.).csv</code><br/>(약 8만 기관)</td><td data-label="쓰는 열">암호화요양기호, 요양기관명, 종별코드명, <strong>주소</strong>, 좌표(X)=경도, 좌표(Y)=위도</td><td data-label="비고">시군구는 <strong>주소 앞 두 단어</strong>로 정한다</td></tr><tr><td data-label="파일"><code>5.의료기관별상세정보서비스_03_진료과목정보(2026.9.).csv</code></td><td data-label="쓰는 열">암호화요양기호, 진료과목코드, <strong>과목별 전문의수</strong></td><td data-label="비고"><strong>진료과목코드 11 = 소아청소년과</strong> (53 소아치과·82 한방소아과는 제외)</td></tr></tbody></table></div>
+<ul>
+<li>⚠️ 인코딩이 <strong><a class="term" data-g="g61" href="#g61" id="g61-n1">CP949</a></strong> — 엑셀은 그냥 열리지만 파이썬은 <code>encoding="cp949"</code> 필요</li>
+<li>⚠️ <code>시군구코드명</code> 열은 "대구동구", "수원장안구"처럼 붙어 있고 일반구 단위 → 인구 자료와 이름이 안 맞음. <strong>주소 열을 쓰는 게 안전</strong></li>
+</ul>
+<p><strong>② 인구: KOSIS 「행정구역(읍면동)별/5세별 주민등록인구(2011년~)」</strong> (행정안전부 원자료)</p>
+<ul>
+<li>"시군구별 연령별 인구"로 검색하면 시·도가 만든 표(예: 충청북도 기본통계)가 먼저 떠서 한 지역만 나온다 → <strong>작성기관이 '행정안전부'인 표</strong>를 고른다</li>
+</ul>
+<div class="table-wrap"><table><thead><tr><th>순서</th><th>할 일</th></tr></thead><tbody><tr><td data-label="순서">1</td><td data-label="할 일"><a class="tool" href="https://kosis.kr/" rel="noopener" target="_blank" title="https://kosis.kr/">KOSIS</a> → <strong>국내통계 › 주제별 통계 › 인구 › 주민등록인구현황 › 행정구역(읍면동)별/5세별 주민등록인구(2011년~)</strong> (바로가기 <a class="src" href="https://kosis.kr/statHtml/statHtml.do?orgId=101&amp;tblId=DT_1B04005N" rel="noopener" target="_blank" title="https://kosis.kr/statHtml/statHtml.do?orgId=101&amp;tblId=DT_1B04005N">표 DT_1B04005N ↗</a>)</td></tr><tr><td data-label="순서">2</td><td data-label="할 일">처음 화면은 전국·시도만 보임 → <strong>조회설정 › 행정구역</strong>에서 레벨 선택으로 <strong>1레벨(시도)·2레벨(시군구)만</strong> 체크(3레벨 읍면동은 해제) → <strong>조회</strong>. 시점(최근 3개월)·연령(전체)·항목(총·남·여)은 그대로 둬도 된다</td></tr><tr><td data-label="순서">3</td><td data-label="할 일"><strong>다운로드</strong> → 파일 형태 <strong>XLS</strong> → <code>101_DT_1B04005N_날짜시각.xls</code> (약 9MB)</td></tr><tr><td data-label="순서">4</td><td data-label="할 일">확인: 시트 <code>데이터</code> 1만 6,434행. 열 = <code>행정구역(동읍면)별 · 5세별 · 항목 · 단위 · 2026.08 월 · 2026.09 월 · 2026.10 월</code> — <strong>지역×연령×항목이 한 행</strong>인 긴 표</td></tr></tbody></table></div>
+<p><strong>이 XLS를 다룰 때 알아 둘 것</strong> (실제 파일로 확인)</p>
+<div class="table-wrap"><table><thead><tr><th>함정</th><th>내용</th><th>처리</th></tr></thead><tbody><tr><td data-label="함정">겉만 엑셀</td><td data-label="내용">확장자는 .xls지만 실제로는 <strong>엑셀 2003 XML</strong>, 인코딩 <a class="term" data-g="g61" href="#g61" id="g61-n2">EUC-KR</a>. 엑셀에선 열리지만 <code>pandas.read_excel</code>은 실패. '메타정보' 시트의 <code>&lt; 통계표 메타자료 &gt;</code> 꺾쇠 때문에 XML 파서도 멈춤</td><td data-label="처리">AI에게 "XML로 읽고, 데이터 안의 꺾쇠는 이스케이프하라"고 알려 주기 · 또는 엑셀에서 열어 CSV로 다시 저장</td></tr><tr><td data-label="함정">시도 열이 없다</td><td data-label="내용">서울 중구·부산 중구·대구 중구…처럼 같은 이름이 여럿</td><td data-label="처리">위에서부터 읽으며 <strong>시도 행</strong>(…특별시·광역시·도·특별자치시) 아래 행을 그 시도의 시군구로</td></tr><tr><td data-label="함정">빼야 할 행</td><td data-label="내용">전국·시도 합계 행 / <code>북부출장소</code>·<code>동해출장소</code>(값 0) / 세종은 시도·시군구로 <strong>두 번</strong> 나옴</td><td data-label="처리">합계·출장소 행 제외, 세종은 한 번만</td></tr><tr><td data-label="함정">남길 값</td><td data-label="내용">항목 3종 × 연령 22구간 × 3개월</td><td data-label="처리">항목 <code>총인구수[명]</code> · 연령 <code>0 - 4세</code>·<code>5 - 9세</code>·<code>10 - 14세</code> · 열 <code>2026.09 월</code> → <strong>230개 시군구, 합계 5,116,175명</strong></td></tr></tbody></table></div>
+<ul>
+<li>대안 표: 같은 메뉴의 「행정구역(시군구)별/1세별 주민등록인구」(DT_1B04006) — 0~14세를 1세 단위로 더해야 해 열이 많다</li>
+</ul>
+<p><strong>③ 두 자료를 맞출 때 — 2026년 행정구역 개편</strong></p>
+<ul>
+<li><strong>기준월을 같게</strong>: 심평원 2026.9.30 추출 ↔ 인구 2026.09</li>
+<li>두 자료 모두 개편이 반영돼 있다: <strong>전남광주통합특별시</strong>(옛 광주·전남), 인천 <strong>제물포·영종·서해·검단구</strong>, 화성시 4개 일반구</li>
+<li>심평원 주소 중 6곳은 아직 "광주광역시"·"전라남도" → 전남광주통합특별시로 맞춘다. 결과: <strong>230개 시군구</strong>(자치구·시·군 + 세종 + 제주시·서귀포시)</li>
+<li>이 '이름 맞추기'가 데이터 기사의 핵심 취재 작업 — 규칙을 README에 남긴다(<a class="term" data-g="g6" href="#g6" id="g6-n2">방법론 공개</a>)</li>
+</ul>
+<p><strong>④ 막히면 — 인구 파일 바로 받기 / 에이전트에게 받아 오게 시키기</strong></p>
+<blockquote class="callout"><p><strong>인구 원자료는 바로 받기</strong> — 강의 페이지와 같은 폴더(GitHub)에 올려 둔 KOSIS 원본 (2026.08~10, 1·2레벨)</p><p>📥 <a class="lec-link" style="word-break:break-all;white-space:normal" href="101_DT_1B04005N_20261105235840.xls" download>101_DT_1B04005N_20261105235840.xls</a> (약 9MB)</p><p style="font-size:13.5px;color:var(--text-2)">심평원 자료(zip 21MB, 압축 해제 시 CSV 최대 50MB)는 용량 때문에 올리지 않았다 → 위 ①의 방법으로 공공데이터포털에서 직접 받는다. 받은 파일은 모두 실습 폴더의 <code>raw/</code>에.</p></blockquote>
+<pre><code>raw/ 폴더에 실습 원자료 두 개를 받아 줘. 단계마다 확인받아.
+1) 공공데이터포털 '건강보험심사평가원_전국 병의원 및 약국 현황'(data.go.kr/data/15051059) 최신 zip을 받아
+   raw/에 풀고, '1.병원정보서비스'와 '5.…_03_진료과목정보' CSV의 열 이름과 행 수를 보여 줘(cp949).
+2) KOSIS 표 DT_1B04005N(행정구역(읍면동)별/5세별 주민등록인구)에서 2026.09, 총인구수,
+   행정구역 1·2레벨을 XLS로 받아 raw/에 넣어 줘.
+   브라우저 조작이 필요하면 그 방법을 먼저 알려 줘.
+</code></pre>
+<ul>
+<li>Claude Code는 Chrome 확장(Claude in Chrome)과 연결하면 KOSIS 같은 화면 조작도 대신한다 · KOSIS OpenAPI는 인증키(무료 가입) 필요</li>
+<li><strong>현장 대비</strong>: 위 인구 원본 외에, 강사가 미리 집계한 파일(시군구 집계 2개 + 결합 결과 + README)도 배포 — 아래 검산 기준값과 같은 결과</li>
+</ul>
+<p><strong>검산 기준값</strong> (2026.9 원자료로 강사가 직접 계산 — 실습 결과가 이와 같아야 한다)</p>
+<div class="table-wrap"><table><thead><tr><th>항목</th><th>값</th></tr></thead><tbody><tr><td data-label="항목">시군구 수</td><td data-label="값"><strong>230곳</strong> (심평원 쪽은 229곳 — 경북 영양군은 소아청소년과 진료기관이 없어 집계에 없음 → 0으로)</td></tr><tr><td data-label="항목">소아청소년과 전문의 합계</td><td data-label="값"><strong>5,890명</strong> · 전문의 1명 이상 기관 3,183곳</td></tr><tr><td data-label="항목">0~14세 인구 합계</td><td data-label="값"><strong>5,116,175명</strong> (KOSIS 전국 값과 일치)</td></tr><tr><td data-label="항목">전국 평균</td><td data-label="값">어린이 1만 명당 <strong>11.5명</strong></td></tr><tr><td data-label="항목">전문의 0명</td><td data-label="값"><strong>23곳</strong> · 0~2명은 <strong>71곳</strong> (보도의 "229곳 중 70곳"과 비교해 볼 것)</td></tr><tr><td data-label="항목">1위</td><td data-label="값">서울 종로구 121.3명 — 대학병원 전문의가 <strong>근무지</strong> 기준으로 잡힌 결과 → 지표의 한계로 기사에 밝힐 것</td></tr></tbody></table></div>
+<h3 id="l3">8-3. 트랙 A — 대화형 AI로 완성하고 배포하기 (설치 없음)</h3>
+<div class="table-wrap"><table><thead><tr><th>단계</th><th>할 일</th><th>시간</th></tr></thead><tbody><tr><td data-label="단계">A1 준비</td><td data-label="할 일">Claude: 설정에서 <strong>코드 실행·파일 생성</strong> 켜기 / ChatGPT: 파일 첨부만 하면 데이터 분석 작동 · 무료 플랜은 업로드·사용량 제한 → 유료 권장</td><td data-label="시간">3분</td></tr><tr><td data-label="단계">A2 첨부</td><td data-label="할 일"><strong>심평원 zip(21MB) 그대로</strong> + KOSIS 인구 XLS(9MB). Claude는 파일당 용량 제한이 있어 압축을 푼 진료과목정보(약 50MB)는 안 올라갈 수 있음 → zip이 안 되면 <strong>강사 배포 집계 파일 2개</strong>로(이때는 프롬프트에 "1)~2)는 이미 집계됐으니 건너뛰어"를 덧붙이기)</td><td data-label="시간">3분</td></tr><tr><td data-label="단계">A3 요청</td><td data-label="할 일">아래 <strong>프롬프트 한 번</strong> 붙여 넣기</td><td data-label="시간">1분</td></tr><tr><td data-label="단계">A4 검산</td><td data-label="할 일">AI가 먼저 보여 주는 <strong>검산표</strong>를 위 기준값과 대조 → 다르면 "전문의 합계가 5,890이 아니야. 어디서 빠졌는지 찾아 줘"</td><td data-label="시간">10분</td></tr><tr><td data-label="단계">A5 다듬기</td><td data-label="할 일">미리보기를 보며 말로 수정: "모바일에서 그래프가 잘려" · "0명 지역을 표로"</td><td data-label="시간">10분</td></tr><tr><td data-label="단계">A6 받기</td><td data-label="할 일"><code>index.html</code>(데이터 내장)·<code>README.md</code> 내려받기</td><td data-label="시간">1분</td></tr><tr><td data-label="단계">A7 배포</td><td data-label="할 일"><a class="term" data-g="g58" href="#g58" id="g58-n1">GitHub</a> 웹에서 올리기 (아래)</td><td data-label="시간">10분</td></tr></tbody></table></div>
+<p><strong>A3 프롬프트 (복사해 쓰기)</strong></p>
+<pre><code>첨부한 파일로 '우리 동네 소아과는 몇 곳?' 데이터 기사 웹페이지를 만들어 줘.
+[원자료] ① 심평원 '전국 병의원 및 약국 현황 2026.9.zip'(CSV, cp949)
+         ② KOSIS '101_DT_1B04005N_….xls'(실제로는 엑셀 2003 XML, EUC-KR — read_excel이 안 되면 XML로 읽어)
+1) zip에서 '1.병원정보서비스'와 '5.…_03_진료과목정보'만 써. 진료과목코드 11(소아청소년과)의 '과목별 전문의수'를
+   기관별로 더해 '암호화요양기호'로 병원정보와 붙여.
+2) 시군구는 주소 앞 두 단어로 정해(일반구는 시로, 세종은 하나로, '광주광역시'·'전라남도' 주소는 전남광주통합특별시로).
+   인구는 '데이터' 시트에서 항목 '총인구수[명]', 0 - 4세·5 - 9세·10 - 14세, '2026.09 월' 열만 써.
+   시도 열이 없으니 위에서부터 시도 행 아래를 그 시도의 시군구로 보고, 전국·시도 합계 행과
+   '출장소' 행은 빼고, 세종은 한 번만.
+3) 어린이 1만 명당 전문의 수와 전국 순위를 계산하고, 먼저 검산표를 보여 줘:
+   시군구 수, 전문의 합계, 0~14세 합계, 이름이 안 맞은 시군구.
+4) 그다음 index.html 한 파일(데이터 내장, D3 v7 CDN):
+   내 시군구 선택 → "○○는 어린이 1만 명당 전문의 ○명, 230곳 중 ○위" 문장 / 전체 점그래프에서 내 동네 강조 /
+   전문의 0명 지역 목록 / 출처·기준일·한계 / 모바일 / 한국어. README.md(출처·계산법·한계)도 만들어 내려받게 해 줘.
+숫자는 코드로만 계산하고 지어내지 마.
+</code></pre>
+<p><strong>A7 GitHub 웹으로 배포 — 명령어 없이</strong></p>
+<div class="table-wrap"><table><thead><tr><th>순서</th><th>누를 곳</th></tr></thead><tbody><tr><td data-label="순서">1</td><td data-label="누를 곳"><a class="tool" href="https://github.com/" rel="noopener" target="_blank" title="https://github.com/">github.com</a> 가입·로그인 → 오른쪽 위 <strong>+ › New repository</strong></td></tr><tr><td data-label="순서">2</td><td data-label="누를 곳">이름 <code>kids-clinic-gap</code> · <strong>Public</strong> 선택 → <strong>Create repository</strong></td></tr><tr><td data-label="순서">3</td><td data-label="누를 곳"><strong>uploading an existing file</strong> 링크(또는 Add file › Upload files) → <code>index.html</code>·<code>README.md</code> 끌어 놓기 → <strong>Commit changes</strong></td></tr><tr><td data-label="순서">4</td><td data-label="누를 곳"><strong>Settings › Pages</strong> → Source: <em>Deploy from a branch</em> → <code>main</code> / <code>/ (root)</code> → <strong>Save</strong> <a class="src" href="https://docs.github.com/ko/pages/quickstart" rel="noopener" target="_blank" title="https://docs.github.com/ko/pages/quickstart">GitHub Pages 빠른 시작 ↗</a></td></tr><tr><td data-label="순서">5</td><td data-label="누를 곳">1~2분 뒤 Pages 화면 위쪽에 주소 표시 → <code>https://아이디.github.io/kids-clinic-gap/</code> 공유</td></tr><tr><td data-label="순서">고칠 때</td><td data-label="누를 곳">새 index.html을 같은 방법으로 다시 올리면(같은 이름) 덮어써지고 자동 반영</td></tr></tbody></table></div>
+<ul><li>여기까지 해 보면 7-2의 벽이 보인다 — 다음 분기 자료가 나오면 <strong>처음부터 다시</strong>. 그래서 트랙 B</li></ul>
+<h3 id="l4">8-4. 트랙 B — 코딩 에이전트로 다시 만들기 (계속 갱신하는 기사)</h3>
+<p><strong>B1. 설치는 두 가지만</strong></p>
+<div class="table-wrap"><table><thead><tr><th>순서</th><th>할 일</th></tr></thead><tbody><tr><td data-label="순서">1</td><td data-label="할 일"><a class="tool" href="https://code.visualstudio.com/" rel="noopener" target="_blank" title="https://code.visualstudio.com/">VS Code</a> 설치 → 확장(<code>Ctrl+Shift+X</code>)에서 <strong>Claude Code</strong>(Anthropic) 또는 <strong>Codex</strong>(OpenAI) 설치 → 로그인(유료 구독 또는 API 키)</td></tr><tr><td data-label="순서">2</td><td data-label="할 일"><strong>파일 › 폴더 열기</strong>로 빈 폴더 <code>kids-clinic-gap</code> 지정 → 에이전트 패널 열기 (에이전트는 열린 폴더 안에서만 일한다)</td></tr><tr><td data-label="순서">3</td><td data-label="할 일"><a class="term" data-g="g46" href="#g46" id="g46-n1">Python</a>·<a class="term" data-g="g55" href="#g55" id="g55-n1">Git</a>은 직접 깔지 않는다 → 아래 <strong>프롬프트 0</strong>으로 에이전트에게 맡기기</td></tr></tbody></table></div>
+<p><strong>B2. 폴더 구조 — 파일 다섯 개</strong></p>
+<pre><code>kids-clinic-gap/
+├── AGENTS.md     ← 메모리 (Claude Code는 CLAUDE.md)
+├── raw/          ← 원자료 3개 (GitHub에 안 올림)
+│   ├── 1.병원정보서비스(2026.9.).csv        ← 심평원: 기관·주소
+│   ├── 5.…_03_진료과목정보(2026.9.).csv    ← 심평원: 과목별 전문의 수
+│   └── 101_DT_1B04005N_….xls               ← KOSIS: 시군구별 연령 인구
+├── build.py      ← raw/ → data.js 계산
+├── data.js       ← 계산 결과 (페이지가 읽음)
+├── index.html    ← 페이지
+└── README.md     ← 출처·기준일·계산법·한계
+</code></pre>
+<ul><li><code>data.js</code>(<code>window.DATA = …</code>)로 두면 서버 없이 <code>index.html</code>을 더블클릭해도 열린다</li></ul>
+<p><strong>B3. 프롬프트 — 순서대로 짧게</strong></p>
+<p>0 · 환경</p>
+<pre><code>이 컴퓨터에 Python(pandas 포함)과 Git이 있는지 확인하고, 없으면 설치해 줘. 실행할 명령을 먼저 보여 줘.
+</code></pre>
+<p>1 · <a class="term" data-g="g43" href="#g43" id="g43-n3">메모리</a></p>
+<pre><code>AGENTS.md(Claude Code면 CLAUDE.md)를 만들어 줘.
+목적: 시군구별 어린이(0~14세) 1만 명당 소아청소년과 전문의 수 기사 / 원자료(raw/): 심평원 병원정보·진료과목정보 CSV(cp949) + KOSIS 인구 XLS(엑셀 2003 XML), 기준월 2026.09
+구조: build.py → data.js → index.html(D3 v7 CDN) / 규칙: 숫자는 코드로만, 출처·기준일 표기, raw/는 git 제외, 한국어·모바일
+</code></pre>
+<p>2 · 데이터 (zip을 풀어 1번·5번 CSV만 남기고 KOSIS XLS를 넣은 뒤)</p>
+<pre><code>raw/ 파일의 열과 행 수를 먼저 보여 주고, 계획을 승인받은 뒤 build.py를 만들어 실행해.
+계산 규칙은 8-2와 같아(코드 11, 주소 앞 두 단어, 전남광주 맞춤 / KOSIS는 XML로 읽고 시도 행 아래 시군구, 합계·출장소 제외, 세종 한 번).
+끝나면 검산표: 시군구 수, 전문의 합계, 0~14세 합계, 이름이 안 맞은 지역.
+</code></pre>
+<p>3 · 페이지</p>
+<pre><code>data.js를 읽는 index.html 계획부터 보여 줘. 내 시군구 선택 → 문장 카드 / 점그래프에서 내 동네 강조 /
+비슷한 인구 규모 10곳 비교 막대 / 전문의 0명 목록 / 방법론·출처. 승인하면 만들고 브라우저로 열어 줘.
+</code></pre>
+<p>4 · 배포</p>
+<pre><code>README.md를 쓰고 .gitignore에 raw/를 넣은 뒤, 공개 저장소 kids-clinic-gap에 올리고
+GitHub Pages(main, 루트)를 켜는 과정을 단계마다 확인받으며 진행해 줘. 마지막에 주소를 알려 줘.
+</code></pre>
+<p>선택 · <a class="term" data-g="g45" href="#g45" id="g45-n3">서브에이전트</a>로 검산</p>
+<pre><code>data.js의 숫자를 raw/에서 독립적으로 다시 계산해 대조하는 검증 서브에이전트를 만들어 실행해 줘. 파일은 고치지 말고 보고만.
+</code></pre>
+<ul>
+<li><strong>다음 분기</strong>: raw/ 파일만 바꾸고 "build.py 다시 돌리고 바뀐 숫자를 요약해 줘" → 커밋 → 자동 반영 (<a class="term" data-g="g5" href="#g5" id="g5-n2">재현 가능</a>)</li>
+<li>오류가 나면: 브라우저 <a class="term" data-g="g54" href="#g54" id="g54-n1">콘솔</a>(F12) 메시지를 그대로 붙여 넣기</li>
+</ul>
+<h3 id="l5">8-5. 점검하고 넓히기</h3>
+<ul>
+<li><strong>배포 전 점검</strong>: ☐ 검산 기준값과 일치 ☐ 내 동네 숫자를 원자료에서 직접 세어 대조 ☐ 출처·기준일·한계 표기 ☐ 모바일 ☐ raw/·키 미포함</li>
+<li><strong>안 열릴 때</strong>: 공개 저장소인지 · <code>index.html</code>이 맨 위에 있는지 · 파일 이름 대소문자</li>
+<li><strong>넓히기</strong>: 병원정보의 좌표로 <a class="term" data-g="g50" href="#g50" id="g50-n1">Leaflet</a> 지도 추가 · 산부인과(진료과목코드 10)·응급실로 같은 틀 반복 · 분기마다 갱신 → 6-3의 4단계로</li>
+<li><strong>한 단계 더</strong>: 정적 페이지를 넘어 매일 스스로 수집·갱신하는 서비스로 → <a href="#v5">7-5</a>(자체 서버 사례)</li>
+</ul>
+<hr/></section><section class="chapter"><h2 id="s33">9. 배우는 길과 AI 사용 원칙</h2>
+<h3 id="s34">9-1. 학습 로드맵</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>단계</th>
+<th>추천 자료</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="단계"><a class="term" data-g="g11" href="#g11" id="g11-u1">데이터 리터러시</a></td>
+<td data-label="추천 자료">Google News Initiative <a class="src" href="https://newsinitiative.withgoogle.com/resources/trainings/" rel="noopener" target="_blank" title="https://newsinitiative.withgoogle.com/resources/trainings/">newsinitiative.withgoogle.com ↗</a> · Data Journalism Handbook <a class="src" href="https://datajournalism.com/read/handbook/two/introduction/introduction" rel="noopener" target="_blank" title="https://datajournalism.com/read/handbook/two/introduction/introduction">datajournalism.com ↗</a></td>
+</tr>
+<tr>
+<td data-label="단계"><a class="term" data-g="g46" href="#g46" id="g46-u4">파이썬</a>·분석</td>
+<td data-label="추천 자료">First Python Notebook <a class="src" href="https://www.firstpythonnotebook.org/" rel="noopener" target="_blank" title="https://www.firstpythonnotebook.org/">firstpythonnotebook.org ↗</a> · 점프 투 파이썬 <a class="src" href="https://wikidocs.net/book/1" rel="noopener" target="_blank" title="https://wikidocs.net/book/1">wikidocs.net ↗</a></td>
+</tr>
+<tr>
+<td data-label="단계">시각화</td>
+<td data-label="추천 자료">Datawrapper Academy <a class="src" href="https://academy.datawrapper.de/" rel="noopener" target="_blank" title="https://academy.datawrapper.de/">academy.datawrapper.de ↗</a> · <a class="term" data-g="g49" href="#g49" id="g49-u2">D3</a> 갤러리 <a class="src" href="https://observablehq.com/@d3/gallery" rel="noopener" target="_blank" title="https://observablehq.com/@d3/gallery">observablehq.com ↗</a></td>
+</tr>
+<tr>
+<td data-label="단계">AI·에이전트</td>
+<td data-label="추천 자료">나이트센터 MOOC <a class="src" href="https://journalismcourses.org/" rel="noopener" target="_blank" title="https://journalismcourses.org/">journalismcourses.org ↗</a> · JournalismAI <a class="src" href="https://www.journalismai.info/resources/training" rel="noopener" target="_blank" title="https://www.journalismai.info/resources/training">journalismai.info ↗</a> · Simon Willison(NICAR 2026) <a class="src" href="https://simonwillison.net/2026/Mar/16/coding-agents-for-data-analysis/" rel="noopener" target="_blank" title="https://simonwillison.net/2026/Mar/16/coding-agents-for-data-analysis/">simonwillison.net ↗</a></td>
+</tr>
+<tr>
+<td data-label="단계">윤리·검증</td>
+<td data-label="추천 자료">Poynter AI 윤리 <a class="src" href="https://www.poynter.org/ai-ethics-journalism/ai-ethics-guidelines/" rel="noopener" target="_blank" title="https://www.poynter.org/ai-ethics-journalism/ai-ethics-guidelines/">poynter.org ↗</a> · Bellingcat 툴킷 <a class="src" href="https://bellingcat.gitbook.io/toolkit" rel="noopener" target="_blank" title="https://bellingcat.gitbook.io/toolkit">bellingcat.gitbook.io ↗</a></td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>교육 프로그램: KPF미카 <a class="src" href="https://www.meca.or.kr/" rel="noopener" target="_blank" title="https://www.meca.or.kr/">meca.or.kr ↗</a> · 연세대 윤세영저널리즘전공(2027.3 개설) <a class="src" href="https://www.seoul.co.kr/news/economy/2026/06/16/20260616500094" rel="noopener" target="_blank" title="https://www.seoul.co.kr/news/economy/2026/06/16/20260616500094">seoul.co.kr ↗</a> · IRE 부트캠프 <a class="src" href="https://www.ire.org/training/bootcamps/" rel="noopener" target="_blank" title="https://www.ire.org/training/bootcamps/">ire.org ↗</a></li>
+</ul>
+<h3 id="s35">9-2. 기자의 AI 사용 5원칙</h3>
+<ol>
+<li><strong>AI 답은 '제보'</strong> — 원문·<a class="term" data-g="g13" href="#g13" id="g13-u3">원자료</a>로 확인</li>
+<li><strong>숫자는 코드가 계산</strong> — AI 합계·비율은 재검산</li>
+<li><strong>민감 자료는 올리지 않기</strong> — 취재원·미공개 문서·개인정보</li>
+<li><strong>AI 사용 기록</strong> — 회사 AI 준칙 확인, 필요 시 표시</li>
+<li><strong>출처 보존</strong> — URL·캡처·Wayback 저장</li>
+</ol>
+<hr/>
+</section><section class="chapter"><h2 id="s36">마무리</h2>
+<blockquote class="callout">
+<p><strong>AI 자동화는 기자를 대체하지 않는다. '자동화만 하는 기자'와 '자동화로 번 시간에 데이터를 만드는 기자'를 가른다.</strong></p>
+</blockquote>
+<p><strong>오늘 돌아가서 할 일 3가지</strong></p>
+<ol>
+<li>AI 도구·API 가이드에서 「⭐ 추천」 필터 → 3개 계정 만들기</li>
+<li>데이터 소스 디렉토리에서 내 출입처 데이터 3개 즐겨찾기</li>
+<li>8장 트랙 A로 '우리 동네 소아과' 페이지를 GitHub Pages에 배포 → 트랙 B로 다시 만들어 분기마다 갱신</li>
+</ol>
+<hr/>
+</section><section class="chapter"><h2 id="s37">참고 자료</h2>
+<ul>
+<li>Reuters Institute (2026). <em>Trends and Predictions 2026</em>. <a class="src" href="https://reutersinstitute.politics.ox.ac.uk/journalism-media-and-technology-trends-and-predictions-2026" rel="noopener" target="_blank" title="https://reutersinstitute.politics.ox.ac.uk/journalism-media-and-technology-trends-and-predictions-2026">reutersinstitute.politics.ox.ac.uk ↗</a></li>
+<li>Reuters Institute (2026). <em>Digital News Report 2026</em>. <a class="src" href="https://reutersinstitute.politics.ox.ac.uk/digital-news-report/2026/dnr-executive-summary" rel="noopener" target="_blank" title="https://reutersinstitute.politics.ox.ac.uk/digital-news-report/2026/dnr-executive-summary">reutersinstitute.politics.ox.ac.uk ↗</a></li>
+<li>GIJN (2026). 2026 Sigma Awards. <a class="src" href="https://gijn.org/stories/2026-data-journalism-sigma-award-winners/" rel="noopener" target="_blank" title="https://gijn.org/stories/2026-data-journalism-sigma-award-winners/">gijn.org ↗</a></li>
+<li>Nieman Lab (2026). Eight Pulitzer awardees disclosed AI use. <a class="src" href="https://www.niemanlab.org/2026/08/a-record-breaking-eight-pulitzer-awardees-disclosed-ai-use-this-year/" rel="noopener" target="_blank" title="https://www.niemanlab.org/2026/08/a-record-breaking-eight-pulitzer-awardees-disclosed-ai-use-this-year/">niemanlab.org ↗</a></li>
+<li>luongnv89, <em>claude-howto</em> (Claude Code 기능 가이드). <a class="src" href="https://github.com/luongnv89/claude-howto" rel="noopener" target="_blank" title="https://github.com/luongnv89/claude-howto">github.com ↗</a></li>
+<li>Anthropic, Claude Code 문서. <a class="src" href="https://code.claude.com/docs/en/overview" rel="noopener" target="_blank" title="https://code.claude.com/docs/en/overview">code.claude.com ↗</a></li>
+<li>OpenAI, Codex 문서. <a class="src" href="https://developers.openai.com/codex" rel="noopener" target="_blank" title="https://developers.openai.com/codex">developers.openai.com ↗</a></li>
+</ul></section><section class="chapter glossary"><h2 id="glossary">부록. 용어 사전</h2><p class="g-intro">본문의 <span class="term-demo">밑줄 용어</span>를 누르면 이곳으로 옵니다. 각 항목의 <b>↗ 더 알아보기</b>는 원 문헌·공식 문서, <b>본문</b>은 그 용어가 나온 곳입니다.</p><div class="g-search"><input aria-label="용어 찾기" id="gq" placeholder="용어 찾기 (예: API, 메모리, 바벨)" type="search"/><span id="gcount"></span></div><h3 id="gc1">저널리즘 개념·이론</h3><div class="g-grid"><div class="g-item" data-s="ifcn international fact-checking network 국제팩트체킹연맹. 비당파성·투명성 원칙을 심사해 팩트체크 기관을 인증한다. 국내 인증은 jtbc·단비뉴스." id="g8"><div class="g-h"><b>IFCN</b><span class="g-en">International Fact-Checking Network</span></div><p>국제팩트체킹연맹. 비당파성·투명성 원칙을 심사해 팩트체크 기관을 인증한다. 국내 인증은 JTBC·단비뉴스.</p><a class="g-more" href="https://www.poynter.org/ifcn/" rel="noopener" target="_blank">↗ 더 알아보기: Poynter IFCN</a><div class="g-back">본문: <a href="#g8-u1">3장</a></div></div><div class="g-item" data-s="뉴스 페그 news peg 지금 이 기사를 써야 하는 이유가 되는 최근 사건·발표. 데이터 기사도 페그가 있으면 독자가 읽는다." id="g3"><div class="g-h"><b>뉴스 페그</b><span class="g-en">news peg</span></div><p>지금 이 기사를 써야 하는 이유가 되는 최근 사건·발표. 데이터 기사도 페그가 있으면 독자가 읽는다.</p><div class="g-back">본문: <a href="#g3-n1">8장</a></div></div><div class="g-item" data-s="데이터 리터러시 data literacy 표를 읽고 비율·증감률·표본을 바르게 해석하는 능력. 데이터 기사의 출발점." id="g11"><div class="g-h"><b>데이터 리터러시</b><span class="g-en">data literacy</span></div><p>표를 읽고 비율·증감률·표본을 바르게 해석하는 능력. 데이터 기사의 출발점.</p><a class="g-more" href="https://newsinitiative.withgoogle.com/resources/trainings/" rel="noopener" target="_blank">↗ 더 알아보기: Google News Initiative 트레이닝</a><div class="g-back">본문: <a href="#g11-u1">9장</a></div></div><div class="g-item" data-s='데이터저널리즘 data journalism 데이터를 모으고 분석·시각화해 사실을 밝히는 보도 방식. 숫자를 "인용"하는 것을 넘어 데이터를 직접 "만들고" 검증한다.' id="g0"><div class="g-h"><b>데이터저널리즘</b><span class="g-en">data journalism</span></div><p>데이터를 모으고 분석·시각화해 사실을 밝히는 보도 방식. 숫자를 "인용"하는 것을 넘어 데이터를 직접 "만들고" 검증한다.</p><a class="g-more" href="https://datajournalism.com/read/handbook/two/introduction/introduction" rel="noopener" target="_blank">↗ 더 알아보기: Data Journalism Handbook</a></div><div class="g-item" data-s="디지털뉴스리포트 digital news report 로이터저널리즘연구소가 매년 40여 개국 뉴스 이용을 조사하는 보고서. 한국 결과도 포함된다." id="g10"><div class="g-h"><b>디지털뉴스리포트</b><span class="g-en">Digital News Report</span></div><p>로이터저널리즘연구소가 매년 40여 개국 뉴스 이용을 조사하는 보고서. 한국 결과도 포함된다.</p><a class="g-more" href="https://reutersinstitute.politics.ox.ac.uk/digital-news-report/2026/dnr-executive-summary" rel="noopener" target="_blank">↗ 더 알아보기: DNR 2026 요약</a><div class="g-back">본문: <a href="#g10-u1">2장</a></div></div><div class="g-item" data-s="바벨 효과 barbell effect 역기(바벨)처럼 양 끝 — 사람만 할 수 있는 차별화 저널리즘과 철저한 자동화 — 은 살아남고, 가운데의 어중간한 범용 뉴스가 가장 위험해진다는 전망." id="g1"><div class="g-h"><b>바벨 효과</b><span class="g-en">barbell effect</span></div><p>역기(바벨)처럼 양 끝 — 사람만 할 수 있는 차별화 저널리즘과 철저한 자동화 — 은 살아남고, 가운데의 어중간한 범용 뉴스가 가장 위험해진다는 전망.</p><a class="g-more" href="https://reutersinstitute.politics.ox.ac.uk/journalism-media-and-technology-trends-and-predictions-2026" rel="noopener" target="_blank">↗ 더 알아보기: 로이터연구소 2026 전망 보고서</a><div class="g-back">본문: <a href="#g1-u1">1장</a> · <a href="#g1-u2">2장</a></div></div><div class="g-item" data-s='방법론 공개 methodology disclosure 데이터 출처·기준일·계산 방법·한계를 독자에게 밝히는 일. 보통 readme나 기사 하단 "어떻게 분석했나"로 쓴다.' id="g6"><div class="g-h"><b>방법론 공개</b><span class="g-en">methodology disclosure</span></div><p>데이터 출처·기준일·계산 방법·한계를 독자에게 밝히는 일. 보통 README나 기사 하단 "어떻게 분석했나"로 쓴다.</p></div><div class="g-item" data-s="시그마 어워드 sigma awards 세계 최고 권위의 데이터저널리즘상. 수상작의 방법론과 데이터가 공개돼 교재로 쓰기 좋다." id="g9"><div class="g-h"><b>시그마 어워드</b><span class="g-en">Sigma Awards</span></div><p>세계 최고 권위의 데이터저널리즘상. 수상작의 방법론과 데이터가 공개돼 교재로 쓰기 좋다.</p><a class="g-more" href="https://www.sigmaawards.org/" rel="noopener" target="_blank">↗ 더 알아보기: sigmaawards.org</a></div><div class="g-item" data-s="인구 대비 비율 per-capita rate 절대 숫자 대신 인구로 나눠 비교하는 지표(예: 어린이 1만 명당 소아과 전문의 수). 인구가 다른 지역을 공정하게 비교할 수 있다." id="g12"><div class="g-h"><b>인구 대비 비율</b><span class="g-en">per-capita rate</span></div><p>절대 숫자 대신 인구로 나눠 비교하는 지표(예: 어린이 1만 명당 소아과 전문의 수). 인구가 다른 지역을 공정하게 비교할 수 있다.</p><div class="g-back">본문: <a href="#g12-x2">6장</a> · <a href="#g12-n1">8장</a></div></div><div class="g-item" data-s='인터랙티브 interactive 독자가 검색·선택·필터로 자기 동네·학교를 직접 찾아보는 기사 형식. 같은 데이터가 독자마다 "내 이야기"가 된다.' id="g4"><div class="g-h"><b>인터랙티브</b><span class="g-en">interactive</span></div><p>독자가 검색·선택·필터로 자기 동네·학교를 직접 찾아보는 기사 형식. 같은 데이터가 독자마다 "내 이야기"가 된다.</p><a class="g-more" href="https://newsjel.ly/archives/newsjelly-report/visual-curation/17265" rel="noopener" target="_blank">↗ 더 알아보기: 뉴스젤리, 수상작 속 인터랙티브</a></div><div class="g-item" data-s="임팩트 impact 보도 뒤 실제로 일어난 변화 — 제도 개선, 예산 반영, 후속 조치. 데이터저널리즘상 심사의 핵심 기준." id="g7"><div class="g-h"><b>임팩트</b><span class="g-en">impact</span></div><p>보도 뒤 실제로 일어난 변화 — 제도 개선, 예산 반영, 후속 조치. 데이터저널리즘상 심사의 핵심 기준.</p><div class="g-back">본문: <a href="#g7-u1">6장</a></div></div><div class="g-item" data-s="재현 가능성 reproducibility 같은 원자료와 같은 코드로 다시 돌리면 같은 결과가 나오는 성질. 방법론 공개와 함께 데이터 기사의 신뢰를 받친다." id="g5"><div class="g-h"><b>재현 가능성</b><span class="g-en">reproducibility</span></div><p>같은 원자료와 같은 코드로 다시 돌리면 같은 결과가 나오는 성질. 방법론 공개와 함께 데이터 기사의 신뢰를 받친다.</p><a class="g-more" href="https://en.wikipedia.org/wiki/Reproducibility" rel="noopener" target="_blank">↗ 더 알아보기: Wikipedia: Reproducibility</a><div class="g-back">본문: <a href="#g5-u1">6장</a> · <a href="#g5-n1">7장</a> · <a href="#g5-n2">8장</a></div></div><div class="g-item" data-s='증강 vs 대체 augmentation vs automation ai로 사람의 능력을 키우는 쓰임(증강)과 사람을 없애는 쓰임(대체)의 구분. 브리뇰프슨은 대체에만 매달리는 것을 "튜링 함정"이라 불렀다.' id="g2"><div class="g-h"><b>증강 vs 대체</b><span class="g-en">augmentation vs automation</span></div><p>AI로 사람의 능력을 키우는 쓰임(증강)과 사람을 없애는 쓰임(대체)의 구분. 브리뇰프슨은 대체에만 매달리는 것을 "튜링 함정"이라 불렀다.</p><a class="g-more" href="https://direct.mit.edu/daed/article/151/2/272/110622/The-Turing-Trap-The-Promise-amp-Peril-of-Human" rel="noopener" target="_blank">↗ 더 알아보기: Brynjolfsson (2022), The Turing Trap</a></div></div><h3 id="gc2">데이터·수집</h3><div class="g-grid"><div class="g-item" data-s="ais automatic identification system 선박이 위치·속도를 자동으로 송신하는 신호. 해운·제재·사고 추적 보도에 쓴다." id="g24"><div class="g-h"><b>AIS</b><span class="g-en">Automatic Identification System</span></div><p>선박이 위치·속도를 자동으로 송신하는 신호. 해운·제재·사고 추적 보도에 쓴다.</p><a class="g-more" href="https://en.wikipedia.org/wiki/Automatic_identification_system" rel="noopener" target="_blank">↗ 더 알아보기: Wikipedia: AIS</a><div class="g-back">본문: <a href="#g24-u1">6장</a></div></div><div class="g-item" data-s='api application programming interface 기관·서비스가 "프로그램으로 데이터를 가져가라"고 열어 둔 창구. 주소로 요청하면 정해진 형식(주로 json)으로 돌려준다.' id="g14"><div class="g-h"><b>API</b><span class="g-en">Application Programming Interface</span></div><p>기관·서비스가 "프로그램으로 데이터를 가져가라"고 열어 둔 창구. 주소로 요청하면 정해진 형식(주로 JSON)으로 돌려준다.</p><a class="g-more" href="https://developer.mozilla.org/en-US/docs/Glossary/API" rel="noopener" target="_blank">↗ 더 알아보기: MDN: API</a></div><div class="g-item" data-s="api 키 api key api를 쓸 때 본인임을 증명하는 비밀 문자열. 코드·깃허브·웹페이지에 넣으면 남이 도용할 수 있다." id="g15"><div class="g-h"><b>API 키</b><span class="g-en">API key</span></div><p>API를 쓸 때 본인임을 증명하는 비밀 문자열. 코드·깃허브·웹페이지에 넣으면 남이 도용할 수 있다.</p><div class="g-back">본문: <a href="#g15-u1">4장</a> · <a href="#g15-n1">7장</a></div></div><div class="g-item" data-s='json javascript object notation 데이터를 {"항목": 값} 꼴로 적는 표준 형식. 웹페이지가 읽기 쉽고, ai 답을 json으로 받으면 검산하기 쉽다.' id="g22"><div class="g-h"><b>JSON</b><span class="g-en">JavaScript Object Notation</span></div><p>데이터를 {"항목": 값} 꼴로 적는 표준 형식. 웹페이지가 읽기 쉽고, AI 답을 JSON으로 받으면 검산하기 쉽다.</p><a class="g-more" href="https://www.json.org/json-ko.html" rel="noopener" target="_blank">↗ 더 알아보기: json.org (한국어)</a></div><div class="g-item" data-s="ocr optical character recognition 종이·이미지 속 글자를 텍스트로 바꾸는 기술. 방치된 종이 기록을 데이터로 만든다." id="g21"><div class="g-h"><b>OCR</b><span class="g-en">Optical Character Recognition</span></div><p>종이·이미지 속 글자를 텍스트로 바꾸는 기술. 방치된 종이 기록을 데이터로 만든다.</p><a class="g-more" href="https://ko.wikipedia.org/wiki/광학_문자_인식" rel="noopener" target="_blank">↗ 더 알아보기: 위키백과: 광학 문자 인식</a><div class="g-back">본문: <a href="#g21-u1">6장</a></div></div><div class="g-item" data-s='robots.txt robots exclusion 사이트가 자동 수집 프로그램에 "여기는 가져가지 말라"고 알리는 규칙 파일. 사이트주소/robots.txt 로 확인.' id="g17"><div class="g-h"><b>robots.txt</b><span class="g-en">robots exclusion</span></div><p>사이트가 자동 수집 프로그램에 "여기는 가져가지 말라"고 알리는 규칙 파일. 사이트주소/robots.txt 로 확인.</p><a class="g-more" href="https://developers.google.com/search/docs/crawling-indexing/robots/intro?hl=ko" rel="noopener" target="_blank">↗ 더 알아보기: Google 검색 센터</a></div><div class="g-item" data-s="rss really simple syndication 사이트의 새 글 목록을 표준 형식으로 내보내는 피드. rss 리더에 등록하면 새 글이 알아서 모인다." id="g18"><div class="g-h"><b>RSS</b><span class="g-en">Really Simple Syndication</span></div><p>사이트의 새 글 목록을 표준 형식으로 내보내는 피드. RSS 리더에 등록하면 새 글이 알아서 모인다.</p><a class="g-more" href="https://ko.wikipedia.org/wiki/RSS" rel="noopener" target="_blank">↗ 더 알아보기: 위키백과: RSS</a><div class="g-back">본문: <a href="#g18-u1">1장</a> · <a href="#g18-u2">3장</a> · <a href="#g18-u3">4장</a> · <a href="#g18-u4">5장</a></div></div><div class="g-item" data-s="cp949 인코딩 encoding euc-kr 한글을 컴퓨터 바이트로 저장하는 방식 중 하나. 공공기관 csv에 많다. 파이썬에서 encoding=&quot;cp949&quot;를 지정하지 않으면 글자가 깨진다." id="g61"><div class="g-h"><b>CP949 인코딩</b><span class="g-en">character encoding</span></div><p>한글을 컴퓨터 바이트로 저장하는 방식 중 하나(EUC-KR 확장). 공공기관 CSV에 많다. 파이썬에서 encoding="cp949"를 지정하지 않으면 글자가 깨진다.</p><a class="g-more" href="https://ko.wikipedia.org/wiki/코드_페이지_949" rel="noopener" target="_blank">↗ 더 알아보기: 위키백과: 코드 페이지 949</a><div class="g-back">본문: <a href="#g61-n1">8장</a></div></div><div class="g-item" data-s="데이터 정제 data cleaning 표기 불일치·중복·오류·빠진 값을 바로잡아 분석할 수 있게 만드는 작업. 시군구 이름 맞추기도 정제다." id="g23"><div class="g-h"><b>데이터 정제</b><span class="g-en">data cleaning</span></div><p>표기 불일치·중복·오류·빠진 값을 바로잡아 분석할 수 있게 만드는 작업. 시군구 이름 맞추기도 정제다.</p><a class="g-more" href="https://openrefine.org/" rel="noopener" target="_blank">↗ 더 알아보기: OpenRefine</a></div><div class="g-item" data-s="원자료 raw data 기관이 내놓은 가공 전 데이터 파일. 기사 숫자는 반드시 원자료로 다시 계산해 확인한다." id="g13"><div class="g-h"><b>원자료</b><span class="g-en">raw data</span></div><p>기관이 내놓은 가공 전 데이터 파일. 기사 숫자는 반드시 원자료로 다시 계산해 확인한다.</p><div class="g-back">본문: <a href="#g13-x7">6장</a> · <a href="#g13-u3">9장</a></div></div><div class="g-item" data-s="웹페이지 변경 감시 page change monitoring 지정한 웹페이지가 바뀌면 알려 주는 기능. rss가 없는 공고·게시판 감시에 쓴다(visualping 등)." id="g19"><div class="g-h"><b>웹페이지 변경 감시</b><span class="g-en">page change monitoring</span></div><p>지정한 웹페이지가 바뀌면 알려 주는 기능. RSS가 없는 공고·게시판 감시에 쓴다(Visualping 등).</p><div class="g-back">본문: <a href="#g19-u1">1장</a></div></div><div class="g-item" data-s="전사 transcription · stt 녹음된 말을 글로 옮기는 일. 음성 인식 도구가 자동으로 해 준다. 민감한 녹취는 내 pc에서 돌리는 도구로." id="g25"><div class="g-h"><b>전사</b><span class="g-en">transcription · STT</span></div><p>녹음된 말을 글로 옮기는 일. 음성 인식 도구가 자동으로 해 준다. 민감한 녹취는 내 PC에서 돌리는 도구로.</p><a class="g-more" href="https://ko.wikipedia.org/wiki/음성_인식" rel="noopener" target="_blank">↗ 더 알아보기: 위키백과: 음성 인식</a><div class="g-back">본문: <a href="#g25-u1">1장</a> · <a href="#g25-u2">2장</a></div></div><div class="g-item" data-s="정보공개청구 foi request 공공기관이 공개하지 않은 정보를 법에 따라 요구하는 절차. 자체 db를 만드는 가장 강력한 방법." id="g20"><div class="g-h"><b>정보공개청구</b><span class="g-en">FOI request</span></div><p>공공기관이 공개하지 않은 정보를 법에 따라 요구하는 절차. 자체 DB를 만드는 가장 강력한 방법.</p><a class="g-more" href="https://www.open.go.kr/" rel="noopener" target="_blank">↗ 더 알아보기: 정보공개포털</a><div class="g-back">본문: <a href="#g20-u1">1장</a> · <a href="#g20-u2">6장</a></div></div><div class="g-item" data-s="크롤링 crawling · scraping api가 없는 웹페이지에서 필요한 부분을 프로그램으로 자동 수집하는 일. 약관과 robots.txt를 먼저 확인한다." id="g16"><div class="g-h"><b>크롤링</b><span class="g-en">crawling · scraping</span></div><p>API가 없는 웹페이지에서 필요한 부분을 프로그램으로 자동 수집하는 일. 약관과 robots.txt를 먼저 확인한다.</p><a class="g-more" href="https://ko.wikipedia.org/wiki/웹_크롤러" rel="noopener" target="_blank">↗ 더 알아보기: 위키백과: 웹 크롤러</a><div class="g-back">본문: <a href="#g16-u1">오늘의 메시지</a> · <a href="#g16-u2">1장</a> · <a href="#g16-u3">4장</a> · <a href="#g16-x5">6장</a></div></div></div><h3 id="gc3">AI 개념</h3><div class="g-grid"><div class="g-item" data-s="ai 라이선스 ai licensing deal ai 기업이 뉴스 콘텐츠의 학습·인용 대가를 언론사에 지급하는 계약." id="g34"><div class="g-h"><b>AI 라이선스</b><span class="g-en">AI licensing deal</span></div><p>AI 기업이 뉴스 콘텐츠의 학습·인용 대가를 언론사에 지급하는 계약.</p><a class="g-more" href="https://pressgazette.co.uk/platforms/news-publisher-ai-deals-lawsuits-openai-google/" rel="noopener" target="_blank">↗ 더 알아보기: Press Gazette 계약·소송 트래커</a><div class="g-back">본문: <a href="#g34-u1">2장</a></div></div><div class="g-item" data-s="ai 생성물 표시 ai labeling ai가 만든 결과물임을 밝히는 표시. 한국 ai 기본법(2026.1 시행)상 의무." id="g35"><div class="g-h"><b>AI 생성물 표시</b><span class="g-en">AI labeling</span></div><p>AI가 만든 결과물임을 밝히는 표시. 한국 AI 기본법(2026.1 시행)상 의무.</p><a class="g-more" href="https://www.kmib.co.kr/article/view.asp?arcid=1768984300" rel="noopener" target="_blank">↗ 더 알아보기: 국민일보, AI 기본법 시행</a><div class="g-back">본문: <a href="#g35-u1">2장</a></div></div><div class="g-item" data-s="ai 에이전트 ai agent 목표를 주면 검색·코드 실행·파일 작업 같은 도구를 스스로 이어 쓰며 일을 끝내는 ai." id="g29"><div class="g-h"><b>AI 에이전트</b><span class="g-en">AI agent</span></div><p>목표를 주면 검색·코드 실행·파일 작업 같은 도구를 스스로 이어 쓰며 일을 끝내는 AI.</p><a class="g-more" href="https://www.anthropic.com/engineering/building-effective-agents" rel="noopener" target="_blank">↗ 더 알아보기: Anthropic, Building effective agents</a></div><div class="g-item" data-s="ai 요약 ai overviews · ai answers 검색 결과 맨 위에 ai가 여러 출처를 요약해 보여 주는 기능. 링크 클릭률을 낮춘다." id="g32"><div class="g-h"><b>AI 요약</b><span class="g-en">AI Overviews · AI answers</span></div><p>검색 결과 맨 위에 AI가 여러 출처를 요약해 보여 주는 기능. 링크 클릭률을 낮춘다.</p><a class="g-more" href="https://www.pewresearch.org/short-reads/2025/07/22/google-users-are-less-likely-to-click-on-links-when-an-ai-summary-appears-in-the-results/" rel="noopener" target="_blank">↗ 더 알아보기: Pew Research (2025)</a><div class="g-back">본문: <a href="#g32-u1">1장</a> · <a href="#g32-u2">2장</a></div></div><div class="g-item" data-s="ai 크롤러 ai crawler · bot ai 학습·답변용으로 웹을 자동 수집하는 봇. 언론사가 차단하거나 과금하는 흐름이 생겼다." id="g33"><div class="g-h"><b>AI 크롤러</b><span class="g-en">AI crawler · bot</span></div><p>AI 학습·답변용으로 웹을 자동 수집하는 봇. 언론사가 차단하거나 과금하는 흐름이 생겼다.</p><a class="g-more" href="https://techcrunch.com/2026/07/01/cloudflares-new-policy-pushes-ai-companies-to-pay-for-publishers-content/" rel="noopener" target="_blank">↗ 더 알아보기: TechCrunch (2026)</a><div class="g-back">본문: <a href="#g33-u1">2장</a></div></div><div class="g-item" data-s="llm large language model · 대규모 언어 모델 chatgpt·claude·gemini의 바탕이 되는 ai. 방대한 글로 학습해 글을 읽고, 요약·분류·작성한다." id="g26"><div class="g-h"><b>LLM</b><span class="g-en">Large Language Model · 대규모 언어 모델</span></div><p>ChatGPT·Claude·Gemini의 바탕이 되는 AI. 방대한 글로 학습해 글을 읽고, 요약·분류·작성한다.</p><a class="g-more" href="https://en.wikipedia.org/wiki/Large_language_model" rel="noopener" target="_blank">↗ 더 알아보기: Wikipedia: LLM</a><div class="g-back">본문: <a href="#g26-u1">1장</a></div></div><div class="g-item" data-s="역추적 검색 reverse image search 사진·영상의 원본과 최초 게시 시점을 찾는 검색(google lens·tineye·invid)." id="g36"><div class="g-h"><b>역추적 검색</b><span class="g-en">reverse image search</span></div><p>사진·영상의 원본과 최초 게시 시점을 찾는 검색(Google Lens·TinEye·InVID).</p><a class="g-more" href="https://tineye.com/" rel="noopener" target="_blank">↗ 더 알아보기: TinEye</a><div class="g-back">본문: <a href="#g36-u1">1장</a></div></div><div class="g-item" data-s="제로클릭 zero-click search 검색 결과 화면에서 답을 보고 아무 링크도 누르지 않고 끝나는 검색. 언론사 유입이 줄어드는 핵심 원인." id="g31"><div class="g-h"><b>제로클릭</b><span class="g-en">zero-click search</span></div><p>검색 결과 화면에서 답을 보고 아무 링크도 누르지 않고 끝나는 검색. 언론사 유입이 줄어드는 핵심 원인.</p><a class="g-more" href="https://sparktoro.com/blog/in-2026-less-than-one-third-of-google-searches-still-send-a-click/" rel="noopener" target="_blank">↗ 더 알아보기: SparkToro (2026)</a><div class="g-back">본문: <a href="#g31-u1">1장</a></div></div><div class="g-item" data-s="컨텍스트 context window ai가 한 번에 기억하며 참고할 수 있는 대화·파일의 분량. 넘치면 앞 내용을 잊는다 → 메모리·서브에이전트가 필요한 이유." id="g30"><div class="g-h"><b>컨텍스트</b><span class="g-en">context window</span></div><p>AI가 한 번에 기억하며 참고할 수 있는 대화·파일의 분량. 넘치면 앞 내용을 잊는다 → 메모리·서브에이전트가 필요한 이유.</p><a class="g-more" href="https://docs.claude.com/en/docs/build-with-claude/context-windows" rel="noopener" target="_blank">↗ 더 알아보기: Anthropic: context windows</a><div class="g-back">본문: <a href="#g30-n1">7장</a></div></div><div class="g-item" data-s="프롬프트 prompt ai에게 주는 지시문. 목적·입력·출력 형식·규칙을 구체적으로 적을수록 결과가 안정적이다." id="g27"><div class="g-h"><b>프롬프트</b><span class="g-en">prompt</span></div><p>AI에게 주는 지시문. 목적·입력·출력 형식·규칙을 구체적으로 적을수록 결과가 안정적이다.</p><a class="g-more" href="https://docs.claude.com/en/docs/build-with-claude/prompt-engineering/overview" rel="noopener" target="_blank">↗ 더 알아보기: Anthropic 프롬프트 가이드</a><div class="g-back">본문: <a href="#g27-u1">2장</a></div></div><div class="g-item" data-s="환각 hallucination ai가 사실이 아닌 내용을 그럴듯하게 지어내는 현상. 인용·숫자·출처에서 특히 잦다 → 숫자는 코드로, 사실은 원문으로." id="g28"><div class="g-h"><b>환각</b><span class="g-en">hallucination</span></div><p>AI가 사실이 아닌 내용을 그럴듯하게 지어내는 현상. 인용·숫자·출처에서 특히 잦다 → 숫자는 코드로, 사실은 원문으로.</p><a class="g-more" href="https://en.wikipedia.org/wiki/Hallucination_(artificial_intelligence)" rel="noopener" target="_blank">↗ 더 알아보기: Wikipedia: AI hallucination</a></div></div><h3 id="gc4">바이브코딩</h3><div class="g-grid"><div class="g-item" data-s="cdn content delivery network 라이브러리 파일을 인터넷 주소로 바로 불러 쓰게 해 주는 배포망. 설치 없이 d3를 쓸 수 있다." id="g51"><div class="g-h"><b>CDN</b><span class="g-en">Content Delivery Network</span></div><p>라이브러리 파일을 인터넷 주소로 바로 불러 쓰게 해 주는 배포망. 설치 없이 D3를 쓸 수 있다.</p><a class="g-more" href="https://developer.mozilla.org/en-US/docs/Glossary/CDN" rel="noopener" target="_blank">↗ 더 알아보기: MDN: CDN</a></div><div class="g-item" data-s="d3 d3.js 웹페이지에 데이터 시각화를 그리는 자바스크립트 라이브러리. 뉴스룸 인터랙티브 그래픽의 표준." id="g49"><div class="g-h"><b>D3</b><span class="g-en">D3.js</span></div><p>웹페이지에 데이터 시각화를 그리는 자바스크립트 라이브러리. 뉴스룸 인터랙티브 그래픽의 표준.</p><a class="g-more" href="https://d3js.org/" rel="noopener" target="_blank">↗ 더 알아보기: d3js.org</a><div class="g-back">본문: <a href="#g49-u2">9장</a></div></div><div class="g-item" data-s="leaflet leaflet.js 웹페이지에 확대·이동 가능한 지도를 넣는 가벼운 자바스크립트 라이브러리." id="g50"><div class="g-h"><b>Leaflet</b><span class="g-en">Leaflet.js</span></div><p>웹페이지에 확대·이동 가능한 지도를 넣는 가벼운 자바스크립트 라이브러리.</p><a class="g-more" href="https://leafletjs.com/" rel="noopener" target="_blank">↗ 더 알아보기: leafletjs.com</a><div class="g-back">본문: <a href="#g50-n1">8장</a></div></div><div class="g-item" data-s="live server vs code extension 파일을 저장하면 브라우저에 바로 반영해 보여 주는 vs code 확장." id="g53"><div class="g-h"><b>Live Server</b><span class="g-en">VS Code extension</span></div><p>파일을 저장하면 브라우저에 바로 반영해 보여 주는 VS Code 확장.</p><a class="g-more" href="https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer" rel="noopener" target="_blank">↗ 더 알아보기: Live Server 확장</a></div><div class="g-item" data-s="pandas python library 파이썬의 표 데이터 처리 도구. 엑셀로 버거운 대용량 표를 합치고 계산한다." id="g47"><div class="g-h"><b>pandas</b><span class="g-en">Python library</span></div><p>파이썬의 표 데이터 처리 도구. 엑셀로 버거운 대용량 표를 합치고 계산한다.</p><a class="g-more" href="https://pandas.pydata.org/" rel="noopener" target="_blank">↗ 더 알아보기: pandas.pydata.org</a></div><div class="g-item" data-s="plan 모드 plan mode 에이전트가 파일을 고치기 전에 계획만 먼저 보여 주게 하는 방식. 승인한 뒤 실행한다." id="g41"><div class="g-h"><b>Plan 모드</b><span class="g-en">plan mode</span></div><p>에이전트가 파일을 고치기 전에 계획만 먼저 보여 주게 하는 방식. 승인한 뒤 실행한다.</p><a class="g-more" href="https://github.com/luongnv89/claude-howto/tree/main/09-advanced-features" rel="noopener" target="_blank">↗ 더 알아보기: claude-howto: 고급 기능</a><div class="g-back">본문: <a href="#g41-n1">7장</a></div></div><div class="g-item" data-s="vs code visual studio code 무료 코드 편집기. 확장(extensions)으로 claude code·codex 같은 코딩 에이전트를 붙여 쓴다." id="g40"><div class="g-h"><b>VS Code</b><span class="g-en">Visual Studio Code</span></div><p>무료 코드 편집기. 확장(Extensions)으로 Claude Code·Codex 같은 코딩 에이전트를 붙여 쓴다.</p><a class="g-more" href="https://code.visualstudio.com/docs" rel="noopener" target="_blank">↗ 더 알아보기: VS Code 문서</a><div class="g-back">본문: <a href="#g40-n1">7장</a></div></div><div class="g-item" data-s="대화형 ai chat assistant claude·chatgpt 같은 대화창 ai. 파일을 올리면 대화창 안에서 파이썬을 돌려 계산하고 파일을 만들어 준다. 설치가 필요 없다." id="g38"><div class="g-h"><b>대화형 AI</b><span class="g-en">chat assistant</span></div><p>Claude·ChatGPT 같은 대화창 AI. 파일을 올리면 대화창 안에서 파이썬을 돌려 계산하고 파일을 만들어 준다. 설치가 필요 없다.</p><div class="g-back">본문: <a href="#g38-n1">7장</a></div></div><div class="g-item" data-s="메모리 memory · claude.md · agents.md 에이전트가 대화를 시작할 때마다 자동으로 읽는 프로젝트 설명서 파일. 목적·데이터 출처·규칙을 적어 두면 매번 다시 말하지 않아도 된다." id="g43"><div class="g-h"><b>메모리</b><span class="g-en">memory · CLAUDE.md · AGENTS.md</span></div><p>에이전트가 대화를 시작할 때마다 자동으로 읽는 프로젝트 설명서 파일. 목적·데이터 출처·규칙을 적어 두면 매번 다시 말하지 않아도 된다.</p><a class="g-more" href="https://github.com/luongnv89/claude-howto/tree/main/02-memory" rel="noopener" target="_blank">↗ 더 알아보기: claude-howto: 메모리</a><div class="g-back">본문: <a href="#g43-x10">6장</a> · <a href="#g43-n1">7장</a> · <a href="#g43-n3">8장</a></div></div><div class="g-item" data-s="바이브코딩 vibe coding 원하는 것을 말로 설명하면 ai가 코드를 쓰고 실행·수정하는 방식. 카파시(a. karpathy)가 2025년 처음 쓴 말." id="g37"><div class="g-h"><b>바이브코딩</b><span class="g-en">vibe coding</span></div><p>원하는 것을 말로 설명하면 AI가 코드를 쓰고 실행·수정하는 방식. 카파시(A. Karpathy)가 2025년 처음 쓴 말.</p><a class="g-more" href="https://en.wikipedia.org/wiki/Vibe_coding" rel="noopener" target="_blank">↗ 더 알아보기: Wikipedia: Vibe coding</a><div class="g-back">본문: <a href="#g37-u1">오늘의 메시지</a></div></div><div class="g-item" data-s="서브에이전트 subagent 별도의 컨텍스트에서 한 가지 일(예: 숫자 검증)만 맡아 결과만 돌려주는 보조 ai. 작성과 검증을 나눌 수 있다." id="g45"><div class="g-h"><b>서브에이전트</b><span class="g-en">subagent</span></div><p>별도의 컨텍스트에서 한 가지 일(예: 숫자 검증)만 맡아 결과만 돌려주는 보조 AI. 작성과 검증을 나눌 수 있다.</p><a class="g-more" href="https://github.com/luongnv89/claude-howto/tree/main/04-subagents" rel="noopener" target="_blank">↗ 더 알아보기: claude-howto: 서브에이전트</a><div class="g-back">본문: <a href="#g45-x12">6장</a> · <a href="#g45-n1">7장</a> · <a href="#g45-n3">8장</a></div></div><div class="g-item" data-s="스크립트 script 할 일을 순서대로 적어 둔 작은 프로그램 파일(예: build_data.py). 다시 실행하면 같은 결과가 나온다." id="g48"><div class="g-h"><b>스크립트</b><span class="g-en">script</span></div><p>할 일을 순서대로 적어 둔 작은 프로그램 파일(예: build_data.py). 다시 실행하면 같은 결과가 나온다.</p><div class="g-back">본문: <a href="#g48-n1">7장</a></div></div><div class="g-item" data-s="스킬 agent skill · skill.md 반복하는 작업 절차를 폴더 하나(skill.md)에 담은 것. 요청이 설명과 맞으면 에이전트가 알아서 불러 쓴다." id="g44"><div class="g-h"><b>스킬</b><span class="g-en">agent skill · SKILL.md</span></div><p>반복하는 작업 절차를 폴더 하나(SKILL.md)에 담은 것. 요청이 설명과 맞으면 에이전트가 알아서 불러 쓴다.</p><a class="g-more" href="https://github.com/luongnv89/claude-howto/tree/main/03-skills" rel="noopener" target="_blank">↗ 더 알아보기: claude-howto: 스킬</a><div class="g-back">본문: <a href="#g44-x11">6장</a> · <a href="#g44-n1">7장</a></div></div><div class="g-item" data-s="정적 페이지 static site 서버 프로그램 없이 html·js·css 파일만으로 돌아가는 웹페이지. github pages에 그대로 올릴 수 있다." id="g52"><div class="g-h"><b>정적 페이지</b><span class="g-en">static site</span></div><p>서버 프로그램 없이 HTML·JS·CSS 파일만으로 돌아가는 웹페이지. GitHub Pages에 그대로 올릴 수 있다.</p></div><div class="g-item" data-s="체크포인트 checkpoint 에이전트가 바꾸기 전 상태를 저장해 두는 지점. 잘못되면 되감아 되돌린다." id="g42"><div class="g-h"><b>체크포인트</b><span class="g-en">checkpoint</span></div><p>에이전트가 바꾸기 전 상태를 저장해 두는 지점. 잘못되면 되감아 되돌린다.</p><a class="g-more" href="https://github.com/luongnv89/claude-howto/tree/main/08-checkpoints" rel="noopener" target="_blank">↗ 더 알아보기: claude-howto: 체크포인트</a><div class="g-back">본문: <a href="#g42-n1">7장</a></div></div><div class="g-item" data-s="코딩 에이전트 coding agent 내 컴퓨터의 작업 폴더에서 직접 파일을 만들고 명령을 실행하는 ai(claude code, codex). 매 단계 허락을 구한다." id="g39"><div class="g-h"><b>코딩 에이전트</b><span class="g-en">coding agent</span></div><p>내 컴퓨터의 작업 폴더에서 직접 파일을 만들고 명령을 실행하는 AI(Claude Code, Codex). 매 단계 허락을 구한다.</p><a class="g-more" href="https://github.com/luongnv89/claude-howto" rel="noopener" target="_blank">↗ 더 알아보기: claude-howto 가이드</a><div class="g-back">본문: <a href="#g39-n1">7장</a></div></div><div class="g-item" data-s="콘솔 browser console 브라우저 개발자 도구(f12)의 오류 메시지 창. 페이지가 안 될 때 여기 뜬 오류를 그대로 ai에게 붙여 넣는다." id="g54"><div class="g-h"><b>콘솔</b><span class="g-en">browser console</span></div><p>브라우저 개발자 도구(F12)의 오류 메시지 창. 페이지가 안 될 때 여기 뜬 오류를 그대로 AI에게 붙여 넣는다.</p><a class="g-more" href="https://developer.chrome.com/docs/devtools/console" rel="noopener" target="_blank">↗ 더 알아보기: Chrome DevTools 콘솔</a><div class="g-back">본문: <a href="#g54-n1">8장</a></div></div><div class="g-item" data-s="파이썬 python 데이터 수집·정리·분석에 가장 많이 쓰는 프로그래밍 언어. 에이전트가 대신 코드를 쓰지만 설치는 필요하다." id="g46"><div class="g-h"><b>파이썬</b><span class="g-en">Python</span></div><p>데이터 수집·정리·분석에 가장 많이 쓰는 프로그래밍 언어. 에이전트가 대신 코드를 쓰지만 설치는 필요하다.</p><a class="g-more" href="https://www.python.org/" rel="noopener" target="_blank">↗ 더 알아보기: python.org</a><div class="g-back">본문: <a href="#g46-u1">1장</a> · <a href="#g46-n1">8장</a> · <a href="#g46-u4">9장</a></div></div></div><h3 id="gc5">배포·협업</h3><div class="g-grid"><div class="g-item" data-s="자체 서버 로컬 서버 self-hosted server 연구실 pc 리눅스 클라우드 vm 내가 관리하는 컴퓨터에서 웹페이지·프로그램을 계속 돌리는 것. 정해진 시각에 수집·분석·발행을 반복하고, api 키와 원자료를 밖에 내보내지 않는다." id="g62"><div class="g-h"><b>자체 서버</b><span class="g-en">self-hosted server</span></div><p>내가 관리하는 컴퓨터(연구실 PC·리눅스 서버·클라우드 VM)에서 웹페이지·프로그램을 계속 돌리는 것. 정해진 시각에 수집·분석·발행을 반복하고, API 키와 원자료를 밖에 내보내지 않는다.</p><div class="g-back">본문: <a href="#g62-n1">7장</a></div></div><div class="g-item" data-s="스케줄 실행 cron 크론 scheduled job 정해진 시각마다 프로그램을 자동으로 실행하는 기능. 리눅스는 cron, github는 actions 스케줄." id="g63"><div class="g-h"><b>스케줄 실행</b><span class="g-en">cron · scheduled job</span></div><p>정해진 시각마다 프로그램을 자동으로 실행하는 기능. 리눅스는 cron, GitHub는 Actions 스케줄. 「경제 산책」의 하루 두 번 발행이 이 방식.</p><a class="g-more" href="https://ko.wikipedia.org/wiki/Cron" rel="noopener" target="_blank">↗ 더 알아보기: 위키백과: cron</a><div class="g-back">본문: <a href="#g63-n1">7장</a></div></div><div class="g-item" data-s=".gitignore ignore file github에 올리지 않을 파일·폴더 목록(원자료, 키 파일 등). 실수로 비밀이 공개되는 것을 막는다." id="g60"><div class="g-h"><b>.gitignore</b><span class="g-en">ignore file</span></div><p>GitHub에 올리지 않을 파일·폴더 목록(원자료, 키 파일 등). 실수로 비밀이 공개되는 것을 막는다.</p><a class="g-more" href="https://git-scm.com/docs/gitignore" rel="noopener" target="_blank">↗ 더 알아보기: git-scm: gitignore</a></div><div class="g-item" data-s="git version control 파일의 변경 이력을 저장하는 도구. 언제 무엇을 바꿨는지 남고, 잘못되면 되돌릴 수 있다." id="g55"><div class="g-h"><b>Git</b><span class="g-en">version control</span></div><p>파일의 변경 이력을 저장하는 도구. 언제 무엇을 바꿨는지 남고, 잘못되면 되돌릴 수 있다.</p><a class="g-more" href="https://git-scm.com/book/ko/v2" rel="noopener" target="_blank">↗ 더 알아보기: Pro Git (한국어)</a><div class="g-back">본문: <a href="#g55-n1">8장</a></div></div><div class="g-item" data-s="github github.com git 저장소를 온라인에 올려 공유·협업하는 서비스. 무료 계정으로 공개 저장소를 만들 수 있다." id="g58"><div class="g-h"><b>GitHub</b><span class="g-en">github.com</span></div><p>Git 저장소를 온라인에 올려 공유·협업하는 서비스. 무료 계정으로 공개 저장소를 만들 수 있다.</p><a class="g-more" href="https://github.com/" rel="noopener" target="_blank">↗ 더 알아보기: github.com</a><div class="g-back">본문: <a href="#g58-u1">오늘의 메시지</a> · <a href="#g58-u2">4장</a> · <a href="#g58-n1">8장</a></div></div><div class="g-item" data-s="github pages github.io 저장소의 html 파일을 무료 웹사이트로 공개하는 기능. 아이디.github.io/저장소/ 주소가 생긴다." id="g59"><div class="g-h"><b>GitHub Pages</b><span class="g-en">github.io</span></div><p>저장소의 HTML 파일을 무료 웹사이트로 공개하는 기능. 아이디.github.io/저장소/ 주소가 생긴다.</p><a class="g-more" href="https://docs.github.com/ko/pages/quickstart" rel="noopener" target="_blank">↗ 더 알아보기: GitHub Pages 빠른 시작</a></div><div class="g-item" data-s="저장소 repository 프로젝트 파일과 변경 이력을 담는 폴더. github에 올리면 온라인 저장소가 된다." id="g57"><div class="g-h"><b>저장소</b><span class="g-en">repository</span></div><p>프로젝트 파일과 변경 이력을 담는 폴더. GitHub에 올리면 온라인 저장소가 된다.</p></div><div class="g-item" data-s='커밋 commit git에서 "이 시점의 변경을 저장"하는 단위. 메시지로 무엇을 바꿨는지 적는다.' id="g56"><div class="g-h"><b>커밋</b><span class="g-en">commit</span></div><p>Git에서 "이 시점의 변경을 저장"하는 단위. 메시지로 무엇을 바꿨는지 적는다.</p><a class="g-more" href="https://git-scm.com/book/ko/v2" rel="noopener" target="_blank">↗ 더 알아보기: Pro Git (한국어)</a></div></div><button class="g-return" id="gret" type="button">↩ 읽던 곳으로</button></section></main>
+</div>
+<footer>방송기자연합회 특강 「AI 자동화 도구 소개 및 활용법」 · 이종혁 (경희대학교 미디어학과) · 2026.11<br/>
+서비스·요금·수치는 바뀔 수 있습니다. 기사에 인용하기 전에는 링크된 원문에서 다시 확인하세요.</footer>
+<button aria-label="맨 위로" class="totop" id="totop" type="button">↑</button>
+<script>
+(function () {
+  const links = [...document.querySelectorAll('#toc a')];
+  const heads = links.map((a) => document.getElementById(a.dataset.id)).filter(Boolean);
+  const byId = Object.fromEntries(links.map((a) => [a.dataset.id, a]));
+  const curSec = document.getElementById('curSec');
+  function setActive(id) {
+    links.forEach((a) => a.classList.remove('on'));
+    document.querySelectorAll('#toc .t2').forEach((li) => li.classList.remove('open'));
+    const a = byId[id]; if (!a) return;
+    a.classList.add('on');
+    const li2 = a.closest('.t2');
+    if (li2) { li2.classList.add('open'); li2.querySelector(':scope > a').classList.add('on'); curSec.textContent = li2.querySelector(':scope > a').textContent; }
+    if (window.innerWidth > 960) {
+      const box = document.getElementById('aside'); const r = a.getBoundingClientRect(); const br = box.getBoundingClientRect();
+      if (r.top < br.top || r.bottom > br.bottom) a.scrollIntoView({ block: 'nearest' });
+    }
+  }
+  function onScroll() {
+    const y = window.scrollY + 120;
+    let cur = heads[0] && heads[0].id;
+    for (const h of heads) { if (h.offsetTop <= y) cur = h.id; else break; }
+    setActive(cur);
+    const max = document.documentElement.scrollHeight - innerHeight;
+    document.getElementById('progress').style.width = (max > 0 ? (scrollY / max) * 100 : 0) + '%';
+    document.getElementById('totop').classList.toggle('show', scrollY > 700);
+  }
+  addEventListener('scroll', onScroll, { passive: true }); onScroll();
+  const aside = document.getElementById('aside'); const tg = document.getElementById('tocToggle');
+  tg.addEventListener('click', () => { const o = aside.classList.toggle('open'); tg.setAttribute('aria-expanded', o); });
+  links.forEach((a) => a.addEventListener('click', () => { aside.classList.remove('open'); tg.setAttribute('aria-expanded', false); }));
+  document.querySelectorAll('main pre').forEach((pre) => {
+    const b = document.createElement('button'); b.className = 'copy-btn'; b.type = 'button'; b.textContent = '복사';
+    b.addEventListener('click', async () => {
+      const t = pre.querySelector('code') ? pre.querySelector('code').innerText : pre.innerText;
+      try { await navigator.clipboard.writeText(t); } catch (e) { const r = document.createRange(); r.selectNodeContents(pre); const s = getSelection(); s.removeAllRanges(); s.addRange(r); document.execCommand('copy'); s.removeAllRanges(); }
+      b.textContent = '복사됨'; b.classList.add('done'); setTimeout(() => { b.textContent = '복사'; b.classList.remove('done'); }, 1500);
+    });
+    pre.appendChild(b);
+  });
+  document.getElementById('totop').addEventListener('click', () => scrollTo({ top: 0, behavior: 'smooth' }));
+})();
+</script>
+<script>window.GLOSS={"g0": ["데이터저널리즘", "데이터를 모으고 분석·시각화해 사실을 밝히는 보도 방식. 숫자를 \"인용\"하는 것을 넘어 데이터를 직접 \"만들고\" 검증한다."], "g1": ["바벨 효과", "역기(바벨)처럼 양 끝 — 사람만 할 수 있는 차별화 저널리즘과 철저한 자동화 — 은 살아남고, 가운데의 어중간한 범용 뉴스가 가장 위험해진다는 전망."], "g2": ["증강 vs 대체", "AI로 사람의 능력을 키우는 쓰임(증강)과 사람을 없애는 쓰임(대체)의 구분. 브리뇰프슨은 대체에만 매달리는 것을 \"튜링 함정\"이라 불렀다."], "g3": ["뉴스 페그", "지금 이 기사를 써야 하는 이유가 되는 최근 사건·발표. 데이터 기사도 페그가 있으면 독자가 읽는다."], "g4": ["인터랙티브", "독자가 검색·선택·필터로 자기 동네·학교를 직접 찾아보는 기사 형식. 같은 데이터가 독자마다 \"내 이야기\"가 된다."], "g5": ["재현 가능성", "같은 원자료와 같은 코드로 다시 돌리면 같은 결과가 나오는 성질. 방법론 공개와 함께 데이터 기사의 신뢰를 받친다."], "g6": ["방법론 공개", "데이터 출처·기준일·계산 방법·한계를 독자에게 밝히는 일. 보통 README나 기사 하단 \"어떻게 분석했나\"로 쓴다."], "g7": ["임팩트", "보도 뒤 실제로 일어난 변화 — 제도 개선, 예산 반영, 후속 조치. 데이터저널리즘상 심사의 핵심 기준."], "g8": ["IFCN", "국제팩트체킹연맹. 비당파성·투명성 원칙을 심사해 팩트체크 기관을 인증한다. 국내 인증은 JTBC·단비뉴스."], "g9": ["시그마 어워드", "세계 최고 권위의 데이터저널리즘상. 수상작의 방법론과 데이터가 공개돼 교재로 쓰기 좋다."], "g10": ["디지털뉴스리포트", "로이터저널리즘연구소가 매년 40여 개국 뉴스 이용을 조사하는 보고서. 한국 결과도 포함된다."], "g11": ["데이터 리터러시", "표를 읽고 비율·증감률·표본을 바르게 해석하는 능력. 데이터 기사의 출발점."], "g12": ["인구 대비 비율", "절대 숫자 대신 인구로 나눠 비교하는 지표(예: 어린이 1만 명당 소아과 전문의 수). 인구가 다른 지역을 공정하게 비교할 수 있다."], "g13": ["원자료", "기관이 내놓은 가공 전 데이터 파일. 기사 숫자는 반드시 원자료로 다시 계산해 확인한다."], "g14": ["API", "기관·서비스가 \"프로그램으로 데이터를 가져가라\"고 열어 둔 창구. 주소로 요청하면 정해진 형식(주로 JSON)으로 돌려준다."], "g15": ["API 키", "API를 쓸 때 본인임을 증명하는 비밀 문자열. 코드·깃허브·웹페이지에 넣으면 남이 도용할 수 있다."], "g16": ["크롤링", "API가 없는 웹페이지에서 필요한 부분을 프로그램으로 자동 수집하는 일. 약관과 robots.txt를 먼저 확인한다."], "g17": ["robots.txt", "사이트가 자동 수집 프로그램에 \"여기는 가져가지 말라\"고 알리는 규칙 파일. 사이트주소/robots.txt 로 확인."], "g18": ["RSS", "사이트의 새 글 목록을 표준 형식으로 내보내는 피드. RSS 리더에 등록하면 새 글이 알아서 모인다."], "g19": ["웹페이지 변경 감시", "지정한 웹페이지가 바뀌면 알려 주는 기능. RSS가 없는 공고·게시판 감시에 쓴다(Visualping 등)."], "g20": ["정보공개청구", "공공기관이 공개하지 않은 정보를 법에 따라 요구하는 절차. 자체 DB를 만드는 가장 강력한 방법."], "g21": ["OCR", "종이·이미지 속 글자를 텍스트로 바꾸는 기술. 방치된 종이 기록을 데이터로 만든다."], "g22": ["JSON", "데이터를 {\"항목\": 값} 꼴로 적는 표준 형식. 웹페이지가 읽기 쉽고, AI 답을 JSON으로 받으면 검산하기 쉽다."], "g23": ["데이터 정제", "표기 불일치·중복·오류·빠진 값을 바로잡아 분석할 수 있게 만드는 작업. 시군구 이름 맞추기도 정제다."], "g24": ["AIS", "선박이 위치·속도를 자동으로 송신하는 신호. 해운·제재·사고 추적 보도에 쓴다."], "g25": ["전사", "녹음된 말을 글로 옮기는 일. 음성 인식 도구가 자동으로 해 준다. 민감한 녹취는 내 PC에서 돌리는 도구로."], "g26": ["LLM", "ChatGPT·Claude·Gemini의 바탕이 되는 AI. 방대한 글로 학습해 글을 읽고, 요약·분류·작성한다."], "g27": ["프롬프트", "AI에게 주는 지시문. 목적·입력·출력 형식·규칙을 구체적으로 적을수록 결과가 안정적이다."], "g28": ["환각", "AI가 사실이 아닌 내용을 그럴듯하게 지어내는 현상. 인용·숫자·출처에서 특히 잦다 → 숫자는 코드로, 사실은 원문으로."], "g29": ["AI 에이전트", "목표를 주면 검색·코드 실행·파일 작업 같은 도구를 스스로 이어 쓰며 일을 끝내는 AI."], "g30": ["컨텍스트", "AI가 한 번에 기억하며 참고할 수 있는 대화·파일의 분량. 넘치면 앞 내용을 잊는다 → 메모리·서브에이전트가 필요한 이유."], "g31": ["제로클릭", "검색 결과 화면에서 답을 보고 아무 링크도 누르지 않고 끝나는 검색. 언론사 유입이 줄어드는 핵심 원인."], "g32": ["AI 요약", "검색 결과 맨 위에 AI가 여러 출처를 요약해 보여 주는 기능. 링크 클릭률을 낮춘다."], "g33": ["AI 크롤러", "AI 학습·답변용으로 웹을 자동 수집하는 봇. 언론사가 차단하거나 과금하는 흐름이 생겼다."], "g34": ["AI 라이선스", "AI 기업이 뉴스 콘텐츠의 학습·인용 대가를 언론사에 지급하는 계약."], "g35": ["AI 생성물 표시", "AI가 만든 결과물임을 밝히는 표시. 한국 AI 기본법(2026.1 시행)상 의무."], "g36": ["역추적 검색", "사진·영상의 원본과 최초 게시 시점을 찾는 검색(Google Lens·TinEye·InVID)."], "g37": ["바이브코딩", "원하는 것을 말로 설명하면 AI가 코드를 쓰고 실행·수정하는 방식. 카파시(A. Karpathy)가 2025년 처음 쓴 말."], "g38": ["대화형 AI", "Claude·ChatGPT 같은 대화창 AI. 파일을 올리면 대화창 안에서 파이썬을 돌려 계산하고 파일을 만들어 준다. 설치가 필요 없다."], "g39": ["코딩 에이전트", "내 컴퓨터의 작업 폴더에서 직접 파일을 만들고 명령을 실행하는 AI(Claude Code, Codex). 매 단계 허락을 구한다."], "g40": ["VS Code", "무료 코드 편집기. 확장(Extensions)으로 Claude Code·Codex 같은 코딩 에이전트를 붙여 쓴다."], "g41": ["Plan 모드", "에이전트가 파일을 고치기 전에 계획만 먼저 보여 주게 하는 방식. 승인한 뒤 실행한다."], "g42": ["체크포인트", "에이전트가 바꾸기 전 상태를 저장해 두는 지점. 잘못되면 되감아 되돌린다."], "g43": ["메모리", "에이전트가 대화를 시작할 때마다 자동으로 읽는 프로젝트 설명서 파일. 목적·데이터 출처·규칙을 적어 두면 매번 다시 말하지 않아도 된다."], "g44": ["스킬", "반복하는 작업 절차를 폴더 하나(SKILL.md)에 담은 것. 요청이 설명과 맞으면 에이전트가 알아서 불러 쓴다."], "g45": ["서브에이전트", "별도의 컨텍스트에서 한 가지 일(예: 숫자 검증)만 맡아 결과만 돌려주는 보조 AI. 작성과 검증을 나눌 수 있다."], "g46": ["파이썬", "데이터 수집·정리·분석에 가장 많이 쓰는 프로그래밍 언어. 에이전트가 대신 코드를 쓰지만 설치는 필요하다."], "g47": ["pandas", "파이썬의 표 데이터 처리 도구. 엑셀로 버거운 대용량 표를 합치고 계산한다."], "g48": ["스크립트", "할 일을 순서대로 적어 둔 작은 프로그램 파일(예: build_data.py). 다시 실행하면 같은 결과가 나온다."], "g49": ["D3", "웹페이지에 데이터 시각화를 그리는 자바스크립트 라이브러리. 뉴스룸 인터랙티브 그래픽의 표준."], "g50": ["Leaflet", "웹페이지에 확대·이동 가능한 지도를 넣는 가벼운 자바스크립트 라이브러리."], "g51": ["CDN", "라이브러리 파일을 인터넷 주소로 바로 불러 쓰게 해 주는 배포망. 설치 없이 D3를 쓸 수 있다."], "g52": ["정적 페이지", "서버 프로그램 없이 HTML·JS·CSS 파일만으로 돌아가는 웹페이지. GitHub Pages에 그대로 올릴 수 있다."], "g53": ["Live Server", "파일을 저장하면 브라우저에 바로 반영해 보여 주는 VS Code 확장."], "g54": ["콘솔", "브라우저 개발자 도구(F12)의 오류 메시지 창. 페이지가 안 될 때 여기 뜬 오류를 그대로 AI에게 붙여 넣는다."], "g55": ["Git", "파일의 변경 이력을 저장하는 도구. 언제 무엇을 바꿨는지 남고, 잘못되면 되돌릴 수 있다."], "g56": ["커밋", "Git에서 \"이 시점의 변경을 저장\"하는 단위. 메시지로 무엇을 바꿨는지 적는다."], "g57": ["저장소", "프로젝트 파일과 변경 이력을 담는 폴더. GitHub에 올리면 온라인 저장소가 된다."], "g58": ["GitHub", "Git 저장소를 온라인에 올려 공유·협업하는 서비스. 무료 계정으로 공개 저장소를 만들 수 있다."], "g59": ["GitHub Pages", "저장소의 HTML 파일을 무료 웹사이트로 공개하는 기능. 아이디.github.io/저장소/ 주소가 생긴다."], "g62": ["자체 서버", "내가 관리하는 컴퓨터에서 프로그램을 계속 돌리는 것. 정해진 시각에 수집·분석·발행하고, 키와 원자료를 밖에 내보내지 않는다."], "g63": ["스케줄 실행", "정해진 시각마다 프로그램을 자동 실행하는 기능(cron, GitHub Actions)."], "g61": ["CP949 인코딩", "한글을 저장하는 문자 인코딩. 공공기관 CSV에 많아 파이썬에서 encoding=\"cp949\" 지정이 필요하다."], "g60": [".gitignore", "GitHub에 올리지 않을 파일·폴더 목록(원자료, 키 파일 등). 실수로 비밀이 공개되는 것을 막는다."]};</script><script>
+(function () {
+  const G = window.GLOSS || {};
+  // popover (mouse only)
+  const pop = document.createElement('div'); pop.className = 'gpop'; document.body.appendChild(pop);
+  const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
+  if (fine) {
+    document.querySelectorAll('a.term').forEach((a) => {
+      a.addEventListener('mouseenter', () => {
+        const d = G[a.dataset.g]; if (!d) return;
+        pop.innerHTML = '<b></b><span></span><small>누르면 용어 사전으로 →</small>';
+        pop.querySelector('b').textContent = d[0]; pop.querySelector('span').textContent = d[1];
+        const r = a.getBoundingClientRect(); pop.classList.add('show');
+        const w = pop.offsetWidth, h = pop.offsetHeight;
+        let x = Math.min(Math.max(8, r.left), innerWidth - w - 8), y = r.bottom + 8;
+        if (y + h > innerHeight - 8) y = r.top - h - 8;
+        pop.style.left = x + 'px'; pop.style.top = y + 'px';
+      });
+      a.addEventListener('mouseleave', () => pop.classList.remove('show'));
+    });
+  }
+  // remember where the reader came from
+  let from = null; const ret = document.getElementById('gret');
+  document.querySelectorAll('a.term').forEach((a) => a.addEventListener('click', () => {
+    pop.classList.remove('show'); from = a.id;
+    setTimeout(() => { const t = document.getElementById(a.dataset.g); if (t) { t.classList.add('hit'); setTimeout(() => t.classList.remove('hit'), 1800); } }, 60);
+  }));
+  ret.addEventListener('click', () => {
+    if (!from) return; const a = document.getElementById(from);
+    a.scrollIntoView({ block: 'center' }); a.classList.add('flash'); setTimeout(() => a.classList.remove('flash'), 1700);
+    from = null; ret.classList.remove('show');
+  });
+  const gsec = document.getElementById('glossary');
+  addEventListener('scroll', () => { ret.classList.toggle('show', !!from && gsec.getBoundingClientRect().top < innerHeight * 0.6); }, { passive: true });
+  // search
+  const q = document.getElementById('gq'), cnt = document.getElementById('gcount');
+  const items = [...document.querySelectorAll('.g-item')];
+  function filt() {
+    const v = q.value.trim().toLowerCase(); let n = 0;
+    items.forEach((it) => { const ok = !v || it.dataset.s.includes(v); it.hidden = !ok; if (ok) n++; });
+    document.querySelectorAll('.glossary h3').forEach((h) => { const grid = h.nextElementSibling; const any = [...grid.children].some((c) => !c.hidden); h.style.display = grid.style.display = any ? '' : 'none'; });
+    cnt.textContent = v ? n + '개' : items.length + '개 용어';
+  }
+  q.addEventListener('input', filt); filt();
+})();
+</script>
+</body>
+</html>
