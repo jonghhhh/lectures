@@ -1,0 +1,1264 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI 활용 정책연구</title>
+<style>
+  :root{--fg:#1f2328;--muted:#59636e;--line:#d0d7de;--bg:#ffffff;--side:#f6f8fa;--accent:#0b5cad;--term:#7a3e00;--code:#f6f8fa}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Pretendard","Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;color:var(--fg);background:var(--bg);line-height:1.55;font-size:15px}
+  #sidebar{position:fixed;top:0;left:0;width:260px;height:100vh;overflow-y:auto;background:var(--side);border-right:1px solid var(--line);padding:18px 14px 40px}
+  #sidebar .brand{font-weight:700;font-size:15px;margin:0 0 10px}
+  #sidebar ol,#sidebar ul{margin:0;padding-left:16px}
+  #sidebar li{margin:2px 0;font-size:13px}
+  #sidebar a{color:var(--fg);text-decoration:none}
+  #sidebar a:hover,#sidebar a.active{color:var(--accent);font-weight:600}
+  #sidebar .sub{font-size:12px;color:var(--muted)}
+  #sidebar .sub a{color:var(--muted)}
+  #sidebar hr{border:0;border-top:1px solid var(--line);margin:10px 0}
+  main{margin-left:260px;max-width:980px;padding:24px 36px 80px}
+  h1{font-size:28px;margin:4px 0}
+  h2{font-size:21px;margin:34px 0 10px;padding-top:6px;border-top:2px solid var(--line)}
+  h3{font-size:17px;margin:22px 0 8px}
+  p,li{margin:4px 0}
+  ul,ol{padding-left:22px}
+  a{color:var(--accent)}
+  a.term{color:var(--term);text-decoration:none;border-bottom:1px dotted var(--term)}
+  a.term:hover{background:#fff4e5}
+  .sub-title{color:var(--muted);font-size:16px;margin:0 0 14px}
+  table{border-collapse:collapse;width:100%;margin:8px 0 12px;font-size:14px}
+  th,td{border:1px solid var(--line);padding:6px 8px;vertical-align:top;text-align:left}
+  th{background:var(--side)}
+  pre{background:var(--code);border:1px solid var(--line);padding:10px 12px;overflow-x:auto;font-size:13px;line-height:1.45;white-space:pre-wrap}
+  code{font-family:"D2Coding","Consolas",monospace}
+  blockquote{margin:8px 0;padding:6px 12px;border-left:4px solid var(--line);color:var(--muted)}
+  .note{font-size:13px;color:var(--muted)}
+  .src{font-size:12.5px;color:var(--muted)}
+  dl.gloss dt{font-weight:700;margin-top:10px;scroll-margin-top:12px}
+  dl.gloss dd{margin:2px 0 0 0;padding-left:12px;border-left:3px solid var(--line)}
+  :target{background:#fff8c5}
+  .mermaid{background:#fff;border:1px solid var(--line);padding:8px}
+  h4{font-size:15.5px;margin:18px 0 6px;scroll-margin-top:12px}
+  kbd{font-family:"D2Coding","Consolas",monospace;font-size:12.5px;border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;padding:0 4px;background:#fff}
+  .lab{border:1px solid var(--line);border-left:4px solid var(--accent);padding:6px 14px 8px;margin:8px 0 14px;background:#fbfdff}
+  .tiers{margin:8px 0 12px}
+  .tier{border:1px solid var(--line);border-radius:6px;padding:8px 12px;display:grid;grid-template-columns:128px 1fr;gap:2px 12px;align-items:start}
+  .tier .tl{grid-row:span 2;font-size:12px;font-weight:700;color:#fff;border-radius:4px;padding:3px 6px;text-align:center;align-self:center}
+  .tier b{font-size:14.5px}
+  .tier .td{font-size:13px;color:var(--muted)}
+  .t1{background:#eaf2fb;border-color:#9cc0e6}.t1 .tl{background:#0b5cad}
+  .t2{background:#f3f7ee;border-color:#b9d3a3;margin-left:28px}.t2 .tl{background:#3f7a1e}
+  .t3{background:#f6f8fa;margin-left:56px}.t3 .tl{background:#59636e}
+  .tarr{font-size:12px;color:var(--muted);margin:3px 0 3px 44px}
+  .tguard{margin-top:8px;font-size:13px;border:1px dashed #c47f00;background:#fff8ec;padding:6px 10px;border-radius:6px}
+  .hyb{border:1px solid var(--line);border-radius:8px;padding:12px;background:#fff;margin:8px 0 12px}
+  .hflow{display:flex;align-items:stretch}
+  .hstep{flex:1;border:1px solid var(--line);border-radius:6px;padding:8px 10px;background:var(--side);font-size:13px}
+  .hstep b{display:block;font-size:14px;margin-bottom:2px}
+  .hnum{display:inline-block;width:20px;height:20px;line-height:20px;border-radius:50%;background:var(--fg);color:#fff;font-size:12px;text-align:center;margin-right:4px}
+  .harr{align-self:center;padding:0 6px;color:var(--muted);font-size:18px}
+  .hdown{text-align:center;color:var(--muted);font-size:13px;margin:8px 0 6px}
+  .hlanes{display:grid;grid-template-columns:1fr 1fr .75fr;gap:10px}
+  .hlane{border:1px solid;border-radius:6px;padding:8px 10px;font-size:13px}
+  .hbadge{display:inline-block;font-size:12px;font-weight:700;color:#fff;border-radius:4px;padding:1px 7px}
+  .hlane b{display:block;font-size:14px;margin:6px 0 2px}
+  .hlane .hd{color:var(--muted)}
+  .hlane .hgood{margin-top:6px}
+  .hlane .hex{margin-top:6px;font-size:12.5px;color:var(--muted);border-top:1px dotted var(--line);padding-top:4px}
+  .hl-ext{background:#eaf2fb;border-color:#9cc0e6}.hl-ext .hbadge{background:#0b5cad}
+  .hl-loc{background:#f3f7ee;border-color:#b9d3a3}.hl-loc .hbadge{background:#3f7a1e}
+  .hl-no{background:#f6f8fa;border-color:var(--line)}.hl-no .hbadge{background:#59636e}
+  .hbar{margin-top:10px;border-top:1px dashed var(--line);padding-top:8px;font-size:13px}
+  @media (max-width:760px){.hflow{flex-direction:column}.harr{transform:rotate(90deg)}.hlanes{grid-template-columns:1fr}.tier{grid-template-columns:1fr}.t2,.t3{margin-left:0}}
+  #menuBtn{display:none}
+  @media (max-width:900px){
+    #sidebar{transform:translateX(-100%);transition:transform .2s;z-index:10;box-shadow:2px 0 8px rgba(0,0,0,.15)}
+    #sidebar.open{transform:none}
+    main{margin-left:0;padding:16px}
+    #menuBtn{display:block;position:fixed;top:10px;right:10px;z-index:11;padding:6px 10px;border:1px solid var(--line);background:#fff;border-radius:6px}
+  }
+  @media print{#sidebar,#menuBtn{display:none}main{margin-left:0}}
+</style>
+</head>
+<body>
+<button id="menuBtn" onclick="document.getElementById('sidebar').classList.toggle('open')">목차</button>
+<nav id="sidebar">
+  <p class="brand">AI 활용 정책연구</p>
+  <ol start="0">
+    <li><a href="#s0">들어가며: 왜 지금인가</a></li>
+    <li><a href="#s1">전체 지도: 파이프라인</a></li>
+    <li><a href="#s2">수집: API·RSS·MCP</a>
+      <ul class="sub"><li><a href="#s2-1">국내 API</a></li><li><a href="#s2-2">해외 API</a></li><li><a href="#s2-3">RSS</a></li><li><a href="#s2-4">MCP</a></li><li><a href="#s2-5">수집 설계</a></li></ul></li>
+    <li><a href="#s3">분석: 네 가지 도구</a>
+      <ul class="sub"><li><a href="#s3-1">LLM 코딩</a></li><li><a href="#s3-2">BERT 증류</a></li><li><a href="#s3-3">DB·RAG</a></li><li><a href="#s3-4">통계분석</a></li></ul></li>
+    <li><a href="#s4">자동화: 모니터링 웹페이지</a>
+      <ul class="sub"><li><a href="#s4-1">구조</a></li><li><a href="#s4-2">경기연구원 맞춤 예시</a></li><li><a href="#s4-3">국내외 운영 사례</a></li></ul></li>
+    <li><a href="#s5">바이브코딩</a>
+      <ul class="sub"><li><a href="#s5-1">대화형과 설계형</a></li><li><a href="#s5-2">대화형</a></li><li><a href="#s5-3">설계형 ① script 중심</a></li><li><a href="#s5-4">설계형 ② skill 중심</a></li><li><a href="#s5-5">초보자 실습 A·B·C</a></li></ul></li>
+    <li><a href="#s6">기관 AX 전환</a>
+      <ul class="sub"><li><a href="#s6-1">자료 등급</a></li><li><a href="#s6-2">인프라 선택지</a></li><li><a href="#s6-3">로컬 LLM 서버</a></li><li><a href="#s6-4">연구지원 시스템</a></li><li><a href="#s6-5">조직·규정</a></li><li><a href="#s6-6">교육 체계</a></li></ul></li>
+  </ol>
+  <hr>
+  <ul style="list-style:none;padding-left:0">
+    <li><a href="#appA">부록 A. VS Code·Claude Code</a>
+      <ul class="sub" style="padding-left:30px"><li><a href="#appA-3">확장 설치</a></li><li><a href="#appA-4">실행·로그인</a></li><li><a href="#appA-6">Python·Git</a></li></ul></li>
+    <li><a href="#appB">부록 B. GitHub 배포</a>
+      <ul class="sub" style="padding-left:30px"><li><a href="#appB-2">웹에서 올리기</a></li><li><a href="#appB-3">VS Code에서 올리기</a></li><li><a href="#appB-5">공개 전 점검</a></li><li><a href="#appB-6">자동 갱신</a></li></ul></li>
+  </ul>
+  <hr>
+  <ul style="list-style:none;padding-left:0">
+    <li><a href="#refs">참고자료</a></li>
+    <li><a href="#glossary">용어집</a></li>
+  </ul>
+</nav>
+
+<main>
+<h1 id="top">AI 활용 정책연구</h1>
+<p class="sub-title">행정·정책 데이터의 수집·분석·자동화, 그리고 바이브코딩</p>
+
+<h2 id="toc">구성</h2>
+<table>
+<thead><tr><th>순서</th><th>내용</th></tr></thead>
+<tbody>
+<tr><td>0</td><td><a href="#s0">들어가며: 왜 지금 정책연구의 AI 전환인가</a></td></tr>
+<tr><td>1</td><td><a href="#s1">전체 지도: 정책연구 AI 파이프라인</a></td></tr>
+<tr><td>2</td><td><a href="#s2">수집: API·RSS·MCP로 국내외 행정·정책 데이터 확보</a></td></tr>
+<tr><td>3</td><td><a href="#s3">분석: LLM 코딩, BERT 증류, DB·RAG, 통계분석</a></td></tr>
+<tr><td>4</td><td><a href="#s4">자동화: 매일 갱신되는 정책 모니터링 웹페이지</a></td></tr>
+<tr><td>5</td><td><a href="#s5">바이브코딩: 대화형 / 설계형(script 중심·skill 중심) + 초보자 실습</a></td></tr>
+<tr><td>6</td><td><a href="#s6">기관 AX 전환: 보안 등급·인프라·로컬 LLM·시스템·조직·교육</a></td></tr>
+<tr><td>부록 A</td><td><a href="#appA">VS Code 설치와 Claude Code 확장</a></td></tr>
+<tr><td>부록 B</td><td><a href="#appB">GitHub 로그인과 웹페이지 배포(GitHub Pages)</a></td></tr>
+</tbody>
+</table>
+<p class="note">밑줄 점선 용어는 맨 뒤 <a href="#glossary">용어집</a>, 파란 링크는 원문 출처로 연결</p>
+
+<!-- ===================== 0 ===================== -->
+<h2 id="s0">0. 들어가며: 왜 지금인가</h2>
+<p><strong>정부·공공부문의 <a class="term" href="#g-ax">AI 전환(AX)</a> 속도</strong></p>
+<ul>
+<li>2026.1.22 「<a href="https://www.law.go.kr/법령/인공지능발전과신뢰기반조성등에관한기본법">인공지능 발전과 신뢰 기반 조성 등에 관한 기본법</a>」 시행 — 공공부문 AI 확산의 제도적 기반</li>
+<li>범정부 AI 공통기반: 2025.11 내부망 시범운영 → 2026.3 전체 중앙·지방정부로 단계적 확대 (<a href="https://www.heraldk.com/article/2025112323000046008">헤럴드경제</a>) — 국가정보자원관리원 대구센터 폐쇄형 환경에 한글 특화 중소형 <a class="term" href="#g-llm">LLM</a>과 <a class="term" href="#g-rag">RAG</a> API 7종을 PaaS로 제공 (<a href="https://www.ddaily.co.kr/page/view/2026061615460746270">디지털데일리, 12개 공공 AI 지원사업</a>)</li>
+<li>2026.4.2 범정부 '공공AI사업지원센터' 개소(NIA 서울사무소) — 기획·데이터 준비·기술 검증 등 공공 AI 사업 전주기 지원 (<a href="https://eiec.kdi.re.kr/policy/materialView.do?num=278902">KDI 경제정보센터 정책자료</a>)</li>
+<li>행안부·NIA 「<a href="https://eiec.kdi.re.kr/policy/materialView.do?num=282444">공공부문 AI 도입·활용 가이드</a>」 — 기획-예산-계약-구축-운영 5단계 표준화, <strong>RAG 우선 전략</strong></li>
+<li>행안부·NIA 「<a href="https://discuss.pytorch.kr/t/v1-0-pdf-markdown-70p/10084">공공데이터의 인공지능 친화적 관리 가이드라인 v1.0</a>」(2026.3 발행, 4.24 공개) — 개방을 넘어 AI 활용에 적합한 구조·<a class="term" href="#g-meta">메타데이터</a>·문서화 기준, DCAT·Dublin Core·Croissant 준용</li>
+<li>2026.10 「<a href="https://v.daum.net/v/H3JLK5nQZ4">공공부문 AI 윤리기준</a>」 확정 — 68개 세부 점검 항목, 최종 책임·통제는 사람</li>
+</ul>
+<p><strong>행정 현장 사례</strong></p>
+<ul>
+<li>국민권익위: 「생성형 AI 기반 국민소통·민원분석 체계」 서비스 개시 — 식약처 대상 AI 답변 초안 추천, 국토부·인천·시흥 대상 빈발·중복 민원 군집화 (<a href="https://ditoday.com/?p=140053">디지털투데이</a>, 사업 배경: <a href="https://newsseoul.co.kr/news/view/1065583821012528">뉴스서울</a>)</li>
+<li>법제처: 국가법령정보센터 '생성형 AI 법령검색 서비스' 구축 착수(2026.6.26) — 법령 특화 AI 모델, 법령 간 관계·판례·해석례 구조화, RAG로 환각 최소화, 2027.7 개통 목표 (<a href="https://biz.sbs.co.kr/amp/article/20000319171">SBS Biz</a>)</li>
+<li>법제처·행안부·과기정통부: 'AI 법령 비서' 전 공무원 시범(2026.7.14~) — 범정부 AI 공통기반과 독자 AI 파운데이션 모델 활용 (<a href="https://shinkim.com/kor/media/newsletter/3388">법무법인 세종 뉴스레터</a>)</li>
+<li>국무조정실: '지능형 AI 규제정보 분석시스템 구축사업'(17억 9천만 원, 솔트룩스 컨소시엄) (<a href="https://www.ddaily.co.kr/page/view/2026061615460746270">디지털데일리</a>)</li>
+<li>KISDI 데이터연구플랫폼 KINDA: 정책보고서 생성, 연구보고서 분석, 연구자 네트워크 추천 기능 고도화(2026) (<a href="https://www.venturesquare.net/1108476/">벤처스퀘어</a>)</li>
+</ul>
+<p><strong>그러나: 효과 측정은 미흡</strong></p>
+<ul>
+<li>OECD 「<a href="https://www.oecd.org/en/publications/digital-government-outlook_0496b2bc-en.html">Digital Government Outlook 2026</a>」: 정부 AI 활용은 거의 보편화, 그러나 AI 도구의 효과를 평가하는 정부는 소수 — 36개국 중 35개국 활용, 효과 측정 10개국 (<a href="https://v.daum.net/v/20260722053449437">뉴스1 보도</a>)</li>
+<li>정책연구기관의 역할: 도입 확산이 아니라 <strong>검증 가능한 방법론</strong>과 <strong>효과 측정</strong></li>
+</ul>
+<p><strong>핵심 메시지</strong></p>
+<ul>
+<li>정책연구자의 시간 배분 변화: 자료 찾기·옮기기·정리 → 질문 설계·검증·해석</li>
+<li>코딩을 몰라도 가능한 단계부터, 연구소 공용 자산(<a class="term" href="#g-skill">스킬</a>·DB·웹)으로 쌓는 단계까지</li>
+</ul>
+
+<!-- ===================== 1 ===================== -->
+<h2 id="s1">1. 전체 지도: 정책연구 AI 파이프라인</h2>
+<pre class="mermaid">flowchart LR
+  A[수집&lt;br/&gt;API · RSS · MCP&lt;br/&gt;국회·법령·재정·통계·해외] --&gt; B[정제·저장&lt;br/&gt;표준 스키마&lt;br/&gt;SQLite·DB]
+  B --&gt; C1[LLM 코딩&lt;br/&gt;분류·추출·요약]
+  B --&gt; C2[DB·RAG&lt;br/&gt;근거 검색·인용]
+  B --&gt; C3[통계분석&lt;br/&gt;회귀·시계열·패널]
+  C1 --&gt; C4[BERT 증류&lt;br/&gt;대량·저비용·재현]
+  C1 &amp; C2 &amp; C3 &amp; C4 --&gt; D[산출&lt;br/&gt;보고서 · 대시보드&lt;br/&gt;자동 갱신 웹페이지]
+  V[검증 레이어&lt;br/&gt;골드셋 · 신뢰도 · 원문 대조] -.-&gt; C1 &amp; C2 &amp; C3 &amp; C4
+</pre>
+<table>
+<thead><tr><th>단계</th><th>기존 방식</th><th>AI 활용 방식</th><th>사람의 역할</th></tr></thead>
+<tbody>
+<tr><td>수집</td><td>사이트 방문, 엑셀 내려받기</td><td><a class="term" href="#g-api">API</a>·<a class="term" href="#g-rss">RSS</a> 자동 수집, <a class="term" href="#g-mcp">MCP</a>로 AI가 직접 조회</td><td>수집 범위·기간 설계</td></tr>
+<tr><td>정제</td><td>수작업 복사·붙여넣기</td><td>스크립트로 표준 <a class="term" href="#g-schema">스키마</a> 변환</td><td>변수 정의</td></tr>
+<tr><td>분석</td><td>소수 표본 수작업 코딩</td><td>LLM 전수 코딩 + 표본 검증</td><td><a class="term" href="#g-codebook">코드북</a>·<a class="term" href="#g-gold">골드셋</a></td></tr>
+<tr><td>근거</td><td>기억·검색 의존</td><td>RAG로 원문 근거 문장 제시</td><td>해석·판단</td></tr>
+<tr><td>산출</td><td>연 1회 보고서</td><td>매일·매주 갱신 웹페이지</td><td>의제 선별</td></tr>
+</tbody>
+</table>
+<ul>
+<li>핵심 원칙: <strong>AI는 찾고, 계산하고, 근거를 정리 / 판단은 연구자</strong></li>
+<li>계산은 코드가, 의미 판단 보조는 LLM이 — 두 층의 분리가 재현성의 조건</li>
+</ul>
+
+<!-- ===================== 2 ===================== -->
+<h2 id="s2">2. 수집: 국내외 행정·정책 데이터</h2>
+<h3 id="s2-1">2-1. 국내 주요 API</h3>
+<table>
+<thead><tr><th>출처</th><th>내용</th><th>접근</th><th>비고</th></tr></thead>
+<tbody>
+<tr><td><strong><a href="https://www.data.go.kr">공공데이터포털</a></strong></td><td>중앙·지자체·공공기관 개방 데이터</td><td>회원가입 + 활용신청, 서비스키</td><td>파일데이터 상당수 REST API로 자동 변환 제공</td></tr>
+<tr><td><strong><a href="https://data.gg.go.kr">경기데이터드림</a></strong></td><td>경기도·시군 개방 데이터</td><td>인증키</td><td>공공데이터포털에 링크형 API로도 등록</td></tr>
+<tr><td><strong><a href="https://open.assembly.go.kr">열린국회정보</a></strong></td><td>의원·의안·표결·회의록·국감 보고서 등 270여 종 API</td><td>무료 인증키</td><td>sample 키로 최대 10건 테스트 (<a href="https://glama.ai/mcp/servers/hollobit/assembly-api-mcp">assembly-api-mcp 안내</a>)</td></tr>
+<tr><td><strong><a href="https://www.nabo.go.kr/ko/content.do?key=2512170001">국회예산정책처 NABO</a></strong></td><td>보고서·정기간행물 검색</td><td>인증키 신청</td><td>재정·법안비용추계 연구 연계</td></tr>
+<tr><td><strong><a href="https://open.law.go.kr">국가법령정보 공동활용</a></strong></td><td>법령·행정규칙·<strong>자치법규</strong>·판례·해석례 등 190여 개 API</td><td>데이터별 공동활용 신청·승인, OC 값</td><td>조례 비교연구의 기본 소스 (<a href="https://law.go.kr/LSW/information.do">안내</a>)</td></tr>
+<tr><td><strong><a href="https://kosis.kr/openapi/introduce/introduce_01List.do">KOSIS 공유서비스</a></strong></td><td>국가통계 목록·자료·설명</td><td>회원당 인증키 1개</td><td>요청당 4만 셀, 분당 200건 (<a href="https://glama.ai/mcp/servers/rubatoyd/kosis-openapi-mcp">kosis-openapi-mcp 실측</a>)</td></tr>
+<tr><td><strong><a href="https://www.openfiscaldata.go.kr">열린재정</a></strong></td><td>국가 세입·세출, 결산, 재정지표</td><td>공공데이터포털 링크형 API (<a href="https://www.data.go.kr/data/3073764/openapi.do">예: 국가채무 총괄</a>)</td><td>XML</td></tr>
+<tr><td><strong><a href="https://www.lofin365.go.kr">지방재정365</a></strong></td><td>지자체 예산·결산·재정공시·재정지표</td><td>회원가입 후 인증키 발급 (<a href="https://www.data.go.kr/data/15160375/fileData.do">API 목록</a>)</td><td>시군 재정 비교</td></tr>
+<tr><td><strong><a href="https://www.nkis.re.kr">NKIS</a> · <a href="https://www.prism.go.kr">PRISM</a></strong></td><td>국책연구기관·중앙부처 정책연구보고서</td><td>NKIS 오픈API</td><td>선행연구 DB 구축</td></tr>
+</tbody>
+</table>
+<p><strong>사례: 데이터 결합의 힘</strong></p>
+<ul>
+<li><a href="https://github.com/kyusik-yang/kna">kna: Korean National Assembly CLI</a> — 열린국회정보 API 19종·의안정보시스템·국회공보·재산공개 자료를 의안 ID로 결합, 17~22대(2004~2026) 법안 115,149건의 발의-심사-표결-공포 과정 마스터 DB (<a href="https://pypi.org/project/kna/">PyPI 0.10.0</a>)</li>
+<li><a href="https://github.com/kyusik-yang/kr-hearings-data">kr-hearings-data</a> — 16~22대 회의록 발언 단위 데이터(v10: 회의 26,264건, 발언 1,511만 건), kna의 회의록 ID로 법안과 결합</li>
+<li>응용: 경기도 관련 법안·조례의 발의→처리 기간, 상임위별 처리율, 지자체 간 조례 확산 분석</li>
+</ul>
+
+<h3 id="s2-2">2-2. 해외 행정·정책 API</h3>
+<table>
+<thead><tr><th>출처</th><th>내용</th><th>접근</th></tr></thead>
+<tbody>
+<tr><td><strong><a href="https://www.federalregister.gov/reader-aids/developer-resources/rest-api">US Federal Register</a></strong></td><td>미 연방 규칙·규칙안·고시·대통령 문서</td><td>키 불필요, JSON·CSV</td></tr>
+<tr><td><strong><a href="https://open.gsa.gov/api/regulationsgov/">Regulations.gov</a></strong></td><td>규제 도켓, 문서, <strong><a class="term" href="#g-comment">공공의견(public comments)</a></strong></td><td>무료 api.data.gov 키, 시간당 1,000회</td></tr>
+<tr><td><strong><a href="https://sdmx.oecd.org/public/rest">OECD Data Explorer (SDMX)</a></strong></td><td>경제·조세·교육·환경 등 회원국 비교 통계 (<a class="term" href="#g-sdmx">SDMX</a>)</td><td>키 불필요</td></tr>
+<tr><td><strong><a href="https://data.worldbank.org">World Bank Indicators</a></strong></td><td>개발지표</td><td>키 불필요</td></tr>
+</tbody>
+</table>
+<p><strong>사례: 공공의견 <a class="term" href="#g-textmining">텍스트 마이닝</a></strong></p>
+<ul>
+<li>Will Jobs, <a href="https://github.com/willjobs/public-comments-project/blob/main/blogposts/post2/README.md">Public Comments Project — 데이터셋 구축 기록(Post 2)</a>: Regulations.gov API로 2011~2021년 문서 1,222건의 의견 146,916건 수집(월별 약 250건 표본, 의견 25건 이상 문서로 한정) — 전체 863,574건 문서·1,216만여 건 의견 규모 파악</li>
+<li>GW Regulatory Studies Center, <a href="https://regulatorystudies.columbian.gwu.edu/sites/g/files/zaxdzs4751/files/downloads/USDA/2019Report/GW%20RSC%20-%20USDA%20Cooperative%20Agreement%202018-19_.pdf">Analyzing Public Comments to Inform Agency Regulatory Reform Efforts</a>(USDA 협약 보고서) 4장 "Do Comments Help Identify Regulations Inhibiting Productivity Growth?" — USDA·EPA·FDA 도켓 의견을 API로 수집, 텍스트 마이닝으로 작물 생산 산업에 영향을 주는 규제 식별</li>
+<li>Xie, Z., <a href="https://regulatorystudies.columbian.gwu.edu/using-comments-data-research">Using Comments as Data for Research</a>(GW RSC 코멘터리) — API 수집·PDF 첨부 텍스트 변환 코드 공개</li>
+<li><a href="https://arxiv.org/abs/2311.14871">Tracing Influence at Scale: A Contrastive Learning Approach to Linking Public Comments and Regulator Responses</a> — 2000~2022 Federal Register 규칙과 Regulations.gov 의견을 연결해 규제기관 응답과 의견 매칭</li>
+<li><a href="https://arxiv.org/abs/2605.29025">When Models Disagree: Rethinking LLM Evaluation for Public Comment Analysis</a>(2026) — 도켓 FNS-2016-0018 의견 1,260건을 LLM으로 찬반 등 분류, 모델 간 불일치 문제 제기</li>
+<li><a href="https://aws.amazon.com/marketplace/pp/prodview-ypmw3cvvwhv3y">Mirrulations</a> — 기부 API 키로 Regulations.gov 전체를 미러링한 AWS 공개 데이터셋(PDF 텍스트 추출 포함)</li>
+<li>국내 응용: <a href="https://opinion.lawmaking.go.kr">국민참여입법센터</a> 입법·행정예고 의견, <a href="https://www.epeople.go.kr">국민신문고</a>, 경기도 정책 제안 게시판</li>
+</ul>
+
+<h3 id="s2-3">2-3. RSS: 가장 쉬운 자동 수집</h3>
+<ul>
+<li><a href="https://www.korea.kr">정책브리핑(korea.kr)</a>: 통합 RSS 서비스 <strong>2026.7.1 중단</strong>(콘텐츠 저작권 등 권리 보호에 따른 제공방식 변경, <a href="https://m.korea.kr/etc/noticeView.do?newsId=132038885">공지</a>) → 부처별 RSS나 웹 목록 이용. 재이용 시 <a class="term" href="#g-kogl">공공누리</a> 표시 확인, 미부착 자료와 사진·이미지는 담당자와 사전 협의 (<a href="https://www.korea.kr/guide/copyRight.do">정책브리핑 저작권 정책</a>)</li>
+<li>부처 RSS 예: <a href="https://www.mcst.go.kr/kor/s_etc/rss/rssService.jsp">문화체육관광부</a>(보도자료 <code>http://www.mcst.go.kr/common/rss/press.jsp</code>), <a href="https://www.moel.go.kr/site/rss/rssList.do">고용노동부</a>(입법·행정예고 <code>https://www.moel.go.kr/rss/lawinfo.do</code>), <a href="https://molit.go.kr/USR/p_etc_rsssvc/m_123/ers.jsp">국토교통부</a> — 실습 소재(<a href="#s5-5">5-5</a>)</li>
+<li>국책연구기관·시도연구원 보도자료·발간물 RSS, 언론사 섹션 RSS</li>
+<li>RSS 장점: 키 불필요, 구조화된 제목·링크·날짜, 매일 <a class="term" href="#g-incr">증분 수집</a>에 최적</li>
+<li>RSS가 없을 때: 목록 페이지 스크래핑 — robots.txt·이용약관 확인, 요청 간격 준수</li>
+</ul>
+
+<h3 id="s2-4">2-4. MCP: AI가 API를 직접 부르는 방식</h3>
+<ul>
+<li><a class="term" href="#g-mcp">MCP(Model Context Protocol)</a>: Claude·ChatGPT 등 AI 도구에 외부 API를 '도구'로 연결하는 개방형 표준 (<a href="https://www.anthropic.com/news/model-context-protocol">Anthropic, Introducing the Model Context Protocol</a>, 2024.11)</li>
+<li>국회·법령·통계·공공데이터 공개 MCP 서버가 이미 다수 존재 — 키만 넣으면 대화로 조회</li>
+</ul>
+<table>
+<thead><tr><th>분야</th><th>MCP 서버</th><th>주요 기능</th></tr></thead>
+<tbody>
+<tr><td rowspan="4">국회</td><td><a href="https://github.com/kyusik-yang/open-assembly-mcp">open-assembly-mcp</a> (Kyusik Yang)</td><td>법안 검색·상세, 의원 정보, 표결, 심사 경과, 발의자, 의원별 표결, 위원회 명단 / <code>uvx open-assembly-mcp --setup</code></td></tr>
+<tr><td><a href="https://glama.ai/mcp/servers/hollobit/assembly-api-mcp">assembly-api-mcp</a> (hollobit)</td><td>국회 276개 + 국민참여입법센터 8개 + NABO 3개 API, Lite 6개·Full 11개 도구, 원격 서버 제공</td></tr>
+<tr><td><a href="https://github.com/StatPan/AssemblyMCP">AssemblyMCP</a> (StatPan)</td><td>의안 검색·제안이유, 의안별 위원회 회의록, 위원회 목록</td></tr>
+<tr><td><a href="https://glama.ai/mcp/servers/epoko77-ai/korean-assembly-speech-mcp">korean-assembly-speech-mcp</a></td><td>국회 발언·위원회·회의 자연어 검색(한·영)</td></tr>
+<tr><td rowspan="2">법령</td><td><a href="https://glama.ai/mcp/servers/yy0dqpyfqu">korean-law-mcp</a> (chrisryugj)</td><td>법제처 42개 API를 10개 도구로, 인용 실존·내용 검증, 시점 비교 diff, <strong>조례 정비 레이더</strong></td></tr>
+<tr><td><a href="https://pypi.org/project/caselaw-mcp/">caselaw-mcp</a></td><td>대법원 판례·법령 조문·공정위 결정문 검색, 사건번호 실재 확인</td></tr>
+<tr><td rowspan="3">통계</td><td><a href="https://glama.ai/mcp/servers/rubatoyd/kosis-openapi-mcp">kosis-openapi-mcp</a></td><td>KOSIS 검색·수집, 4만 셀 초과 시 기간 자동 분할, xlsx·csv·sqlite 내보내기</td></tr>
+<tr><td><a href="https://pypi.org/project/korean-stat-mcp/">korean-stat-mcp</a></td><td>KOSIS 통계표 검색·메타데이터·집계</td></tr>
+<tr><td><a href="https://glama.ai/mcp/servers/mfi7wa4of2">ECOS MCP</a></td><td>한국은행 경제통계 조회</td></tr>
+<tr><td rowspan="2">공공데이터</td><td><a href="https://lobehub.com/mcp/koomook-data-go-mcp-servers">data-go-mcp-servers</a> (Koomook)</td><td>나라장터 입찰·계약, 대통령기록관 연설문, 금융위 재무정보 등 data.go.kr 개별 서버 묶음</td></tr>
+<tr><td><a href="https://glama.ai/mcp/servers/hknlc0ux2e">publicdata-kr</a> (FieldCure)</td><td>data.go.kr API 탐색·호출</td></tr>
+<tr><td rowspan="2">해외 규제</td><td><a href="https://chat.mcp.so/server/federal-register-mcp/1102tools">federal-register-mcp</a></td><td>미 연방관보 규칙·규칙안·행정명령·의견기간 추적(키 불필요)</td></tr>
+<tr><td><a href="https://mcp.so/servers/regulations-gov-mcp">regulationsgov-mcp</a></td><td>Regulations.gov 도켓·공공의견 조회(api.data.gov 키)</td></tr>
+</tbody>
+</table>
+<ul>
+<li>예: "22대 국회 지방재정 관련 법안 중 계류 중인 것 정리" → AI가 국회 API 호출 → 표로 정리</li>
+<li>예: "경기도와 서울시의 청년 기본 조례 조문 비교" → 법령 API 호출 → 조문 대조표</li>
+<li>장점: 코드 없이 탐색 / 한계: 대량·반복 수집은 여전히 스크립트가 효율적 — 탐색은 MCP, 본수집은 스크립트</li>
+<li>유의: 대부분 개인·민간 개발 오픈소스 — 기관 공식 서비스 아님, 키 보관·호출 범위 확인 필요</li>
+</ul>
+
+<h3 id="s2-5">2-5. 수집 설계 체크포인트</h3>
+<ul>
+<li>단위 정의: 문서 1건? 조문 1개? 사업 1개? — 분석 단위가 스키마를 결정</li>
+<li>식별자 확보: 의안 ID, 법령 ID, 세부사업코드 — 이후 결합의 열쇠</li>
+<li>증분 수집: 마지막 수집 시점 이후만 — 매일 갱신의 전제</li>
+<li>원자료 보존: API 응답 원본(<a class="term" href="#g-json">JSON</a>) 저장 → 가공본 별도 — 재현성의 기본</li>
+</ul>
+
+<!-- ===================== 3 ===================== -->
+<h2 id="s3">3. 분석: 네 가지 도구</h2>
+<h3 id="s3-1">3-1. LLM 코딩: 정책문서 분류·추출</h3>
+<p><strong>근거 연구</strong></p>
+<ul>
+<li>Gilardi, Alizadeh &amp; Kubli(2023), <a href="https://www.pnas.org/doi/10.1073/pnas.2305016120">ChatGPT outperforms crowd workers for text-annotation tasks</a>(PNAS 120(30)): 트윗·뉴스 6,183건의 관련성·입장·주제·프레임 코딩에서 <a class="term" href="#g-zeroshot">제로샷</a> 정확도가 크라우드워커보다 평균 약 25%p 높음, 코더 간 일치도는 훈련된 코더보다도 높음, 건당 0.003달러 미만(MTurk의 약 30분의 1)</li>
+<li>Gunes &amp; Florczak, <a href="https://arxiv.org/abs/2310.08167">Multiclass Classification of Policy Documents with Large Language Models</a>(2023): 미 의회 법안·청문회의 <a class="term" href="#g-cap">CAP</a> 21개 정책 주제 분류 — 시나리오별 정확도 58~83%, 두 모델 일치 데이터(65%)에서 83%</li>
+<li>같은 저자 학술지판 <a href="https://ideas.repec.org/a/spr/jcsosc/v8y2025i2d10.1007_s42001-025-00362-2.html">Replacing or enhancing the human coder?</a>(Journal of Computational Social Science 8(2), 2025): GPT·Gemini 6종, 가중 <a class="term" href="#g-f1">F1</a> 0.44~0.82, GPT-4와 Gemini 1.5 Pro 일치 데이터(83%)에서 0.82</li>
+<li><a href="https://arxiv.org/abs/2509.10199">Beyond Token Limits: Assessing Language Model Performance on Long Text Classification</a>: 5개 언어 CAP 분류, 512토큰 초과 장문에서 인코더 모델과 GPT 비교 → <strong>과제마다 개별 검증 필수</strong></li>
+</ul>
+<p><strong>정책연구 적용 예와 근거 연구</strong></p>
+<table>
+<thead><tr><th>적용</th><th>연구</th><th>시사점</th></tr></thead>
+<tbody>
+<tr><td>정책 분야(CAP 코드) 분류</td><td>위 Gunes &amp; Florczak; Beyond Token Limits</td><td>모델 교차 일치 데이터만 자동 채택</td></tr>
+<tr><td>의원 발언 입장·프레임 코딩</td><td><a href="https://arxiv.org/abs/2509.07274">LLM Analysis of 150+ years of German Parliamentary Debates on Migration Reveals Shift from Post-War Solidarity to Anti-Solidarity in the Last Decade</a>(2025)</td><td>독일 의회 1867~2025 연대·반연대 프레임 코딩, GPT-4가 인간 상한에 근접</td></tr>
+<tr><td>청문회 다중 화자·다중 쟁점 입장</td><td>Nikolaidis(2025), <a href="https://repository.tudelft.nl/record/uuid:3154565d-b68c-48b4-a734-0d717f118687">Towards Automated Stance Detection in Congressional Hearings with Large Language Models</a>(TU Delft)</td><td>프롬프트 전략별 비교, 주석 프레임워크 제시</td></tr>
+<tr><td>의회 토론 숙의 품질</td><td>Bosley(2024), <a href="https://priceschool.usc.edu/wp-content/uploads/2024/12/Bosley.pdf">Towards Qualitative Measurement at Scale: A Prompt-Engineering Framework for Large-Scale Analysis of Deliberative Quality in Parliamentary Debates</a></td><td>예시 수 증가 시 저가 모델도 GPT-4 수준</td></tr>
+<tr><td>재정·사업 문서 구조화 추출</td><td>Aggarwal et al.(2025), <a href="https://arxiv.org/abs/2511.10659">Information Extraction From Fiscal Documents Using LLMs</a></td><td>인도 카르나타카주 재정문서, 상위 합계 대조로 추출 정확도 자동 검증</td></tr>
+<tr><td>민원 질의 응대</td><td>조상규·김신성(2024), <a href="https://koreascience.or.kr/article/JAKO202429872018607.page?lang=ko">대규모 언어모델(LLM)을 활용한 건축민원 대응 효율화 방안 연구</a></td><td>국토부 건축민원 SPARC 엔진, 일반 질의 80% 이상 정확도</td></tr>
+<tr><td>규제 공공의견 분류</td><td><a href="https://arxiv.org/abs/2605.29025">When Models Disagree</a>(2026)</td><td>모델 간 불일치 자체를 평가 대상으로</td></tr>
+</tbody>
+</table>
+<p><strong>표준 절차</strong></p>
+<pre><code>① 코드북 작성 (정의·예시·경계사례)
+② 골드셋 구축 (연구자 2인 독립 코딩 100~300건, κ 확인)
+③ LLM 코딩 (코드북을 프롬프트로, JSON 출력, temperature 0)
+④ 골드셋 대비 정확도·F1·κ 측정 → 프롬프트 수정
+⑤ 전수 코딩 + 불확실 사례(모델 간 불일치) 사람 재검토
+⑥ 모델명·버전·프롬프트·날짜 기록
+</code></pre>
+<ul>
+<li>용어: <a class="term" href="#g-kappa">κ(카파)</a>, <a class="term" href="#g-temp">temperature</a></li>
+<li>실무 팁: 두 모델(예: Claude·Gemini) 동시 코딩 → 일치 건은 자동 채택, 불일치 건만 사람 검토 — Gunes &amp; Florczak의 교차 모델 방식과 같은 원리</li>
+</ul>
+
+<h3 id="s3-2">3-2. BERT 증류: 대량·저비용·재현</h3>
+<ul>
+<li>문제: 수십만 건 LLM 코딩은 비용·시간 부담, 모델 업데이트 시 결과 변동</li>
+<li>해법: <strong>LLM이 라벨링 → 소형 <a class="term" href="#g-bert">BERT</a> 계열 모델 학습(<a class="term" href="#g-distill">증류</a>)</strong> → 이후 무제한 무료 분류</li>
+</ul>
+<pre><code>LLM 라벨 5천~2만 건 → KLUE-RoBERTa 등 파인튜닝 → 골드셋 검증 → 대량 분류
+</code></pre>
+<p><strong>근거 연구</strong></p>
+<ul>
+<li>Pangakis &amp; Wolken(2024), <a href="https://arxiv.org/abs/2406.17633">Knowledge Distillation in Automated Annotation: Supervised Text Classification with LLM-Generated Training Labels</a>(NLP+CSS 2024): 고영향 학술지 사회과학 분류 과제 14개 재현, GPT-4 라벨로 <a class="term" href="#g-finetune">파인튜닝</a>한 BERT 계열 분류기가 사람 라벨 학습 모델과 대등</li>
+<li>Farr et al.(2024), <a href="https://arxiv.org/abs/2408.08217">RED-CT: A Systems Design Methodology for Using LLM-labeled Data to Train and Deploy Edge Classifiers for Computational Social Science</a>: LLM 라벨 + 최소 사람 라벨로 BERT 분류기를 내부·엣지 환경에 배치 — 외부 API 노출 데이터 축소</li>
+<li>Lu &amp; Smith(2025), <a href="https://arxiv.org/abs/2504.15432">Feeding LLM Annotations to BERT Classifiers at Your Own Risk</a>: 정당 매니페스토 입장 등 과제에서 LLM 라벨 학습의 오류 증폭·예측 불안정 경고 → 골드셋 검증 생략 불가</li>
+<li>국내: 이종찬·황준하·정영섭(2026), <a href="https://journal.kci.go.kr/jksci/archive/articlePdf?artiId=ART003397359">Pretrained Model for Civil Complaint Classification</a>(한국컴퓨터정보학회논문지 31(10)) — 1억 3,790만 토큰 민원·행정 말뭉치로 A.X-Encoder <a class="term" href="#g-dapt">도메인 적응 사전학습</a>, 17개 분야 116,042건 분류 정확도 73.4%</li>
+</ul>
+<ul>
+<li>한국어 기반 모델: <a href="https://huggingface.co/klue/roberta-base">klue/roberta-base</a>(약 1.1억 파라미터) 등</li>
+<li>근거: CAP 분류 연구(<a href="https://arxiv.org/abs/2509.10199">Beyond Token Limits</a>)에서 입력을 512토큰으로 줄여도 성능 차이가 크지 않음 → 문서 분류에 BERT 길이 제한 큰 문제 아님</li>
+<li>장점: 내부 서버 구동(비공개 자료에 유리), 결과 고정(재현성), 처리 속도</li>
+<li>유의: 라이선스 확인 — <a href="https://github.com/KLUE-benchmark/KLUE">KLUE 저장소</a>는 CC BY-SA 4.0, Hugging Face 모델 카드는 라이선스 미명시로 상업·재배포 문의 사례 존재 (<a href="https://huggingface.co/klue/roberta-small/discussions/3">토론 스레드</a>)</li>
+</ul>
+
+<h3 id="s3-3">3-3. DB·RAG: 근거를 달고 답하는 검색</h3>
+<ul>
+<li><a class="term" href="#g-rag">RAG(검색증강생성)</a>: 질문 → 내부 문서 DB에서 관련 부분 검색 → 그 근거만으로 답변</li>
+<li>정부 가이드의 'RAG 우선 전략'과 같은 방향: 최신 내부 문서 기반, <a class="term" href="#g-halluc">환각</a> 방지</li>
+</ul>
+<p><strong>정책연구 RAG 구성</strong></p>
+<pre><code>문서(보고서·조례·회의록·사업계획서)
+ → 파싱(HWP·PDF → 텍스트, 표 보존)
+ → 청크 분할 + 메타데이터(기관·연도·문서유형)
+ → 임베딩(의미검색) + BM25(키워드검색) 하이브리드
+ → 검색 결과 + 원문 인용 → LLM 답변
+ → 인용문이 원문에 실제 존재하는지 자동 대조
+</code></pre>
+<ul><li>용어: <a class="term" href="#g-chunk">청크</a>, <a class="term" href="#g-embed">임베딩</a>, <a class="term" href="#g-bm25">BM25</a>, <a class="term" href="#g-hybrid">하이브리드 검색</a>, <a class="term" href="#g-vdb">벡터DB</a></li></ul>
+<p><strong>근거 연구·사례</strong></p>
+<ul>
+<li>Mathur et al.(2026), <a href="https://arxiv.org/abs/2603.24580">Retrieval Improvements Do Not Guarantee Better Answers: A Study of RAG for AI Policy QA</a>: AI 정책문서 947건(AGORA) RAG — 검색 성능 개선이 답변 품질로 이어지지 않고, 관련 문서가 없을 때 더 자신 있는 환각 발생</li>
+<li>Juhasz et al.(2024), <a href="https://arxiv.org/abs/2410.23902">Responsible Retrieval Augmented Generation for Climate Decision Making from Documents</a>(Climate Policy Radar): 기후 법·정책 문서 RAG의 검색·생성 품질 평가 틀, 생성 주장과 원문 연결 UX</li>
+<li>Maharjan &amp; Yadav(2026), <a href="https://arxiv.org/abs/2601.15457">Chunking, Retrieval, and Re-ranking: An Empirical Evaluation of RAG Architectures for Policy Document Question Answering</a>: CDC 정책문서, 재순위화(cross-encoder) 2단계 검색의 효과와 문서 분할 병목</li>
+<li>국내: 법제처 생성형 AI 법령검색(법령 관계·판례·해석례 구조화 + RAG), 범정부 AI 공통기반 RAG API 7종 (<a href="#s0">0장</a> 참조)</li>
+<li>경기도 재정사업 자체평가서 699건 구조화·임베딩 → 내용 유사 사업 후보를 근거 문장과 함께 제시, 부서가 '유사사업 없음'으로 기재한 사업에서 실·국 간 중복 후보 85쌍 탐지(연구 진행 중, 미공개)</li>
+</ul>
+<ul>
+<li>활용 예
+<ul>
+<li>연구원 30년치 보고서 DB: "경기도 청년 주거정책 관련 기존 권고안과 이행 여부"</li>
+<li>조례 DB: "탄소중립 조례 중 주민참여 조항을 둔 시군"</li>
+<li>회의록 DB: "도의회에서 ○○사업 예산 삭감 논의가 나온 회의와 발언"</li>
+</ul></li>
+<li>설계 포인트: 자유 텍스트만 임베딩하면 행정 상투어("지원", "활성화") 때문에 모두 비슷해짐 → 대상·수단 등 <strong>통제어휘(코드북)로 구조화</strong> 병행</li>
+</ul>
+
+<h3 id="s3-4">3-4. 통계분석: 자연어 → 분석 코드</h3>
+<ul>
+<li>LLM 역할: 연구질문을 실행 가능한 분석 코드(Python·R)로 번역, 결과 해석 초안</li>
+<li>실행은 코드가 결정적으로 수행 — 결과 재현 가능</li>
+<li>의료 분야 사례: <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC12919150/">LATCH: An LLM-assisted framework for verifiable clinical hypothesis testing from EHR</a>(2026) — LLM은 가설을 분석 단계로 번역만, 환자 단위 자료는 LLM에 노출하지 않고 <strong>스키마(변수명)만 제공</strong> → 개인정보 보호와 감사 가능성 동시 확보</li>
+<li>사회과학 재현성 근거: <a href="https://arxiv.org/abs/2606.11447">AI Coding Agents Can Reproduce Social Science Findings</a>(2026) — 원자료·코드가 있을 때 코딩 에이전트가 사회과학 논문 54편의 결과 상당수를 재현</li>
+<li>정책연구 응용: 마이크로데이터·행정자료는 변수 목록만 AI에 주고 코드 작성 → 분석은 내부 PC에서 실행</li>
+<li>예시 질문
+<ul>
+<li>"KOSIS 시군별 청년인구와 지방재정365 청년 예산을 결합해 2018~2025 <a class="term" href="#g-fe">패널 고정효과</a> 모형 코드"</li>
+<li>"조례 제정 시점 기준 <a class="term" href="#g-did">이중차분(DID)</a> 설계와 <a class="term" href="#g-pt">평행추세</a> 검정 코드"</li>
+</ul></li>
+</ul>
+
+<!-- ===================== 4 ===================== -->
+<h2 id="s4">4. 자동화: 매일 갱신되는 정책 모니터링 웹페이지</h2>
+<h3 id="s4-1">4-1. 구조</h3>
+<pre class="mermaid">flowchart LR
+  T[예약 실행&lt;br/&gt;매일 07:00] --&gt; S[수집&lt;br/&gt;RSS·API 증분]
+  S --&gt; F[필터·분류&lt;br/&gt;LLM/BERT]
+  F --&gt; M[요약·묶음&lt;br/&gt;이슈별 클러스터]
+  M --&gt; H[HTML 생성&lt;br/&gt;정적 페이지]
+  H --&gt; P[게시&lt;br/&gt;내부 서버·GitHub Pages]
+  P --&gt; N[알림&lt;br/&gt;메일·메신저]
+</pre>
+<ul>
+<li>예약 실행: 리눅스 <a class="term" href="#g-cron">cron</a>, <a class="term" href="#g-gha">GitHub Actions</a>, AI 도구의 예약 작업 기능</li>
+<li><a class="term" href="#g-static">정적 HTML</a>: 서버·DB 없이 파일 하나로 게시 — 유지보수 최소</li>
+</ul>
+
+<h3 id="s4-2">4-2. 경기연구원 맞춤 예시</h3>
+<table>
+<thead><tr><th>페이지</th><th>소스</th><th>산출</th></tr></thead>
+<tbody>
+<tr><td><strong>경기도 정책 데일리</strong></td><td>부처별 RSS(보도자료·입법·행정예고), 경기도 보도자료, 도의회 회의록</td><td>분야별 오늘의 정책 동향 + 원문 링크</td></tr>
+<tr><td><strong>입법·조례 레이더</strong></td><td><a href="https://open.assembly.go.kr">열린국회정보</a>, <a href="https://open.law.go.kr">국가법령정보</a>(자치법규)</td><td>경기도 영향 법안 신규 발의, 타 시도 조례 제·개정</td></tr>
+<tr><td><strong>재정 대시보드</strong></td><td><a href="https://www.lofin365.go.kr">지방재정365</a>, <a href="https://www.openfiscaldata.go.kr">열린재정</a>, <a href="https://kosis.kr">KOSIS</a></td><td>31개 시군 재정지표 비교, 분기 갱신</td></tr>
+<tr><td><strong>해외 정책 스캐너</strong></td><td><a href="https://www.federalregister.gov">Federal Register</a>, OECD, 해외 지방정부 RSS</td><td>주제별 해외 동향 주간 요약(번역 포함)</td></tr>
+<tr><td><strong>연구 아카이브 검색</strong></td><td>연구원 보고서 + <a href="https://www.nkis.re.kr">NKIS</a></td><td>내부 RAG 검색 페이지</td></tr>
+</tbody>
+</table>
+
+<h3 id="s4-3">4-3. 국내외 운영 사례</h3>
+<table>
+<thead><tr><th>사례</th><th>소스·방식</th><th>참고할 점</th></tr></thead>
+<tbody>
+<tr><td><a href="https://oecd.ai/en/dashboards">OECD.AI Policy Navigator</a></td><td>80여 개 관할의 AI 정책 이니셔티브, 각국 연락관·전문가가 상시 갱신</td><td>기관 단위 '살아있는 정책 DB'의 표준형, 항목별 갱신 이력 공개</td></tr>
+<tr><td><a href="https://github.com/hayleyamay/ai-policy-tracker">AI Policy Tracker</a></td><td>GOV.UK API, 미 의회 API, EU AI Act 페이지 → LLM 요약 → GitHub Actions 매일 실행 → GitHub Pages</td><td>개인이 만든 최소 구성 일일 모니터링, 출처별 수집 방식 혼합</td></tr>
+<tr><td><a href="https://github.com/benschwartz42/policy-signal">Policy Signal</a></td><td>규제·소송·언론 소스 → 중복 제거 → LLM 관련성 판정·요약 → 주제별 일일 메일 + 정적 웹</td><td>'공식 출처 우선' 설계, 처리 기록을 저장소에 커밋해 이력 보존</td></tr>
+<tr><td><a href="https://github.com/floorvote/floorvote">FloorVote</a></td><td>주·연방 법안 추적, AI 요약·태깅, 표결, 청문회 일정, 팀 알림</td><td>월 5~7달러 인프라의 자체 호스팅 팀 도구, Bipartisan Policy Center 지원</td></tr>
+<tr><td><a href="https://github.com/OnlineIgniter/legislative-tracker">Legislative Tracker</a></td><td>LegiScan·Open States API → LLM 구조화 요약(내용·영향 대상·현황·중요성) → 팀별 배포</td><td>요약 서식을 고정한 '브리프' 설계</td></tr>
+<tr><td><a href="https://glama.ai/mcp/servers/yy0dqpyfqu">korean-law-mcp 조례 정비 레이더</a></td><td>법제처 Open API 기반 상위법 개정에 따른 조례 정비 대상 탐지</td><td>국내 '조례 레이더'의 직접 참고 구현</td></tr>
+<tr><td><a href="https://www.ddaily.co.kr/page/view/2026061615460746270">국무조정실 지능형 AI 규제정보 분석시스템</a></td><td>범정부 AI 공통기반 활용 규제정보 분석(2026 사업)</td><td>공공 규제 모니터링의 제도권 사례</td></tr>
+</tbody>
+</table>
+<ul>
+<li>운영 공통 교훈: 첫 버전 구축보다 안정화가 과제 — 소스 형식 변경, 중복 제거, 요약 품질, 수집 실패 알림</li>
+</ul>
+
+<!-- ===================== 5 ===================== -->
+<h2 id="s5">5. 바이브코딩: 위 방법을 AI로 손쉽게</h2>
+<h3 id="s5-1">5-1. 두 갈래: 대화형과 설계형</h3>
+<div class="mermaid">
+flowchart LR
+  V[바이브코딩] --&gt; C[대화형&lt;br/&gt;결과를 받음]
+  V --&gt; D[설계형&lt;br/&gt;과정을 파일로 남김]
+  D --&gt; S[script 중심&lt;br/&gt;실행 파일 py·js]
+  D --&gt; K[skill 중심&lt;br/&gt;CLAUDE.md 지침 + 스킬 + 서브에이전트]
+</div>
+<ul>
+<li>갈림길: <strong>결과만 받느냐</strong>(대화형), <strong>결과를 만드는 과정을 설계하고 파일로 남기느냐</strong>(설계형)</li>
+<li>설계형 안의 구분: 남기는 단위가 <strong>실행 파일</strong>이면 script 중심, 그 실행 파일을 언제·어떤 기준으로 돌리고 무엇을 확인할지까지 담은 <strong>절차</strong>면 skill 중심 — 최상위 지침(CLAUDE.md) 아래에 절차(스킬)·검증(서브에이전트)을 둔 구조</li>
+<li>숙련 순서이자 용도 구분 — 한 연구 안에서도 탐색은 대화형, 수집·분석은 script 중심, 반복 업무는 skill 중심</li>
+<li>용어: <a class="term" href="#g-vibe">바이브코딩</a>, <a class="term" href="#g-vibe-design">설계형 바이브코딩</a>, <a class="term" href="#g-agent">에이전트형 코딩 도구</a>, <a class="term" href="#g-skill">스킬</a>, <a class="term" href="#g-subagent">서브에이전트</a></li>
+</ul>
+<table>
+<thead><tr><th>구분</th><th>대화형</th><th>설계형 · script 중심</th><th>설계형 · skill 중심</th></tr></thead>
+<tbody>
+<tr><td>핵심 동작</td><td>묻고 받기</td><td>실행 파일을 쓰게 하고 돌리기</td><td>작업 절차를 스킬로 저장·호출</td></tr>
+<tr><td>도구</td><td>Claude·ChatGPT·Gemini 채팅</td><td>VS Code + Claude Code 등 에이전트형 코딩 도구</td><td>같은 도구 + CLAUDE.md·스킬·서브에이전트·MCP</td></tr>
+<tr><td>남는 것</td><td>대화 기록, 답변·표</td><td>.py·.js, 데이터, 결과 HTML, README</td><td>CLAUDE.md, SKILL.md, 서브에이전트 파일, 공유 저장소</td></tr>
+<tr><td>재현성</td><td>낮음</td><td>높음 — 재실행으로 같은 결과</td><td>매우 높음 — 누가 해도 같은 절차</td></tr>
+<tr><td>사람의 역할</td><td>질문자</td><td>작업 설계자·검수자</td><td>절차 설계자·표준 관리자</td></tr>
+<tr><td>적합한 일</td><td>탐색, 초안, 개념 학습</td><td>개인 연구의 수집·분석·시각화</td><td>팀·연구소의 반복 업무, 품질 표준화</td></tr>
+<tr><td>초보자 실습</td><td><a href="#lab-a">실습 A</a></td><td><a href="#lab-b">실습 B</a></td><td><a href="#lab-c">실습 C</a></td></tr>
+</tbody>
+</table>
+
+<h3 id="s5-2">5-2. 대화형 — 오늘부터</h3>
+<ul>
+<li>도구: Claude, ChatGPT, Gemini 채팅</li>
+<li>할 수 있는 일: 자료 요약, 표 해석, 코드북 초안, API 사용법 질문, 짧은 코드 받기</li>
+<li>프롬프트 예</li>
+</ul>
+<pre><code>경기도 31개 시군의 청년 기본 조례를 비교 연구하려 한다.
+국가법령정보 공동활용 API로 자치법규를 수집하는 절차를
+① API 신청 ② 검색 파라미터 ③ 본문 조회 ④ 저장 형식 순으로 설명하고,
+조문 비교용 코드북(지원대상·지원수단·전담조직·위원회·예산조항) 초안을 표로.
+</code></pre>
+<ul><li>한계: 코드 실행·파일 처리는 사람이 직접 / 대량 작업 불가 / 과정이 대화 기록으로만 남음</li></ul>
+<p class="note">▶ 초보자 실습: <a href="#lab-a">실습 A — 입법·행정예고 5건 분류표</a></p>
+
+<h3 id="s5-3">5-3. 설계형 ① script 중심 — AI가 실행 파일을 쓰고 돌림</h3>
+<ul>
+<li>도구: <a href="https://code.claude.com/docs/en/vs-code">Claude Code</a>(VS Code 확장, 설치는 <a href="#appA">부록 A</a>), Codex, Gemini CLI 등 에이전트형 코딩 도구</li>
+<li>할 수 있는 일: 수집 스크립트 작성·실행, 데이터 정제, 분석, 그래프, HTML 페이지 생성까지 한 흐름</li>
+<li>작업 지시 예</li>
+</ul>
+<pre><code>1) KOSIS API로 경기도 31개 시군 2015~2025 청년(19~34세) 인구를 수집해 CSV 저장
+2) 지방재정365에서 같은 기간 시군별 청년 분야 세출 예산 수집
+3) 두 자료를 시군·연도 기준으로 결합
+4) 1인당 청년예산과 청년인구 증감률의 관계를 산점도와 패널 회귀로 분석
+5) 결과를 한 장짜리 HTML 보고서로. 인증키는 .env 파일에서 읽을 것
+</code></pre>
+<p><strong>실행 파일로 남기게 하는 프롬프트 (사후 재현성용)</strong></p>
+<pre><code>위 작업을 대화창 안에서 바로 계산하지 말고, 단계별 실행 파일로 만든 뒤 실행할 것.
+- 01_collect.py   : API 수집, 원본 응답(JSON)을 data/raw/에 날짜별 저장
+- 02_clean.py     : 정제·결합, 결과를 data/processed/에 CSV·Parquet로 저장
+- 03_analyze.py   : 회귀·그래프, 결과표와 그림을 output/에 저장
+- 04_report.js    : output/ 결과로 HTML 보고서 생성 (또는 04_report.py)
+- run_all.sh      : 01~04 순서 실행, 어느 단계에서 실패해도 멈추고 원인 출력
+- requirements.txt(패키지 버전 고정), config.yaml(기간·지역·엔드포인트), .env(키, 공유 금지)
+- logs/에 실행 일시·수집 건수·결측·중복 건수 기록
+- README.md에 실행 순서, 입력·출력 파일, 재실행 방법 기술
+- 실행 후 수집 건수와 표본 5건을 원문과 대조한 결과 보고
+</code></pre>
+<ul>
+<li><strong>왜 실행 파일인가</strong>: 대화 중 계산은 과정이 남지 않음 → 같은 결과를 다시 만들거나, 심사·검증 요청에 답하거나, 기간을 바꿔 재분석할 수 없음</li>
+<li>실행 파일 + 원자료 + 버전 고정 = 사후 재현성의 최소 조건 — 공유된 R 스크립트의 약 74%가 재실행에 실패했다는 보고(Trisovic et al., <a href="https://arxiv.org/abs/2602.08561">Shah et al. 2026</a>에서 재인용)</li>
+<li>스크립트가 있으면 AI 에이전트가 재현·수정도 가능 (<a href="https://arxiv.org/abs/2606.11447">AI Coding Agents Can Reproduce Social Science Findings</a>)</li>
+<li>연구자의 역할 변화: 코드 작성자 → <strong>작업 설계자·검수자</strong></li>
+<li>검수 습관: 수집 건수 확인, 표본 5건 원문 대조, 결측·중복 점검을 AI에게 함께 지시</li>
+</ul>
+<p class="note">▶ 초보자 실습: <a href="#lab-b">실습 B — RSS 수집 → 분류 → 웹페이지</a></p>
+
+<h3 id="s5-4">5-4. 설계형 ② skill 중심 — 지침·절차를 패키지로, 연구소 자산화</h3>
+<p><strong>제어 계층: CLAUDE.md가 최상위</strong></p>
+<div class="tiers">
+<div class="tier t1"><span class="tl">① 최상위 · 항상</span><b><a class="term" href="#g-claudemd">CLAUDE.md</a> (프로젝트 메모리)</b><span class="td">연구 목적·원칙·용어·폴더 규칙·금지사항 — 매 세션 시작 시 자동 로드, 모든 대화·스킬·서브에이전트에 공통 적용</span></div>
+<div class="tarr">▼ 원칙을 물려받음</div>
+<div class="tier t2"><span class="tl">② 업무별 · 호출 시</span><b>스킬 <code>/daily-brief</code> · <code>/policy-coding</code> &nbsp;|&nbsp; 서브에이전트 <code>fact-checker</code></b><span class="td">특정 업무의 절차와 검증 역할 — 필요할 때만 불러 씀</span></div>
+<div class="tarr">▼ 실행</div>
+<div class="tier t3"><span class="tl">③ 실행</span><b>script · 데이터 · MCP</b><span class="td">collect.py, codebook.md, gold.csv, 국회·법령 API — 실제 수집·계산</span></div>
+<div class="tguard"><strong>잠금 장치는 별도</strong> — CLAUDE.md는 '지침'이지 강제 설정이 아님. 반드시 막아야 할 동작은 권한 설정(<code>permissions.deny</code>)·훅(hook)으로 차단</div>
+</div>
+<ul>
+<li><strong>왜 최상위인가</strong>: 스킬은 호출될 때만, CLAUDE.md는 <strong>항상</strong> 맥락에 들어감 → 출처 표기·추측 금지·자료 등급 같은 원칙은 스킬마다 반복하지 않고 한 곳에서 정의</li>
+<li><strong>한 곳만 고치면 전체가 바뀜</strong>: 경기도 관련성 기준을 CLAUDE.md에서 바꾸면 스킬 수정 없이 선별 결과 변화 (<a href="#lab-c">실습 C-4</a>)</li>
+<li>서브에이전트도 CLAUDE.md를 함께 읽음 — 검증자도 같은 원칙으로 판정 (내장 Explore·Plan 에이전트는 예외)</li>
+<li>만들기·관리: <code>/init</code>으로 자동 초안 → 사람이 원칙 보완 / <code>/memory</code>로 열람·편집 / 파일당 200줄 이하 권장, 길면 <code>@경로</code>로 문서 분리</li>
+</ul>
+<table>
+<thead><tr><th>범위</th><th>파일 위치</th><th>적용 대상</th><th>정책연구 예</th></tr></thead>
+<tbody>
+<tr><td>조직</td><td>관리형(managed) CLAUDE.md — 정보화 부서가 배포</td><td>기관 전 직원</td><td>자료 등급(<a href="#s6-1">6-1</a>), 개인정보 처리 금지, 'AI 활용 방법' 기재</td></tr>
+<tr><td>개인</td><td><code>~/.claude/CLAUDE.md</code></td><td>나의 모든 프로젝트</td><td>문체, 보고서 서식 선호</td></tr>
+<tr><td>프로젝트</td><td><code>./CLAUDE.md</code> — 저장소로 공유</td><td>과제 참여자 전원</td><td>연구 목적, 변수 정의, 관련성 기준</td></tr>
+<tr><td>개인·프로젝트</td><td><code>./CLAUDE.local.md</code> — <code>.gitignore</code> 등록</td><td>나만, 이 과제만</td><td>테스트 경로, 임시 메모</td></tr>
+</tbody>
+</table>
+<ul><li>여러 파일은 서로 덮어쓰지 않고 이어 붙여 읽음 — 상충하지 않게 범위별 역할 분리</li></ul>
+<p><strong>구성요소 한눈에</strong></p>
+<table>
+<thead><tr><th>구성요소</th><th>역할</th><th>정책연구 예</th></tr></thead>
+<tbody>
+<tr><td><strong><a class="term" href="#g-claudemd">CLAUDE.md</a></strong> (프로젝트 메모리)</td><td><strong>최상위 지침</strong> — 매 세션 자동 로드, 모든 작업에 적용</td><td>연구 목적, 원칙, 변수 정의, 폴더 구조, 금지사항</td></tr>
+<tr><td><strong><a class="term" href="#g-skill">스킬(Skill)</a></strong></td><td>재사용 가능한 지식·작업 절차 묶음</td><td><code>/조례수집</code>, <code>/LLM코딩검증</code>, <code>/보고서서식</code></td></tr>
+<tr><td><strong><a class="term" href="#g-mcp">MCP</a></strong></td><td>외부 API·서비스 연결</td><td>국회·법령·KOSIS MCP (<a href="#s2-4">2-4</a>)</td></tr>
+<tr><td><strong><a class="term" href="#g-subagent">서브에이전트</a></strong></td><td>별도 맥락에서 독립 작업 후 요약만 반환</td><td>수집 담당·검증 담당·문헌검토 담당 분리</td></tr>
+</tbody>
+</table>
+<p class="src">구성요소 설명: <a href="https://code.claude.com/docs/en/memory">Claude Code, How Claude remembers your project</a> · <a href="https://code.claude.com/docs/en/features-overview">Extend Claude Code</a> · <a href="https://code.claude.com/docs/en/skills">Skills</a> · <a href="https://code.claude.com/docs/en/sub-agents">Subagents</a></p>
+<ul>
+<li><strong>역할 분리</strong>: CLAUDE.md = 무엇을 지킬지(원칙), 스킬 = 어떻게 할지(절차), script = 실제 실행</li>
+<li><strong>script와의 관계</strong>: 스킬은 script를 대체하지 않고 감쌈 — "어떤 script를 어떤 순서·기준으로 돌리고, 결과를 무엇으로 확인할지"를 담은 상위 설계</li>
+<li>파일 위치: 지침 <code>./CLAUDE.md</code>, 스킬 <code>.claude/skills/이름/SKILL.md</code>, 서브에이전트 <code>.claude/agents/이름.md</code> — 저장소에 함께 올리면 동료도 같은 원칙·같은 <code>/이름</code> 명령 사용</li>
+<li>호출: 입력창에 <code>/이름</code>, 또는 설명(description)이 작업과 맞으면 Claude가 자동으로 불러 씀</li>
+<li>이름 규칙: 실제 파일에서는 영문 소문자·숫자·하이픈 권장 (예: <code>/ordinance-collect</code>)</li>
+</ul>
+<p><strong>스킬 예시: 정책문서 LLM 코딩 절차</strong></p>
+<pre><code class="language-markdown">---
+name: policy-coding
+description: 정책문서를 코드북으로 LLM 코딩하고 골드셋으로 검증할 때 사용
+---
+1. codebook.md를 읽고 범주 정의·예시를 프롬프트에 포함
+2. gold.csv 100건으로 먼저 코딩 → 정확도·F1·κ 산출
+3. κ 0.7 미만이면 오분류 사례 10건 제시 후 코드북 수정 제안, 중단
+4. 기준 충족 시 전수 코딩, 두 모델 불일치 건은 review.csv로 분리
+5. 모델명·버전·프롬프트 해시·날짜를 log.json에 기록
+</code></pre>
+<p><strong>서브에이전트 활용 시나리오: "경기도 기후정책 비교연구"</strong></p>
+<pre><code>메인 에이전트 (연구 설계·통합)
+ ├─ 수집 에이전트 A: 국내 17개 시도 기후 조례·계획 수집
+ ├─ 수집 에이전트 B: 해외 지방정부(OECD·미 연방관보) 기후정책 수집
+ ├─ 코딩 에이전트: policy-coding 스킬로 정책수단 분류
+ └─ 검증 에이전트: 표본 원문 대조, 인용 정확성 점검 (작성 과정을 보지 않은 독립 검토)
+</code></pre>
+<ul>
+<li>효과: 맥락 분리로 품질 유지, 병렬 처리로 시간 단축, 검증의 독립성 확보</li>
+<li>연구소 차원: 스킬·MCP 설정을 공유 저장소로 → 신규 연구원도 같은 절차·품질</li>
+</ul>
+<p class="note">▶ 초보자 실습: <a href="#lab-c">실습 C — CLAUDE.md 지침 · /daily-brief 스킬 · 검증 서브에이전트</a></p>
+
+<h3 id="s5-5">5-5. 초보자 실습: '오늘의 입법·행정예고 브리핑'을 세 방식으로</h3>
+<blockquote><p>같은 주제를 대화형 → script 중심 → skill 중심 순서로 실행. 결과는 비슷해도 <strong>남는 것</strong>이 다름을 체감</p></blockquote>
+
+<h4 id="lab-0">실습 준비</h4>
+<table>
+<thead><tr><th>항목</th><th>내용</th><th>필요 실습</th></tr></thead>
+<tbody>
+<tr><td>Claude 계정</td><td>A는 무료 채팅도 가능 / B·C는 Pro 이상 유료 계정(무료 플랜은 Claude Code 미포함)</td><td>A·B·C</td></tr>
+<tr><td>VS Code + Claude Code 확장</td><td><a href="#appA">부록 A</a></td><td>B·C</td></tr>
+<tr><td>Python 3</td><td><a href="#appA-6">부록 A-6</a> — 표준 라이브러리만 사용, 추가 설치 없음</td><td>B·C</td></tr>
+<tr><td>GitHub 계정·Git</td><td><a href="#appB">부록 B</a></td><td>배포</td></tr>
+<tr><td>자료 출처</td><td>고용노동부 입법·행정예고 RSS <code>https://www.moel.go.kr/rss/lawinfo.do</code> — 인증키 불필요<br>대안: 문화체육관광부 보도자료 RSS <code>http://www.mcst.go.kr/common/rss/press.jsp</code>, 기타 부처 RSS(<a href="#s2-3">2-3</a>)</td><td>전체</td></tr>
+</tbody>
+</table>
+<ul>
+<li>소요 시간(시연 기준): A 5분 · B 10분 · C 12분 · 배포 5분</li>
+<li>왜 입법·행정예고인가: 정책 변화의 가장 이른 공식 신호, 키 없이 RSS로 바로 수집, 경기도 영향 판단 연습에 적합</li>
+</ul>
+<p class="note">강사 메모: 실습 전날 RSS 주소를 브라우저로 열어 XML 목록이 보이는지 확인. 정책브리핑(korea.kr) 통합 RSS는 2026.7.1 중단(<a href="https://m.korea.kr/etc/noticeView.do?newsId=132038885">공지</a>). 기관 PC는 설치 권한·망분리 여부 확인, 막히면 개인 노트북 사용</p>
+
+<h4 id="lab-a">실습 A — 대화형 (Claude 채팅, 5분)</h4>
+<div class="lab">
+<ol>
+<li>브라우저에서 고용노동부 누리집 › 입법·행정예고 목록(또는 위 RSS 주소) 열기 → 최근 5건의 제목·날짜 복사</li>
+<li>Claude 채팅창에 붙여넣고 아래 프롬프트 입력</li>
+</ol>
+<pre><code>아래는 고용노동부 입법·행정예고 최근 5건이다.
+[여기에 붙여넣기]
+
+각 건을 표로 정리해줘.
+- 열: 제목 | 한 줄 요약 | 정책수단(규제·지원·절차·기타) | 주된 영향 대상 | 경기도 관련성(상·중·하)과 이유
+- 제목만으로 알 수 없는 내용은 추측하지 말고 "원문 확인 필요"로 표시
+</code></pre>
+<ol start="3">
+<li>이어서 질문: <code>이 작업을 매일 자동으로 하려면 무엇이 필요해?</code> → 설계형으로 넘어가는 다리</li>
+</ol>
+<ul>
+<li>관찰 포인트: 몇 초 만에 표 완성 / 그러나 내일 다시 하려면 복사부터 반복 / 분류 기준이 대화마다 달라질 수 있음 / 과정은 대화 기록뿐</li>
+</ul>
+</div>
+
+<h4 id="lab-b">실습 B — 설계형 · script 중심 (VS Code + Claude Code, 10분)</h4>
+<div class="lab">
+<ol>
+<li>바탕화면에 빈 폴더 <code>policy-lab</code> 만들기 → VS Code에서 File › Open Folder로 열기</li>
+<li>Claude Code 패널 열기(Spark 아이콘) → 입력창 아래 권한 모드가 <strong>Manual</strong>(수정 전 확인)인지 확인</li>
+<li>아래 프롬프트 입력</li>
+</ol>
+<pre><code>policy-lab 폴더에서 '오늘의 입법·행정예고 브리핑' 웹페이지를 만들려 한다.
+대화창에서 바로 처리하지 말고, 다시 실행할 수 있는 파일로 만들어 실행해줘.
+
+1) collect.py
+   - 고용노동부 입법·행정예고 RSS(https://www.moel.go.kr/rss/lawinfo.do)를 받아
+     제목·링크·날짜를 data/items.csv에 저장
+   - 이미 있는 링크는 건너뛰고 새 글만 추가(증분 수집), 새로 추가된 건수 출력
+2) rules.json
+   - 정책수단 분류 키워드 사전: 규제(의무·금지·기준), 지원(지원·보조·감면),
+     절차(신고·승인·서식), 기타
+3) build_page.py
+   - items.csv와 rules.json으로 분류해 index.html 생성
+   - 맨 위에 갱신 일시와 분류별 건수, 아래에 최신순 표(날짜 · 제목 링크 · 분류)
+4) README.md: 실행 순서와 각 파일 설명
+
+조건
+- 파이썬 표준 라이브러리만 사용(추가 설치 없이)
+- CSV는 엑셀에서 한글이 깨지지 않게 utf-8-sig
+- 파이썬이 없거나 RSS 접속이 안 되면 멈추고 원인과 해결 방법을 알려줄 것
+- 끝나면 수집 건수와 index.html 위치를 보고
+</code></pre>
+<ol start="4">
+<li>Claude가 파일을 만들 때마다 변경 비교(diff) 확인 → Accept</li>
+<li>완료 후 탐색기에서 <code>index.html</code> 더블클릭 → 브라우저로 결과 확인</li>
+<li>변형: <code>rules.json에 '고용·노동시장' 분류를 추가하고 다시 실행해줘</code> → 규칙 파일만 바뀌고 같은 절차로 재생성</li>
+<li>배포: <a href="#appB">부록 B</a>로 GitHub Pages에 올려 링크 공유</li>
+</ol>
+<pre><code>policy-lab/
+├─ collect.py        수집(증분)
+├─ rules.json        분류 규칙 — 사람이 검토·수정하는 곳
+├─ build_page.py     페이지 생성
+├─ data/items.csv    누적 데이터
+├─ index.html        결과 페이지
+└─ README.md         실행 방법
+</code></pre>
+<ul>
+<li>내일 다시 할 때: 터미널(<kbd>Ctrl+`</kbd>)에서 <code>python collect.py</code> → <code>python build_page.py</code> (Mac은 <code>python3</code>)</li>
+<li>관찰 포인트: 분류 기준이 파일(rules.json)로 남아 검토·수정 가능 / 폴더째 전달하면 동료도 같은 결과 / AI 없이도 재실행 가능</li>
+</ul>
+</div>
+
+<h4 id="lab-c">실습 C — 설계형 · skill 중심 (같은 폴더, 12분)</h4>
+<div class="lab">
+<p><strong>C-1. 최상위 지침 CLAUDE.md 만들기</strong></p>
+<ol>
+<li>실습 B 폴더 그대로, Claude Code에 아래 프롬프트 입력 (<code>/init</code>으로 초안을 만든 뒤 보완해도 됨)</li>
+</ol>
+<pre><code>이 프로젝트의 CLAUDE.md를 만들어줘. 모든 작업에 항상 적용될 최상위 지침이다.
+- 목적: 부처 입법·행정예고를 매일 수집해 경기도 관점으로 선별·요약
+- 원칙: 요약·날짜·수치는 원문에 있는 것만, 모든 요약에 출처 링크,
+        제목만으로 알 수 없으면 "원문 확인 필요"로 표시하고 추측 금지
+- 경기도 관련성 기준
+    상: 경기도·시군 사무이거나 도내 특정 산업·지역에 직접 영향
+    중: 전국 공통 적용(사업장·주민 전반)
+    하: 중앙부처 내부 조직·운영 사항
+- 폴더 규칙: data/는 추가만(덮어쓰기 금지), 파이썬 표준 라이브러리만, CSV는 utf-8-sig
+- 금지: .env·API 키·비공개 자료를 커밋하거나 외부로 보내지 말 것
+50줄 이내로 간결하게.
+</code></pre>
+<ol start="2">
+<li><strong>확인 실험</strong>: 패널에서 <strong>새 대화</strong> 열기 → 아무 규칙 없이 <code>data/items.csv에서 가장 최근 글 1건을 요약하고 경기도 관련성을 판정해줘</code> → 출처 링크·"원문 확인 필요"·상중하 기준이 지시 없이 적용되는지 확인 (새 대화여야 자동 로드 효과가 보임)</li>
+</ol>
+
+<p><strong>C-2. 절차를 스킬로 저장</strong></p>
+<pre><code>실습 B의 collect.py·build_page.py를 쓰는 작업 절차를 이 프로젝트의 스킬 'daily-brief'로 저장해줘.
+위치: .claude/skills/daily-brief/SKILL.md
+요약 원칙과 경기도 관련성 기준은 CLAUDE.md를 따르게 하고, 스킬에는 절차만 담을 것.
+
+/daily-brief 를 실행하면
+1) collect.py 실행, 새 글 수 확인
+2) data/items.csv 최근 10건 가운데 경기도 관련성 상위 3건을 골라 원문을 열어 3줄 요약 → brief.md
+3) build_page.py 실행 — brief.md 요약을 페이지 맨 위에 '오늘의 3건'으로 표시
+4) 수집 건수, 새 글 수, 요약 3건 제목과 관련성 판정을 보고
+RSS 주소를 인수로 받으면 그 주소로 수집(없으면 고용노동부 입법·행정예고)
+</code></pre>
+<ol start="3">
+<li>생성된 <code>SKILL.md</code> 읽기 — 원칙 없이 절차만 있는지 확인 (원칙은 CLAUDE.md에 한 번만)</li>
+<li>입력창에 <code>/daily-brief</code> → 수집·선별·요약·페이지 갱신이 한 번에 실행</li>
+<li>다른 출처로 실행: <code>/daily-brief http://www.mcst.go.kr/common/rss/press.jsp</code></li>
+</ol>
+
+<p><strong>C-3. 검증 서브에이전트</strong></p>
+<pre><code>요약 검증용 서브에이전트 'fact-checker'를 만들어줘. 위치: .claude/agents/fact-checker.md
+- brief.md의 요약 3건을 각 원문 링크와 대조, 판정 기준은 CLAUDE.md 원칙
+- 건별 판정(일치·불일치·확인불가)과 근거 문장을 표로 보고
+- 파일은 고치지 말고 보고만
+</code></pre>
+<ol start="6">
+<li>실행: <code>fact-checker 서브에이전트로 brief.md 점검해줘</code></li>
+</ol>
+
+<p><strong>C-4. 최상위 제어 체감 — 지침 한 줄로 전체 바꾸기</strong></p>
+<ol start="7">
+<li>CLAUDE.md의 관련성 '상' 기준에 한 줄 추가: <code>산업안전 관련 개정은 '상' — 도내 제조업 사업장 비중이 큼</code></li>
+<li>새 대화에서 <code>/daily-brief</code> 다시 실행 → 스킬·script는 그대로인데 '오늘의 3건' 선별과 판정이 바뀌는지 확인</li>
+</ol>
+
+<pre><code>policy-lab/
+├─ CLAUDE.md                          ① 최상위 지침 — 항상 적용
+├─ .claude/
+│  ├─ skills/daily-brief/SKILL.md     ② 업무 절차 — /daily-brief로 호출
+│  └─ agents/fact-checker.md          ② 검증 담당 — 독립 맥락, CLAUDE.md는 공유
+├─ collect.py · build_page.py · rules.json    ③ 실행(script)
+├─ data/items.csv · brief.md · index.html     결과
+└─ README.md
+</code></pre>
+
+<p><strong>생성 결과 예시</strong> (실제 문구는 다를 수 있음)</p>
+<pre><code class="language-markdown"># ./CLAUDE.md
+# policy-lab — 오늘의 입법·행정예고 브리핑
+## 목적
+부처 입법·행정예고를 매일 수집해 경기도 관점으로 선별·요약
+## 원칙 (모든 작업에 적용)
+- 요약·날짜·수치는 원문에 있는 것만, 모든 요약에 출처 링크
+- 제목만으로 알 수 없으면 "원문 확인 필요" — 추측 금지
+## 경기도 관련성 기준
+- 상: 경기도·시군 사무, 도내 특정 산업·지역 직접 영향
+- 중: 전국 공통 적용(사업장·주민 전반)
+- 하: 중앙부처 내부 조직·운영 사항
+## 폴더 규칙
+- data/는 추가만 · 표준 라이브러리만 · CSV는 utf-8-sig
+## 금지
+- .env·API 키·비공개 자료 커밋·외부 전송 금지
+## 업무 도구
+- 일일 브리핑: /daily-brief · 요약 검증: fact-checker 서브에이전트
+
+# .claude/skills/daily-brief/SKILL.md
+---
+name: daily-brief
+description: 부처 RSS로 오늘의 입법·행정예고(보도자료) 브리핑 페이지를 만들 때 사용. RSS 주소를 인수로 받음
+---
+요약 원칙과 경기도 관련성 기준은 CLAUDE.md를 따른다.
+1. `python collect.py $ARGUMENTS` 실행, 새 글 수 확인
+2. data/items.csv 최근 10건 중 관련성 상위 3건 선정 → 원문 확인 → 3줄 요약을 brief.md에 저장
+3. `python build_page.py` 실행 → index.html 상단에 '오늘의 3건' 표시
+4. 수집 건수·새 글 수·요약 3건 제목·관련성 판정 보고
+
+# .claude/agents/fact-checker.md
+---
+name: fact-checker
+description: brief.md 요약이 원문과 일치하는지 점검할 때 사용
+tools: Read, WebFetch
+---
+brief.md의 요약을 하나씩 원문 링크와 대조한다. 판정 기준은 CLAUDE.md 원칙.
+건별 판정(일치·불일치·확인불가)과 근거 문장을 표로 보고한다.
+파일은 수정하지 않는다.
+</code></pre>
+<ul>
+<li>관찰 포인트
+<ul>
+<li>CLAUDE.md = 무엇을 지킬지(원칙), 스킬 = 어떻게 할지(절차), script = 실제 실행 — 세 층의 역할 분리</li>
+<li>원칙은 한 곳에서만 → 스킬이 늘어도 기준 일관, C-4처럼 지침 한 줄로 전체 조정</li>
+<li>검증은 작성 과정을 보지 않은 서브에이전트 담당 — 자기 채점 방지, 단 같은 CLAUDE.md 기준 공유</li>
+<li>CLAUDE.md와 <code>.claude/</code> 폴더를 저장소에 함께 올리면 팀 전체가 같은 원칙·같은 <code>/daily-brief</code></li>
+</ul></li>
+</ul>
+</div>
+
+<h4 id="lab-sum">세 방식 비교 정리</h4>
+<table>
+<thead><tr><th></th><th>실습 A 대화형</th><th>실습 B script 중심</th><th>실습 C skill 중심</th></tr></thead>
+<tbody>
+<tr><td>결과</td><td>5건 분류표</td><td>누적 데이터 + 웹페이지</td><td>웹페이지 + 검증된 '오늘의 3건'</td></tr>
+<tr><td>내일 다시 하려면</td><td>복사·붙여넣기부터 반복</td><td>명령 두 줄</td><td><code>/daily-brief</code> 한 줄</td></tr>
+<tr><td>남는 것</td><td>대화 기록</td><td>실행 파일·규칙 파일·데이터</td><td>지침(CLAUDE.md)·절차(스킬)·검증자(서브에이전트)</td></tr>
+<tr><td>기준을 바꾸려면</td><td>매번 프롬프트에 다시 설명</td><td>rules.json 수정</td><td>CLAUDE.md 한 줄 수정 → 모든 스킬·서브에이전트에 반영</td></tr>
+<tr><td>공유 방식</td><td>결과 복사</td><td>폴더 전달</td><td>저장소 공유 → 팀 표준</td></tr>
+<tr><td>매일 자동화</td><td>불가</td><td>GitHub Actions 예약 실행(<a href="#appB-6">부록 B-6</a>)</td><td>사람이 확인하며 <code>/daily-brief</code></td></tr>
+</tbody>
+</table>
+
+<!-- ===================== 6 ===================== -->
+<h2 id="s6">6. 기관 AX 전환: 개인 활용에서 연구원 체계로</h2>
+<blockquote>
+<p>개인이 잘 쓰는 것과 기관이 전환하는 것은 다른 문제.<br>
+기관 AX = <strong>자료 등급 정리 + 인프라 선택 + 공용 시스템 + 조직·규정 + 교육</strong>의 동시 설계</p>
+</blockquote>
+
+<h3 id="s6-1">6-1. 전환의 출발점: 자료 등급부터</h3>
+<p><strong><a class="term" href="#g-n2sf">국가망보안체계(N2SF)</a>의 등급 구분</strong></p>
+<ul>
+<li>2006년 이후 공공기관의 물리적 <a class="term" href="#g-netsep">망분리</a> → AI·클라우드 활용의 구조적 제약</li>
+<li>국정원 다중보안체계(MLS) 공개(2024.9) → N2SF 명명·가이드라인 → 실증 → 2026년 KISA 도입 지원사업(과제당 7.5억 원, 총 45억 원, 6개 연합체 선정) (<a href="https://www.ddaily.co.kr/page/view/2026052009284715637">디지털데일리</a>, <a href="https://byline.network/2026/06/17-575/">바이라인네트워크</a>)</li>
+<li>정보 3등급 (<a href="https://www.newsis.com/view/NISX20260313_0003547805">뉴시스</a>)
+<ul>
+<li><strong>C(기밀)</strong>: 수사·안보·국방·국민의 생명·안전 직결 정보 — 종전처럼 엄격 격리</li>
+<li><strong>S(민감)</strong>: 외부 유출 시 국가·개인 피해 우려가 있는 내부 비공개 정보 — 강화된 통제하 처리</li>
+<li><strong>O(공개)</strong>: 보도자료 등 대외 공개 가능 정보 — 생성형 AI·클라우드 활용 가능</li>
+</ul></li>
+<li>현장의 최대 난제: <strong>자료를 어느 등급으로 분류하느냐</strong> — KISA '국가망보안체계 실증 사례집'(2026.4) 발간, 시간에 따라 등급이 바뀌는 정보 문제 제기 (<a href="https://www.ddaily.co.kr/page/view/2026052009284715637">디지털데일리</a>, <a href="https://byline.network/2026/04/13-653/">사례집 해설</a>)</li>
+<li>유인: 2026년부터 공공기관 경영평가에 AI 도입 반영, N2SF 도입 시 국정원 보안성 평가 가점 (<a href="https://www.fnnews.com/news/202603151201197538">파이낸셜뉴스</a>)</li>
+</ul>
+<p><strong>연구원 자료에 적용한 처리 경로 매트릭스(제안)</strong></p>
+<table>
+<thead><tr><th>자료 유형</th><th>예시</th><th>등급</th><th>처리 경로</th></tr></thead>
+<tbody>
+<tr><td>공개자료</td><td>법령·조례, 보도자료, 공개 통계, 발간 보고서, 해외 문헌</td><td>O</td><td>외부 AI 서비스·API 자유 활용</td></tr>
+<tr><td>내부 업무자료</td><td>연구 초안, 회의자료, 내부 검토 의견</td><td>S(저)</td><td>기관 계약 서비스(입력 미학습·로그 관리) 또는 유료 API</td></tr>
+<tr><td>비공개 행정자료</td><td>자체평가서, 사업계획서, 지자체 제공 내부자료</td><td>S</td><td>유료 API + 비식별·최소 전송, 또는 로컬 LLM</td></tr>
+<tr><td>개인정보·마이크로데이터</td><td>설문 원자료, 수혜자 명단, 민원 원문</td><td>S(고)</td><td><strong>로컬 LLM·내부 BERT만</strong>, 외부에는 변수 목록(스키마)만</td></tr>
+<tr><td>제공기관이 외부 전송 금지한 자료</td><td>위탁 자료, 보안 서약 자료</td><td>C에 준함</td><td>로컬 처리만, 또는 AI 미사용</td></tr>
+</tbody>
+</table>
+<ul>
+<li>핵심: 등급표가 먼저 있어야 "써도 되나?" 질문이 매번 반복되지 않음</li>
+<li>연구과제 착수 시 <strong>자료 등급 신고란</strong>을 과제계획서 양식에 추가하는 방식 제안</li>
+<li>N2SF 실증 모델 참고: 허용 목록에 등록한 생성형 AI만 사용, AI-DLP로 입력 내용 검사, C·S 문서 외부 반출 기본 차단 (<a href="https://byline.network/2026/09/8-522/">성평등가족부 구축 사례</a>)</li>
+</ul>
+
+<h3 id="s6-2">6-2. 인프라 선택지 비교</h3>
+<table>
+<thead><tr><th>방식</th><th>내용</th><th>장점</th><th>한계</th><th>적합 자료</th></tr></thead>
+<tbody>
+<tr><td>① 개인 구독</td><td>연구자가 개별 유료 구독</td><td>즉시 시작, 최신 모델</td><td>관리·로그 부재, 비용 분산, 규정 사각지대</td><td>O</td></tr>
+<tr><td>② 기관 엔터프라이즈 계약</td><td>기관 단위 Claude·ChatGPT·Gemini 업무용 플랜</td><td>입력 미학습 계약, 통합 계정·권한·로그, 공용 프로젝트</td><td>연간 계약 비용, 외부 전송은 동일</td><td>O, S(저)</td></tr>
+<tr><td>③ <a class="term" href="#g-gateway">API 게이트웨이</a></td><td>기관 공용 API 키를 중계 서버로 배분</td><td>사용량·비용 추적, 모델 교체 용이, 자동화 파이프라인 연결</td><td>개발·운영 인력 필요</td><td>O, S</td></tr>
+<tr><td>④ 범정부·광역 공통기반</td><td>행안부 <a href="https://www.ddaily.co.kr/page/view/2026061615460746270">범정부 AI 공통기반</a> 등 공공 인프라</td><td>공공 보안 요건 충족</td><td>출연기관 접근 범위·기능 확인 필요</td><td>기관 확인</td></tr>
+<tr><td>⑤ <a class="term" href="#g-local">로컬 LLM</a> 서버</td><td>연구원 내부 GPU 서버에 <a class="term" href="#g-openw">오픈 모델</a> 구동</td><td>자료 외부 유출 없음, 결과 고정, 사용량 무관 비용</td><td>초기 투자, 운영 인력, 프런티어 모델 대비 성능 격차</td><td>S(고), C에 준함</td></tr>
+</tbody>
+</table>
+<p><strong>권장 구조: 하이브리드 — 한 화면, 자료 등급에 따라 두 갈래</strong></p>
+<div class="hyb">
+<div class="hflow">
+<div class="hstep"><b><span class="hnum">1</span>연구원</b>질문 입력, 파일 첨부</div>
+<div class="harr">→</div>
+<div class="hstep"><b><span class="hnum">2</span>공용 포털 (한 화면)</b>사내 채팅·문서 검색, <a class="term" href="#g-sso">SSO</a> 로그인 한 번</div>
+<div class="harr">→</div>
+<div class="hstep"><b><span class="hnum">3</span>자료 등급 확인 (라우터)</b>"이 자료는 O·S·C 중 무엇?" — 업로드 시 선택 또는 폴더·시스템별 자동 표시 → 처리 경로 자동 분기</div>
+</div>
+<div class="hdown">▼ 등급에 따라 처리 위치가 갈림</div>
+<div class="hlanes">
+<div class="hlane hl-ext">
+<span class="hbadge">O · S(저)</span> <span class="hd">공개자료, 일반 내부자료</span>
+<b>외부 프런티어 모델</b>
+<span class="hd">기관 계약·유료 API, 입력 미학습 약관</span>
+<div class="hgood">잘하는 일: 고난도 추론, 장문 작성, 코딩</div>
+<div class="hex">예: 해외 정책사례 보고서 요약, 보도자료 초안, 분석 코드 작성</div>
+</div>
+<div class="hlane hl-loc">
+<span class="hbadge">S(고)</span> <span class="hd">개인정보, 비공개 원자료</span>
+<b>연구원 내부 로컬 LLM 서버</b>
+<span class="hd">오픈 모델 + BERT·임베딩, 자료가 밖으로 나가지 않음</span>
+<div class="hgood">잘하는 일: 분류·추출·마스킹, 내부 문서 RAG 검색</div>
+<div class="hex">예: 설문 원자료 응답 분류, 자체평가서 검색, 민원 원문 유형화</div>
+</div>
+<div class="hlane hl-no">
+<span class="hbadge">C에 준함</span> <span class="hd">제공기관이 외부 전송 금지</span>
+<b>로컬 처리만 또는 AI 미사용</b>
+<span class="hd">보안 서약·위탁 자료</span>
+<div class="hex">예: 외부 반출 금지 조건의 위탁 자료</div>
+</div>
+</div>
+<div class="hbar"><span class="hnum">4</span><strong>공통 관리</strong> — 사용 로그 · 등급 표시 · 비용 대시보드 · 모델 교체(모델이 바뀌어도 화면·구조는 그대로)</div>
+</div>
+<ul>
+<li>사용자는 한 화면, 뒤에서는 자료 등급에 따라 경로 자동 분기 (<a class="term" href="#g-sso">SSO</a>)</li>
+<li>KISDI KINDA의 '특정 모델에 종속되지 않는 플러그인 구조'와 같은 방향 (<a href="https://www.venturesquare.net/1108476/">벤처스퀘어</a>) — 모델은 바뀌어도 구조는 유지</li>
+</ul>
+
+<h3 id="s6-3">6-3. 로컬 LLM 서버 구축</h3>
+<p><strong>무엇에 쓰나 — 로컬이 잘하는 일, 못하는 일</strong></p>
+<ul>
+<li>적합: 민감자료의 분류·추출·요약, 개인정보 마스킹, 임베딩·RAG 검색, BERT 증류 모델 서빙, 대량 반복 작업</li>
+<li>부적합: 고난도 추론·장문 작성·복잡한 코딩 — 여전히 프런티어 모델 우위</li>
+<li>원칙: <strong>민감자료 처리는 로컬, 고난도 사고는 외부</strong> — 이분법이 아니라 역할 분담</li>
+</ul>
+<p><strong>모델 선택</strong></p>
+<ul>
+<li>국산 오픈 모델: 과기정통부 '독자 AI 파운데이션 모델' 사업 결과물 공개 확대
+<ul>
+<li>예: LG 'K-엑사원 2.0'(2026.7.31, 750B, Apache 2.0, 10개 언어) — 성능은 높으나 연구원 단위 로컬 구동에는 과대 (<a href="https://www.lgresearch.ai/news/view?seq=678">LG AI연구원</a>, <a href="https://www.segye.com/newsView/20260731510160">세계일보</a>)</li>
+<li>실무 선택지는 수십억~수백억 파라미터급 경량·중형 모델(국산·다국어 오픈 모델) — <strong>라이선스(상업·공공 이용 범위) 반드시 확인</strong></li>
+</ul></li>
+<li>공공 적용 사례: 비전언어모델 엑사원 4.5를 행안부 'AI 안전신문고'에 적용 — 하루 3만 9천 건 이상 신고 분석, 연내 시범 서비스 예정; 식약처 '신약 심사 AI'에도 탑재 (<a href="https://www.lg.co.kr/media/release/30114">LG 보도자료 2026.4.30</a>)</li>
+<li>임베딩: 다국어·한국어 오픈 임베딩 모델 로컬 구동 — RAG의 핵심, GPU 부담 작음</li>
+</ul>
+<p><strong>하드웨어 사이징 감각</strong></p>
+<table>
+<thead><tr><th>모델 규모</th><th>메모리 필요(<a class="term" href="#g-fp16">FP16</a>, 가중치만)</th><th>GPU 구성 예(96GB급 기준)</th><th>용도</th></tr></thead>
+<tbody>
+<tr><td>7~13B</td><td>약 14~26GB</td><td>1장</td><td>분류·추출·요약, 다수 동시 사용</td></tr>
+<tr><td>32~70B</td><td>약 64~140GB</td><td>2~4장(<a class="term" href="#g-tp">텐서 병렬</a>)</td><td>범용 사내 챗봇, RAG 답변</td></tr>
+<tr><td>150B 이상</td><td>300GB 이상</td><td>8장급 서버</td><td>연구원 단위로는 비현실적</td></tr>
+</tbody>
+</table>
+<ul>
+<li>계산 원칙: FP16 기준 파라미터당 약 2바이트 + 동시 사용자용 <a class="term" href="#g-kv">KV 캐시</a> 여유</li>
+<li><a class="term" href="#g-quant">양자화</a>(4·8비트)로 필요 메모리 절반 이하 — 품질 저하는 과제별 검증</li>
+<li>비용 구조: 초기 장비 구입 + 전력·냉각 + <strong>운영 인력</strong>(가장 과소평가되는 항목)</li>
+<li>업체 비교 자료(<a href="https://vrlatech.com/vllm-on-premise-vs-cloud-2026/">VRLA Tech 예</a>)의 클라우드 대비 '월 전기료만' 비교는 <a class="term" href="#g-tco">총소유비용(TCO)</a> 아님 — 장비 감가상각·인건비 포함 계산 필요</li>
+</ul>
+<p><strong>소프트웨어 스택</strong></p>
+<pre><code>모델 서빙: vLLM(다수 동시 사용·고처리량) / Ollama(소규모·시범)
+사용자 화면: 사내 웹 채팅 UI(오픈소스) + SSO 연동
+검색: 벡터DB + 키워드 검색(하이브리드 RAG)
+관리: 사용 로그, 자료 등급 태그, 모델 버전 기록, 모니터링
+</code></pre>
+<ul><li>참고: <a class="term" href="#g-vllm">vLLM</a> (<a href="https://docs.vllm.ai">공식 문서</a>), <a class="term" href="#g-ollama">Ollama</a> (<a href="https://ollama.com">공식 사이트</a>)</li></ul>
+<p><strong>단계적 도입</strong></p>
+<ul>
+<li>시범: 기존 고사양 워크스테이션 1대 + 경량 모델 → 민감자료 분류 과제 1건으로 효과 측정</li>
+<li>확장: 측정 결과로 GPU 서버 예산 근거 마련 → 공용 서비스화</li>
+<li>성능 검증: 같은 과제를 외부 모델·로컬 모델로 골드셋 비교 → 로컬로 충분한 업무 목록 확정</li>
+</ul>
+
+<h3 id="s6-4">6-4. 연구지원 시스템 전환</h3>
+<table>
+<thead><tr><th>공용 시스템</th><th>내용</th><th>효과</th></tr></thead>
+<tbody>
+<tr><td><strong>연구원 지식 DB</strong></td><td>발간 보고서·정책제언·자문의견 전량 RAG화, 연도·분야·저자 메타데이터</td><td>선행연구 검토 시간 단축, 과거 권고안 이행 추적</td></tr>
+<tr><td><strong>공용 데이터 레이크</strong></td><td><a href="#s2">2장</a>의 API·RSS 수집 자동화 결과를 표준 스키마로 축적</td><td>과제마다 반복 수집 제거</td></tr>
+<tr><td><strong>스킬·프롬프트 라이브러리</strong></td><td>검증된 코드북·스킬·프롬프트를 공유 저장소(Git)로 관리</td><td>품질 표준화, 신규 연구원 온보딩</td></tr>
+<tr><td><strong>보고서 작성 파이프라인</strong></td><td>개요→초안→인용 대조→서식 변환, HWP·HWPX 변환 포함</td><td>형식 작업 시간 단축</td></tr>
+<tr><td><strong>모니터링 페이지 묶음</strong></td><td><a href="#s4">4장</a>의 정책 데일리·조례 레이더·재정 대시보드</td><td>연구 의제 발굴, 도정 지원 속도</td></tr>
+</tbody>
+</table>
+<ul>
+<li>답변 품질은 모델보다 <strong>지식베이스 구조</strong>가 좌우 — 법제처가 법령 간 관계·판례·해석례 구조화를 AI 법령검색의 핵심으로 둔 이유 (<a href="https://biz.sbs.co.kr/amp/article/20000319171">SBS Biz</a>)</li>
+<li>경기연구원 강점: 수십 년 축적된 경기도 특화 보고서 — 잘 구조화하면 어떤 범용 AI도 갖지 못한 자산</li>
+</ul>
+
+<h3 id="s6-5">6-5. 조직·규정·거버넌스</h3>
+<ul>
+<li><strong>전담 조직</strong>: AX 추진 TF(연구기획 + 정보화 + 연구자 대표) — 인프라·규정·교육 일원화</li>
+<li><strong>부서별 AI 챔피언</strong>: 실 단위 1인 지정, 사례 발굴·동료 지원·요구사항 수렴 창구</li>
+<li><strong>AI 활용 지침</strong>
+<ul>
+<li>자료 등급별 허용 도구(<a href="#s6-1">6-1 매트릭스</a>)</li>
+<li>연구윤리: 보고서 'AI 활용 방법' 기재 의무, AI 생성 수치·인용의 원문 검증 책임</li>
+<li>금지 업무: 개인 식별, 평가 점수·인사 판단의 AI 단독 결정</li>
+<li>도구 반영: 기관 공통 원칙은 관리형(managed) CLAUDE.md로 전 직원 PC에 배포, 반드시 막을 동작은 관리형 권한 설정(<code>permissions.deny</code>)으로 차단 (<a href="#s5-4">5-4</a>)</li>
+</ul></li>
+<li><strong>승인·기록</strong>: 대외 발신·정책 권고는 연구자 검토·승인 이력 보존</li>
+<li><a href="https://v.daum.net/v/H3JLK5nQZ4">공공부문 AI 윤리기준</a>(2026.10)의 자율점검 체계와 정합 — 경영평가 대응에도 활용</li>
+<li>참고: 행안부는 공직자가 직접 개발한 AI 서비스 공유를 위한 'AX 혁신 스토어'(가칭) 연내 개설 예정, 인사처는 관리자 AI 교육 의무화 방안 발표 (<a href="https://eiec.kdi.re.kr/policy/materialView.do?num=287720&pp=20">KDI 경제정보센터, 2026.10.1 AI 행정혁신 간담회</a>)</li>
+</ul>
+
+<h3 id="s6-6">6-6. 교육 체계</h3>
+<table>
+<thead><tr><th>트랙</th><th>대상</th><th>내용</th><th>방식</th></tr></thead>
+<tbody>
+<tr><td><strong>1. 리터러시</strong></td><td>전 직원(행정직 포함)</td><td>자료 등급과 보안, 대화형 활용, 환각 검증, 업무별 프롬프트</td><td>집합교육 + 업무 사례집</td></tr>
+<tr><td><strong>2. 연구방법 실습</strong></td><td>연구위원·연구원</td><td>API 수집, LLM 코딩·골드셋 검증, RAG, 설계형(script 중심) 바이브코딩</td><td>연속 실습, <strong>본인 과제 자료로 실습</strong></td></tr>
+<tr><td><strong>3. 챔피언·심화</strong></td><td>AI 챔피언, 데이터 담당</td><td>설계형(skill 중심): 스킬·서브에이전트 설계, 로컬 LLM 운영, 자동화 웹페이지 구축·유지·배포</td><td>정기 클리닉 + 공유 저장소 기여</td></tr>
+</tbody>
+</table>
+<ul>
+<li>원칙: 도구 교육이 아니라 <strong>본인 과제 하나를 끝까지 바꿔보는 교육</strong></li>
+<li>확산 장치: 월례 '쇼앤텔'(성공·실패 사례 발표), 우수 스킬 공유 포상 — 행안부 「2026년 공공 AI 대전환 챌린지」(공무원 직접 개발 AI 도구 평가·확산)와 같은 방향 (<a href="https://eiec.kdi.re.kr/policy/materialView.do?num=288372">KDI 경제정보센터</a>)</li>
+<li>교육 성과 측정: 수강 인원이 아니라 교육 후 실제 과제 적용 건수</li>
+</ul>
+
+<!-- ===================== 부록 A ===================== -->
+<h2 id="appA">부록 A. VS Code 설치와 Claude Code 확장</h2>
+<h3 id="appA-1">A-1. 사전 준비</h3>
+<ul>
+<li>Claude 유료 계정: Pro·Max·Team·Enterprise 또는 Claude Console 계정 — 무료 플랜은 Claude Code 미포함, 별도 API 키 불필요</li>
+<li>운영체제: Windows 10(1809) 이상, macOS 13 이상, 메모리 4GB 이상</li>
+<li>기관 PC: 프로그램 설치 권한·보안 정책 사전 확인, 망분리 PC는 인터넷 연결 PC 사용</li>
+</ul>
+
+<h3 id="appA-2">A-2. VS Code 설치</h3>
+<ol>
+<li><a href="https://code.visualstudio.com">code.visualstudio.com</a> → Download (운영체제 자동 인식)</li>
+<li>Windows: 설치 중 '추가 작업 선택'에서 <strong>PATH에 추가</strong>, <strong>"Code(으)로 열기" 작업 추가</strong> 체크 권장</li>
+<li>Mac: 내려받은 앱을 응용 프로그램(Applications) 폴더로 이동</li>
+<li>(선택) 한국어 화면: 확장 <code>Korean Language Pack for Visual Studio Code</code> 설치 후 재시작</li>
+<li>버전 1.94 이상 필요 — 도움말(Help) › 정보(About)에서 확인</li>
+</ol>
+
+<h3 id="appA-3">A-3. Claude Code 확장 설치</h3>
+<ol>
+<li>확장 보기 열기: <kbd>Ctrl+Shift+X</kbd>(Windows) / <kbd>Cmd+Shift+X</kbd>(Mac)</li>
+<li>검색창에 <code>Claude Code</code> → 게시자 <strong>Anthropic</strong> 확인 → Install</li>
+<li>설치 확인: 왼쪽 활동 막대(Activity Bar)에 Spark(불꽃 모양) 아이콘, 오른쪽 아래 상태 표시줄에 <strong>✻ Claude Code</strong></li>
+</ol>
+<p class="note">이름이 비슷한 비공식 확장 주의 — 게시자 Anthropic 확인 (<a href="https://marketplace.visualstudio.com/items?itemName=Anthropic.claude-code">Marketplace 페이지</a>)</p>
+
+<h3 id="appA-4">A-4. 실행과 로그인</h3>
+<ol>
+<li>File › Open Folder로 작업 폴더 열기 (예: <code>policy-lab</code>) — Claude는 열린 폴더 안에서 작업</li>
+<li>Claude 패널 열기: 편집기 오른쪽 위 Spark 아이콘(파일이 열려 있을 때) / 활동 막대 Spark 아이콘 / 상태 표시줄 <strong>✻ Claude Code</strong></li>
+<li>첫 실행 시 <strong>Sign in</strong> → 브라우저에서 Claude 계정 인증 → VS Code로 복귀</li>
+<li>로그인 후 'Learn Claude Code' 안내 목록 표시 — 처음이면 따라해 보기</li>
+<li>로그인 화면이 안 뜰 때: 명령 팔레트(<kbd>Ctrl/Cmd+Shift+P</kbd>) › <code>Developer: Reload Window</code></li>
+</ol>
+
+<h3 id="appA-5">A-5. 처음 쓸 때 알아둘 것</h3>
+<table>
+<thead><tr><th>기능</th><th>방법</th><th>비고</th></tr></thead>
+<tbody>
+<tr><td>권한 모드</td><td>입력창 아래 표시, 클릭해 변경</td><td><strong>Manual</strong>: 파일 수정 전 변경 비교(diff)를 보여주고 승인 요청 — 초보자 권장 / Auto·Edit automatically: 묻지 않고 수정</td></tr>
+<tr><td>변경 검토</td><td>diff 화면의 Accept·Reject</td><td>변경 단위로 일부만 수락·거절 가능</td></tr>
+<tr><td>파일·줄 지정</td><td>편집기에서 범위 선택 후 <kbd>Alt+K</kbd>(Win) / <kbd>Option+K</kbd>(Mac)</td><td><code>@파일명#줄번호</code> 형태로 입력창에 삽입</td></tr>
+<tr><td>대화 기록</td><td>활동 막대 Spark 아이콘 → 세션 목록</td><td>이전 대화 이어가기</td></tr>
+<tr><td>터미널 방식(선택)</td><td><kbd>Ctrl+`</kbd> 터미널에서 <code>claude</code></td><td>CLI 별도 설치 — Windows PowerShell: <code>irm https://claude.ai/install.ps1 | iex</code> / Mac: <code>curl -fsSL https://claude.ai/install.sh | bash</code></td></tr>
+</tbody>
+</table>
+
+<h3 id="appA-6">A-6. Python·Git 설치 (실습 B·C, 부록 B용)</h3>
+<table>
+<thead><tr><th>프로그램</th><th>Windows</th><th>Mac</th><th>확인 명령</th></tr></thead>
+<tbody>
+<tr><td>Python 3</td><td><a href="https://www.python.org/downloads/">python.org/downloads</a> 설치 파일, 첫 화면 <strong>Add python.exe to PATH</strong> 체크</td><td>터미널에서 확인, 없으면 python.org 설치 파일</td><td><code>python --version</code><br>(Mac: <code>python3 --version</code>)</td></tr>
+<tr><td>Git</td><td><a href="https://git-scm.com/downloads/win">Git for Windows</a> — Claude Code가 Bash 도구로도 사용, 설치 권장</td><td>터미널에서 <code>git --version</code> 실행 시 설치 안내(Xcode Command Line Tools)</td><td><code>git --version</code></td></tr>
+</tbody>
+</table>
+<ul>
+<li>설치 후 VS Code 재시작 — 새 PATH 반영</li>
+<li>Windows에서 <code>python</code> 입력 시 Microsoft Store가 열리면 미설치 상태</li>
+<li>막히면 Claude Code에 그대로 질문: <code>python 명령이 인식되지 않아. 원인과 해결 방법 알려줘</code></li>
+</ul>
+<p class="src">출처: <a href="https://code.claude.com/docs/en/vs-code">Use Claude Code in VS Code</a> · <a href="https://code.claude.com/docs/en/setup">Claude Code 설치·요구사항</a></p>
+
+<!-- ===================== 부록 B ===================== -->
+<h2 id="appB">부록 B. GitHub 로그인과 웹페이지 배포 (GitHub Pages)</h2>
+<blockquote><p><a class="term" href="#g-pages">GitHub Pages</a>: 저장소의 HTML 파일을 무료로 웹에 게시 — 주소 <code>https://아이디.github.io/저장소이름/</code></p></blockquote>
+
+<h3 id="appB-1">B-1. 계정과 첫 설정</h3>
+<ol>
+<li><a href="https://github.com/signup">github.com/signup</a> 가입 — 아이디가 웹 주소에 들어가므로 짧은 영문 권장</li>
+<li>Git 최초 1회 이름·이메일 설정 (VS Code 터미널 <kbd>Ctrl+`</kbd>)</li>
+</ol>
+<pre><code>git config --global user.name "홍길동"
+git config --global user.email "가입한이메일@example.com"
+</code></pre>
+
+<h3 id="appB-2">B-2. 방법 ① 웹에서 올리기 — 가장 쉬움</h3>
+<ol>
+<li>github.com 로그인 → 오른쪽 위 <strong>+</strong> › New repository</li>
+<li>Repository name: <code>policy-lab</code> / <strong>Public</strong> 선택 → Create repository</li>
+<li>'uploading an existing file' 링크(또는 Add file › Upload files) → <code>index.html</code> 등 끌어다 놓기 → Commit changes</li>
+<li>Settings › Pages › Build and deployment › Source: <strong>Deploy from a branch</strong> → Branch: <strong>main</strong>, 폴더 <strong>/(root)</strong> → Save</li>
+<li>1~2분 뒤 Pages 화면 위쪽에 주소 표시: <code>https://아이디.github.io/policy-lab/</code></li>
+</ol>
+<ul><li>첫 화면 파일 이름은 반드시 <code>index.html</code>, 저장소 최상위에 위치</li></ul>
+
+<h3 id="appB-3">B-3. 방법 ② VS Code에서 올리기 — 수정·재배포가 편함</h3>
+<ol>
+<li>작업 폴더를 연 상태로 왼쪽 <strong>소스 제어</strong>(Source Control, <kbd>Ctrl+Shift+G</kbd>) 열기</li>
+<li><strong>Publish to GitHub</strong> 클릭 → GitHub 로그인 허용 창에서 Allow → 브라우저 인증 → VS Code로 복귀</li>
+<li>저장소 이름 확인 → <strong>public repository</strong> 선택 → 올릴 파일 목록 확인(비밀 파일은 체크 해제)</li>
+<li>github.com 저장소에서 B-2의 4~5단계(Pages 설정) 1회 수행</li>
+<li>이후 수정 반영: 소스 제어에서 메시지 입력 → <strong>Commit</strong> → <strong>Sync Changes</strong> → 1~2분 뒤 웹 자동 갱신</li>
+</ol>
+
+<h3 id="appB-4">B-4. 방법 ③ Claude Code에게 맡기기</h3>
+<pre><code>이 폴더 변경사항을 커밋하고 GitHub에 올려줘.
+커밋 메시지는 오늘 날짜와 바뀐 내용으로.
+.env, API 키, 비공개 자료처럼 공개하면 안 되는 파일이 있으면 올리기 전에 멈추고 알려줘.
+</code></pre>
+<ul>
+<li>B-3에서 한 번 로그인해 두면 이후 푸시는 대개 저장된 인증으로 진행, 인증 창이 뜨면 로그인</li>
+<li>저장소 생성·Pages 설정까지 맡기려면 GitHub CLI(<code>gh</code>) 설치 후 <code>gh auth login</code> → <code>gh로 공개 저장소를 만들고 GitHub Pages를 켜줘</code></li>
+</ul>
+
+<h3 id="appB-5">B-5. 공개 전 점검 — 반드시</h3>
+<ul>
+<li>공개 저장소와 Pages 사이트는 <strong>누구나 열람</strong> — 무료 계정의 Pages는 공개 저장소에서만 사용(비공개 저장소 Pages는 유료 요금제)</li>
+<li>올리지 말 것: <code>.env</code>·API 키, 비공개 행정자료, 개인정보 — <a href="#s6-1">6-1</a> 자료 등급 O(공개)만</li>
+<li>제외 파일은 <code>.gitignore</code>에 등록: <code>.env와 비공개 폴더를 .gitignore에 넣어줘</code></li>
+<li>키를 실수로 올렸다면 파일 삭제만으로 불충분 — 기록이 남으므로 키 즉시 폐기·재발급</li>
+<li>수집 자료 재게시: 출처 표시, 공공누리 유형 확인(<a href="#s2-3">2-3</a>)</li>
+</ul>
+
+<h3 id="appB-6">B-6. 매일 자동 갱신 (선택) — GitHub Actions</h3>
+<ul><li><a href="#s4">4장</a> 모니터링 페이지의 마지막 단계: 사람이 켜지 않아도 정해진 시각에 수집·게시</li></ul>
+<pre><code>GitHub Actions로 매일 오전 7시(한국 시간)에 collect.py와 build_page.py를 실행하고
+바뀐 index.html과 data/items.csv를 커밋하는 워크플로를 만들어줘.
+API 키가 필요해지면 저장소 Secrets에 넣는 방법도 알려줘.
+</code></pre>
+<ul>
+<li>예약 시각은 UTC 기준 — 한국 07:00 = UTC 22:00(전날)</li>
+<li>예약 실행은 수 분~수십 분 늦어질 수 있음, 공개 저장소는 60일간 활동이 없으면 예약 실행 자동 중지</li>
+<li>자동 실행 대상은 script(실습 B)까지 — 원문 요약·검증(실습 C)은 사람이 확인하며 <code>/daily-brief</code></li>
+</ul>
+<p class="src">출처: <a href="https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site">GitHub Docs, Creating a GitHub Pages site</a> · <a href="https://github.blog/developer-skills/github/github-for-beginners-getting-started-with-github-pages/">GitHub Blog, Getting started with GitHub Pages</a> · <a href="https://code.visualstudio.com/docs/sourcecontrol/overview">VS Code, Source Control</a></p>
+
+<!-- ===================== 참고자료 ===================== -->
+<h2 id="refs">참고자료</h2>
+<h3>정부·공공 동향</h3>
+<ul>
+<li>국가법령정보센터, <a href="https://www.law.go.kr/법령/인공지능발전과신뢰기반조성등에관한기본법">인공지능 발전과 신뢰 기반 조성 등에 관한 기본법</a></li>
+<li>행정안전부·NIA, <a href="https://eiec.kdi.re.kr/policy/materialView.do?num=282444">공공부문 AI 도입·활용 가이드</a> (KDI 경제정보센터)</li>
+<li>행정안전부·NIA, <a href="https://discuss.pytorch.kr/t/v1-0-pdf-markdown-70p/10084">공공데이터의 인공지능 친화적 관리 가이드라인 v1.0</a>(2026.3) 해설·원문 링크</li>
+<li>KDI 경제정보센터, <a href="https://eiec.kdi.re.kr/policy/materialView.do?num=278902">공공AI사업지원센터 개소</a></li>
+<li>헤럴드경제, <a href="https://www.heraldk.com/article/2025112323000046008">정부, 내부망에 AI 공통기반 서비스 최초 도입</a></li>
+<li>디지털데일리, <a href="https://www.ddaily.co.kr/page/view/2026061615460746270">범정부 AI 공통기반 활용한 12개 공공 AI 지원 사업 '윤곽'</a></li>
+<li>연합뉴스, <a href="https://v.daum.net/v/H3JLK5nQZ4">공공부문 AI 윤리기준 마련…"최종 책임·통제는 사람"</a>(2026.10.2)</li>
+<li>뉴스1, <a href="https://v.daum.net/v/20260722053449437">공무원 AI 활용 확산…OECD "전면 도입 전 효과·위험 검증해야"</a>(2026.7.22)</li>
+<li>OECD, <a href="https://www.oecd.org/en/publications/digital-government-outlook_0496b2bc-en.html">Digital Government Outlook 2026: From Foundations to Transformational Impact</a></li>
+<li>디지털투데이, <a href="https://ditoday.com/?p=140053">맥락 이해하는 AI 국민신문고, 국토부 등 4개 기관 도입</a>; 뉴스서울, <a href="https://newsseoul.co.kr/news/view/1065583821012528">국민권익위, 생성형 AI 기반 국민소통·민원분석 체계 구축</a></li>
+<li>SBS Biz, <a href="https://biz.sbs.co.kr/amp/article/20000319171">법령도 AI로 찾는다…법제처, 생성형 AI 검색 서비스 구축</a>(2026.6.26)</li>
+<li>법무법인 세종, <a href="https://shinkim.com/kor/media/newsletter/3388">AI 법령 비서 시범 서비스</a></li>
+<li>벤처스퀘어, <a href="https://www.venturesquare.net/1108476/">바이브컴퍼니, KISDI 2026년 LLM 서비스 고도화 사업 수주</a></li>
+<li>뉴시스, <a href="https://www.newsis.com/view/NISX20260313_0003547805">공공기관 업무PC에서도 챗GPT 쓴다…新국가망보안체계(N2SF) 공모 착수</a>(2026.3)</li>
+<li>디지털데일리, <a href="https://www.ddaily.co.kr/page/view/2026052009284715637">올해 국가망보안체계 사업 '우선 협상' 돌입</a>; 바이라인네트워크, <a href="https://byline.network/2026/06/17-575/">KISA, 2026 N2SF 도입 지원사업 본격 추진</a>, <a href="https://byline.network/2026/04/13-653/">N2SF 실증 사례집 해설</a>, <a href="https://byline.network/2026/09/8-522/">성평등가족부 N2SF 구축 사례</a></li>
+<li>파이낸셜뉴스, <a href="https://www.fnnews.com/news/202603151201197538">N2SF 도입 시 보안성 평가 가점</a></li>
+<li>LG AI연구원, <a href="https://www.lgresearch.ai/news/view?seq=678">K-EXAONE 2.0 공개</a>; LG, <a href="https://www.lg.co.kr/media/release/30114">'엑사원'으로 연 1,000만 건 이상 안전 신고 처리</a>; 세계일보, <a href="https://www.segye.com/newsView/20260731510160">'K-엑사원', 제조, 바이오, 금융, 공공 영역 확대</a></li>
+<li>KDI 경제정보센터, <a href="https://eiec.kdi.re.kr/policy/materialView.do?num=287720&pp=20">AI 행정혁신 간담회(2026.10.1)</a>, <a href="https://eiec.kdi.re.kr/policy/materialView.do?num=288372">2026년 공공 AI 대전환 챌린지</a></li>
+<li>삼성SDS 인사이트, <a href="https://www.samsungsds.com/kr/insights/public-ax-strategy-by-case.html">사례로 본 공공 AX 전략</a>, <a href="https://www.samsungsds.com/kr/insights/public-ax-adoption-strategy-2026-part1.html">2026 공공 AX 도입 전략 1부</a></li>
+<li>VRLA Tech, <a href="https://vrlatech.com/vllm-on-premise-vs-cloud-2026/">Running vLLM on Your Own Hardware vs Cloud</a>(업체 자료, 비용 비교는 참고용)</li>
+</ul>
+<h3>데이터 소스</h3>
+<ul>
+<li><a href="https://www.data.go.kr">공공데이터포털</a> · <a href="https://data.gg.go.kr">경기데이터드림</a> · <a href="https://open.assembly.go.kr">열린국회정보</a> · <a href="https://www.nabo.go.kr/ko/content.do?key=2512170001">국회예산정책처 Open API</a></li>
+<li><a href="https://open.law.go.kr">국가법령정보 공동활용</a> · <a href="https://law.go.kr/LSW/information.do">국가법령정보센터 Open API 안내</a></li>
+<li><a href="https://kosis.kr/openapi/introduce/introduce_01List.do">KOSIS 공유서비스 소개</a> · <a href="https://kosis.kr/openapi/file/openApi_manual_v1.0.pdf">KOSIS OpenAPI 개발가이드</a></li>
+<li><a href="https://www.openfiscaldata.go.kr">열린재정</a> · <a href="https://www.lofin365.go.kr">지방재정365</a> · <a href="https://www.data.go.kr/data/15160375/fileData.do">지방재정365 Open API 목록</a></li>
+<li><a href="https://www.nkis.re.kr">국가정책연구포털 NKIS</a> · <a href="https://www.prism.go.kr">PRISM</a></li>
+<li><a href="https://www.korea.kr/guide/copyRight.do">정책브리핑 저작권 정책</a> · <a href="https://m.korea.kr/etc/noticeView.do?newsId=132038885">정책브리핑 RSS 서비스 제공 중단 안내(2026.7.1)</a></li>
+<li><a href="https://github.com/kyusik-yang/kna">kna (GitHub)</a> · <a href="https://pypi.org/project/kna/">kna (PyPI)</a> · <a href="https://github.com/kyusik-yang/kr-hearings-data">kr-hearings-data</a></li>
+<li><a href="https://www.federalregister.gov/reader-aids/developer-resources/rest-api">FederalRegister.gov REST API</a> · <a href="https://open.gsa.gov/api/regulationsgov/">Regulations.gov API</a> · <a href="https://sdmx.oecd.org/public/rest">OECD SDMX API</a> · <a href="https://data.worldbank.org">World Bank Data</a></li>
+<li><a href="https://github.com/willjobs/public-comments-project/blob/main/blogposts/post2/README.md">Public Comments Project (Will Jobs)</a> · <a href="https://regulatorystudies.columbian.gwu.edu/using-comments-data-research">GW RSC, Using Comments as Data for Research</a> · <a href="https://regulatorystudies.columbian.gwu.edu/sites/g/files/zaxdzs4751/files/downloads/USDA/2019Report/GW%20RSC%20-%20USDA%20Cooperative%20Agreement%202018-19_.pdf">GW RSC, Analyzing Public Comments to Inform Agency Regulatory Reform Efforts</a> · <a href="https://aws.amazon.com/marketplace/pp/prodview-ypmw3cvvwhv3y">Mirrulations</a></li>
+</ul>
+<h3>MCP</h3>
+<ul>
+<li>Anthropic, <a href="https://www.anthropic.com/news/model-context-protocol">Introducing the Model Context Protocol</a>(2024.11)</li>
+<li>국회: <a href="https://github.com/kyusik-yang/open-assembly-mcp">open-assembly-mcp</a> · <a href="https://glama.ai/mcp/servers/hollobit/assembly-api-mcp">assembly-api-mcp</a> · <a href="https://github.com/StatPan/AssemblyMCP">AssemblyMCP</a> · <a href="https://glama.ai/mcp/servers/epoko77-ai/korean-assembly-speech-mcp">korean-assembly-speech-mcp</a></li>
+<li>법령: <a href="https://glama.ai/mcp/servers/yy0dqpyfqu">korean-law-mcp</a> · <a href="https://pypi.org/project/caselaw-mcp/">caselaw-mcp</a></li>
+<li>통계: <a href="https://glama.ai/mcp/servers/rubatoyd/kosis-openapi-mcp">kosis-openapi-mcp</a> · <a href="https://pypi.org/project/korean-stat-mcp/">korean-stat-mcp</a> · <a href="https://glama.ai/mcp/servers/mfi7wa4of2">ECOS MCP</a></li>
+<li>공공데이터: <a href="https://lobehub.com/mcp/koomook-data-go-mcp-servers">data-go-mcp-servers</a> · <a href="https://glama.ai/mcp/servers/hknlc0ux2e">publicdata-kr</a></li>
+<li>해외 규제: <a href="https://chat.mcp.so/server/federal-register-mcp/1102tools">federal-register-mcp</a> · <a href="https://mcp.so/servers/regulations-gov-mcp">regulationsgov-mcp</a></li>
+</ul>
+<h3>방법론 연구</h3>
+<ul>
+<li>Gilardi, F., Alizadeh, M., &amp; Kubli, M. (2023). <a href="https://www.pnas.org/doi/10.1073/pnas.2305016120">ChatGPT outperforms crowd workers for text-annotation tasks</a>. <em>PNAS</em>, 120(30).</li>
+<li>Gunes, E., &amp; Florczak, C. K. (2023). <a href="https://arxiv.org/abs/2310.08167">Multiclass classification of policy documents with large language models</a>. arXiv. / (2025). <a href="https://ideas.repec.org/a/spr/jcsosc/v8y2025i2d10.1007_s42001-025-00362-2.html">Replacing or enhancing the human coder?</a> <em>Journal of Computational Social Science</em>, 8(2).</li>
+<li><a href="https://arxiv.org/abs/2509.10199">Beyond Token Limits: Assessing Language Model Performance on Long Text Classification</a>.</li>
+<li><a href="https://arxiv.org/abs/2509.07274">LLM Analysis of 150+ years of German Parliamentary Debates on Migration Reveals Shift from Post-War Solidarity to Anti-Solidarity in the Last Decade</a> (2025).</li>
+<li>Nikolaidis, A. (2025). <a href="https://repository.tudelft.nl/record/uuid:3154565d-b68c-48b4-a734-0d717f118687">Towards Automated Stance Detection in Congressional Hearings with Large Language Models</a>. TU Delft.</li>
+<li>Bosley, M. (2024). <a href="https://priceschool.usc.edu/wp-content/uploads/2024/12/Bosley.pdf">Towards Qualitative Measurement at Scale</a>.</li>
+<li>Aggarwal, V. et al. (2025). <a href="https://arxiv.org/abs/2511.10659">Information Extraction From Fiscal Documents Using LLMs</a>.</li>
+<li>조상규·김신성 (2024). <a href="https://koreascience.or.kr/article/JAKO202429872018607.page?lang=ko">대규모 언어모델(LLM)을 활용한 건축민원 대응 효율화 방안 연구</a>.</li>
+<li><a href="https://arxiv.org/abs/2605.29025">When Models Disagree: Rethinking LLM Evaluation for Public Comment Analysis</a> (2026); <a href="https://arxiv.org/abs/2311.14871">Tracing Influence at Scale</a> (2023).</li>
+<li>Pangakis, N., &amp; Wolken, S. (2024). <a href="https://arxiv.org/abs/2406.17633">Knowledge Distillation in Automated Annotation</a>. NLP+CSS 2024.</li>
+<li>Farr, D. et al. (2024). <a href="https://arxiv.org/abs/2408.08217">RED-CT</a>.</li>
+<li>Lu, Y., &amp; Smith, K. (2025). <a href="https://arxiv.org/abs/2504.15432">Feeding LLM Annotations to BERT Classifiers at Your Own Risk</a>.</li>
+<li>이종찬·황준하·정영섭 (2026). <a href="https://journal.kci.go.kr/jksci/archive/articlePdf?artiId=ART003397359">Pretrained Model for Civil Complaint Classification</a>. 한국컴퓨터정보학회논문지, 31(10).</li>
+<li>Mathur, S. et al. (2026). <a href="https://arxiv.org/abs/2603.24580">Retrieval Improvements Do Not Guarantee Better Answers: A Study of RAG for AI Policy QA</a>.</li>
+<li>Juhasz, M. et al. (2024). <a href="https://arxiv.org/abs/2410.23902">Responsible Retrieval Augmented Generation for Climate Decision Making from Documents</a>.</li>
+<li>Maharjan, A., &amp; Yadav, U. (2026). <a href="https://arxiv.org/abs/2601.15457">Chunking, Retrieval, and Re-ranking</a>.</li>
+<li><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC12919150/">LATCH: An LLM-assisted framework for verifiable clinical hypothesis testing from EHR</a> (2026).</li>
+<li><a href="https://arxiv.org/abs/2606.11447">AI Coding Agents Can Reproduce Social Science Findings</a> (2026); Shah, Hopfgartner &amp; Bleier (2026). <a href="https://arxiv.org/abs/2602.08561">Automating Computational Reproducibility in Social Science</a>.</li>
+<li><a href="https://github.com/KLUE-benchmark/KLUE">KLUE 벤치마크</a> · <a href="https://huggingface.co/klue/roberta-base">KLUE RoBERTa base</a></li>
+</ul>
+<h3>모니터링·도구</h3>
+<ul>
+<li><a href="https://oecd.ai/en/dashboards">OECD.AI Policy Navigator</a> · <a href="https://github.com/hayleyamay/ai-policy-tracker">AI Policy Tracker</a> · <a href="https://github.com/benschwartz42/policy-signal">Policy Signal</a> · <a href="https://github.com/floorvote/floorvote">FloorVote</a> · <a href="https://github.com/OnlineIgniter/legislative-tracker">Legislative Tracker</a></li>
+<li>Claude Code, <a href="https://code.claude.com/docs/en/features-overview">Extend Claude Code</a>(CLAUDE.md·Skills·MCP·Subagents) · <a href="https://docs.vllm.ai">vLLM</a> · <a href="https://ollama.com">Ollama</a></li>
+<li>Claude Code 문서: <a href="https://code.claude.com/docs/en/vs-code">Use Claude Code in VS Code</a> · <a href="https://code.claude.com/docs/en/setup">Setup</a> · <a href="https://code.claude.com/docs/en/skills">Skills</a> · <a href="https://code.claude.com/docs/en/sub-agents">Subagents</a> · <a href="https://code.claude.com/docs/en/memory">Memory(CLAUDE.md)</a></li>
+<li><a href="https://code.visualstudio.com">Visual Studio Code</a> · <a href="https://code.visualstudio.com/docs/sourcecontrol/overview">VS Code Source Control</a> · <a href="https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site">GitHub Pages 문서</a> · <a href="https://github.blog/developer-skills/github/github-for-beginners-getting-started-with-github-pages/">GitHub for Beginners: GitHub Pages</a></li>
+</ul>
+
+<!-- ===================== 용어집 ===================== -->
+<h2 id="glossary">용어집</h2>
+<dl class="gloss">
+<dt id="g-api">API (Application Programming Interface)</dt><dd>프로그램이 다른 시스템의 데이터·기능을 정해진 규칙으로 요청하는 창구. 공공 API는 인증키를 붙여 URL로 호출, JSON·XML로 응답</dd>
+<dt id="g-ax">AX (AI Transformation, AI 전환)</dt><dd>업무 절차·조직·인프라를 AI 활용 전제로 재설계하는 과정. 도구 도입을 넘어 규정·교육·데이터 체계까지 포함</dd>
+<dt id="g-bert">BERT</dt><dd>구글이 2018년 공개한 인코더형 언어모델 계열. 분류·추출에 강하고 수억 파라미터로 작아 내부 서버 구동 가능. RoBERTa·KLUE-RoBERTa 등 파생 모델 다수</dd>
+<dt id="g-bm25">BM25</dt><dd>단어 출현 빈도와 문서 길이를 반영하는 고전적 키워드 검색 점수. 고유명사·조문 번호 검색에 강함</dd>
+<dt id="g-cap">CAP (Comparative Agendas Project)</dt><dd>정책 의제를 21개 주요 주제(경제, 보건, 환경 등)로 분류하는 국제 공통 코드북. 법안·연설·언론 비교연구의 표준</dd>
+<dt id="g-chunk">청크 (Chunk)</dt><dd>RAG 검색을 위해 긴 문서를 나눈 단위. 너무 짧으면 맥락 단절, 너무 길면 검색 정밀도 저하</dd>
+<dt id="g-claudemd">CLAUDE.md</dt><dd>Claude Code가 매 세션 시작 시 자동으로 읽는 프로젝트 메모리 파일. 모든 대화·스킬·서브에이전트에 공통 적용되는 최상위 지침 — 연구 목적·원칙·폴더 구조·금지사항 기록. 강제 설정은 아니므로 반드시 막을 동작은 권한 설정·훅으로 차단</dd>
+<dt id="g-codebook">코드북 (Codebook)</dt><dd>내용분석 범주의 정의·판단 기준·예시·경계사례를 정리한 문서. 사람 코더와 LLM 프롬프트의 공통 기준</dd>
+<dt id="g-comment">공공의견 (Public Comments)</dt><dd>미국 행정절차에서 규칙안 공고 후 시민·단체·기업이 제출하는 의견. Regulations.gov에 공개, 규제 연구의 대규모 텍스트 자료</dd>
+<dt id="g-commit">커밋 (Commit)</dt><dd>파일 변경 내용을 설명 메시지와 함께 저장소 기록에 남기는 단위. 푸시(push)로 GitHub에 올림</dd>
+<dt id="g-cron">cron</dt><dd>리눅스·유닉스의 예약 실행 도구. "매일 07:00 실행" 같은 일정을 한 줄로 지정</dd>
+<dt id="g-dapt">도메인 적응 사전학습 (DAPT)</dt><dd>범용 언어모델을 특정 분야(민원·법령 등) 비라벨 말뭉치로 추가 사전학습해 분야 어휘·문체에 맞추는 기법</dd>
+<dt id="g-did">이중차분 (DID, Difference-in-Differences)</dt><dd>정책 시행 집단과 비시행 집단의 전후 변화 차이를 비교해 정책 효과를 추정하는 준실험 설계</dd>
+<dt id="g-distill">증류 (Knowledge Distillation)</dt><dd>큰 모델(교사)의 판단을 작은 모델(학생)이 학습하게 하는 방법. 여기서는 LLM이 붙인 라벨로 BERT를 학습시키는 방식</dd>
+<dt id="g-embed">임베딩 (Embedding)</dt><dd>문장·문서를 의미를 담은 숫자 벡터로 바꾼 것. 벡터 간 거리로 의미 유사도 계산, 의미검색의 기반</dd>
+<dt id="g-f1">F1 점수</dt><dd>정밀도(맞다고 한 것 중 실제 맞은 비율)와 재현율(실제 맞은 것 중 찾아낸 비율)의 조화평균. 범주 불균형 분류 평가 지표</dd>
+<dt id="g-fe">패널 고정효과 모형</dt><dd>같은 단위(시군 등)를 여러 시점 관찰한 자료에서, 시간에 따라 변하지 않는 단위별 특성을 통제하고 변화의 관계를 추정하는 회귀모형</dd>
+<dt id="g-finetune">파인튜닝 (Fine-tuning)</dt><dd>사전학습된 모델을 특정 과제 데이터로 추가 학습시켜 그 과제에 맞추는 과정</dd>
+<dt id="g-fp16">FP16</dt><dd>16비트 부동소수점 형식. 모델 가중치를 파라미터당 2바이트로 저장, GPU 메모리 산정의 기준</dd>
+<dt id="g-gateway">API 게이트웨이</dt><dd>기관 공용 API 키를 한 곳에서 중계·배분하는 서버. 사용량·비용 추적, 모델 교체, 접근 통제 담당</dd>
+<dt id="g-git">Git</dt><dd>파일 변경 이력을 관리하는 버전 관리 도구. GitHub는 Git 저장소를 온라인에 두는 서비스. 올리지 않을 파일은 <code>.gitignore</code>에 등록</dd>
+<dt id="g-gha">GitHub Actions</dt><dd>GitHub 저장소에서 정해진 시각·사건에 스크립트를 자동 실행하는 서비스. 일일 수집·웹페이지 갱신에 활용</dd>
+<dt id="g-pages">GitHub Pages</dt><dd>GitHub 저장소의 HTML 파일을 무료 웹사이트로 게시하는 기능. 주소 <code>https://아이디.github.io/저장소이름/</code></dd>
+<dt id="g-gold">골드셋 (Gold Set)</dt><dd>연구자가 직접 정답을 붙인 검증용 표본. LLM·BERT 분류 정확도 측정의 기준</dd>
+<dt id="g-halluc">환각 (Hallucination)</dt><dd>LLM이 사실이 아닌 내용·출처·수치를 그럴듯하게 생성하는 현상</dd>
+<dt id="g-hybrid">하이브리드 검색</dt><dd>의미검색(임베딩)과 키워드검색(BM25)을 결합한 검색. 의미 유사성과 정확한 용어 일치를 동시에 확보</dd>
+<dt id="g-incr">증분 수집</dt><dd>전체를 다시 받지 않고 마지막 수집 시점 이후 새로 생긴 자료만 받는 방식</dd>
+<dt id="g-json">JSON</dt><dd>키-값 쌍으로 데이터를 표현하는 텍스트 형식. 대부분 API의 응답 형식</dd>
+<dt id="g-kappa">κ (코헨의 카파)</dt><dd>두 코더의 일치도에서 우연 일치를 뺀 지표. 0.6 이상 상당, 0.8 이상 매우 높은 일치로 흔히 해석</dd>
+<dt id="g-kogl">공공누리 (KOGL)</dt><dd>공공저작물 자유이용 허락 표시. 제1유형은 출처표시 조건으로 상업적 이용·변경 허용, 2~4유형은 상업 이용 금지·변경 금지 조건 추가</dd>
+<dt id="g-kv">KV 캐시</dt><dd>LLM이 문장을 생성할 때 앞 내용의 계산 결과를 저장하는 메모리. 동시 사용자·긴 문맥일수록 커짐</dd>
+<dt id="g-llm">LLM (대규모 언어모델)</dt><dd>대량의 텍스트로 학습해 문장을 이해·생성하는 수십억~수조 파라미터 규모 모델. GPT, Claude, Gemini, 엑사원 등</dd>
+<dt id="g-local">로컬 LLM</dt><dd>외부 클라우드가 아닌 기관 내부 서버에서 구동하는 언어모델. 자료가 외부로 나가지 않음</dd>
+<dt id="g-mcp">MCP (Model Context Protocol)</dt><dd>AI 도구가 외부 데이터·서비스를 '도구'로 호출하도록 하는 개방형 표준. Anthropic이 2024.11 공개</dd>
+<dt id="g-meta">메타데이터</dt><dd>데이터에 대한 데이터. 작성기관·연도·문서유형·단위·수집 방법 등, 검색·결합·검증의 기반</dd>
+<dt id="g-n2sf">국가망보안체계 (N2SF)</dt><dd>국가·공공기관 업무정보를 기밀(C)·민감(S)·공개(O)로 분류해 등급별로 보안통제를 차등 적용하는 체계. 기존 일률적 망분리의 대안</dd>
+<dt id="g-netsep">망분리</dt><dd>업무망과 인터넷망을 물리적·논리적으로 분리하는 공공기관 보안 방식. 외부 AI·클라우드 활용의 제약 요인</dd>
+<dt id="g-ollama">Ollama</dt><dd>개인 PC·소규모 서버에서 오픈 모델을 간단히 내려받아 실행하는 도구. 시범 운영에 적합</dd>
+<dt id="g-openw">오픈 모델 (Open-weight Model)</dt><dd>가중치를 공개해 누구나 내려받아 자체 서버에서 구동할 수 있는 모델. 라이선스별로 상업 이용 범위 상이</dd>
+<dt id="g-pt">평행추세 가정</dt><dd>DID에서 정책이 없었다면 두 집단의 추세가 같았을 것이라는 전제. 정책 이전 시기 추세 비교로 점검</dd>
+<dt id="g-quant">양자화 (Quantization)</dt><dd>가중치를 16비트에서 8·4비트로 줄여 메모리와 연산을 절감하는 기법. 과제별 품질 저하 검증 필요</dd>
+<dt id="g-rag">RAG (검색증강생성)</dt><dd>질문과 관련된 문서를 먼저 검색해 그 내용을 근거로 답변을 생성하는 방식. 최신성·출처 제시·환각 감소</dd>
+<dt id="g-repo">저장소 (Repository)</dt><dd>프로젝트 파일과 변경 이력을 담는 Git의 기본 단위. 공개(Public)·비공개(Private) 선택</dd>
+<dt id="g-rss">RSS</dt><dd>사이트의 새 글 목록(제목·링크·날짜)을 XML로 배포하는 표준 형식. 키 없이 자동 수집 가능</dd>
+<dt id="g-schema">스키마 (Schema)</dt><dd>데이터의 구조 정의. 변수명·자료형·단위·코드값 목록</dd>
+<dt id="g-sdmx">SDMX</dt><dd>국제기구 통계 교환 표준 형식. OECD·IMF·세계은행 등 통계 API의 공통 규격</dd>
+<dt id="g-skill">스킬 (Skill)</dt><dd>AI 에이전트가 필요할 때 불러 쓰는 작업 절차·지식 묶음(지시문 + 스크립트). 반복 업무의 표준화 단위</dd>
+<dt id="g-sso">SSO (Single Sign-On)</dt><dd>한 번의 로그인으로 기관 내 여러 시스템을 이용하는 통합 인증</dd>
+<dt id="g-static">정적 HTML</dt><dd>서버 프로그램·DB 없이 미리 만든 HTML 파일을 그대로 게시하는 웹페이지. 유지보수·보안 부담 최소</dd>
+<dt id="g-subagent">서브에이전트</dt><dd>메인 AI 에이전트가 하위 작업을 맡기는 별도 에이전트. 독립된 맥락에서 작업 후 요약만 반환</dd>
+<dt id="g-agent">에이전트형 코딩 도구</dt><dd>지시를 받아 코드를 작성·실행·수정하고 파일을 다루는 AI 도구. Claude Code, Codex, Gemini CLI 등</dd>
+<dt id="g-tco">총소유비용 (TCO)</dt><dd>장비 구입비뿐 아니라 전력·냉각·감가상각·운영 인건비·교체 비용까지 합한 전체 비용</dd>
+<dt id="g-temp">temperature</dt><dd>LLM 출력의 무작위성 조절 값. 0에 가까울수록 같은 입력에 같은 출력, 코딩·분류에는 낮게 설정</dd>
+<dt id="g-textmining">텍스트 마이닝</dt><dd>대량의 텍스트에서 주제·감성·개체·패턴을 계산적으로 추출하는 분석</dd>
+<dt id="g-tp">텐서 병렬 (Tensor Parallelism)</dt><dd>한 모델의 연산을 여러 GPU에 나눠 처리하는 방식. 단일 GPU 메모리를 넘는 모델 구동에 필요</dd>
+<dt id="g-vdb">벡터DB</dt><dd>임베딩 벡터를 저장하고 유사도 검색을 빠르게 수행하는 데이터베이스</dd>
+<dt id="g-vibe">바이브코딩 (Vibe Coding)</dt><dd>자연어로 원하는 결과를 설명하고 AI가 코드를 작성·실행하게 하는 개발 방식. 사람은 설계·검수 담당</dd>
+<dt id="g-vibe-design">설계형 바이브코딩</dt><dd>결과만 받지 않고, 결과를 만드는 과정을 AI와 함께 설계해 파일로 남기는 방식. 실행 파일 단위면 script 중심, 실행 순서·판단 기준·확인 절차까지 묶으면 skill 중심</dd>
+<dt id="g-vllm">vLLM</dt><dd>다수 사용자의 동시 요청을 고처리량으로 처리하는 오픈소스 LLM 서빙 엔진</dd>
+<dt id="g-vscode">VS Code (Visual Studio Code)</dt><dd>Microsoft의 무료 코드 편집기. 확장(Extension)을 설치해 기능 추가 — Claude Code 확장으로 편집기 안에서 AI와 작업</dd>
+<dt id="g-zeroshot">제로샷 (Zero-shot)</dt><dd>예시 없이 지시문만으로 모델이 과제를 수행하는 방식. 예시 몇 개를 주면 퓨샷(few-shot)</dd>
+</dl>
+<p class="note"><a href="#top">↑ 맨 위로</a></p>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+  try{mermaid.initialize({startOnLoad:true,theme:'neutral',securityLevel:'loose'});}catch(e){}
+  // 사이드바 현재 위치 강조
+  (function(){
+    var links=[].slice.call(document.querySelectorAll('#sidebar a[href^="#"]'));
+    var targets=links.map(function(a){return document.getElementById(a.getAttribute('href').slice(1));});
+    function onScroll(){
+      var y=window.scrollY+80,cur=-1;
+      targets.forEach(function(t,i){if(t&&t.offsetTop<=y)cur=i;});
+      links.forEach(function(a,i){a.classList.toggle('active',i===cur);});
+    }
+    window.addEventListener('scroll',onScroll,{passive:true});onScroll();
+    links.forEach(function(a){a.addEventListener('click',function(){document.getElementById('sidebar').classList.remove('open');});});
+  })();
+</script>
+</body>
+</html>
